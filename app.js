@@ -1,3 +1,70 @@
+async function fetchJson(url, optional = false) {
+  try {
+    const response = await fetch(url, { cache: 'no-cache' });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    return await response.json();
+  } catch (err) {
+    if (optional) {
+      return { meta: { source: 'optional-empty', record_count: 0 }, records: [] };
+    }
+    throw err;
+  }
+}
+
+
+function isValidLevelValue(v) {
+  return typeof v === "number" && Number.isFinite(v) && v > -9999;
+}
+
+function mergeDatasets(historical, recent) {
+  const map = new Map();
+  for (const r of historical.records || []) map.set(r.timestamp, r);
+  for (const r of recent.records || []) map.set(r.timestamp, r);
+  const records = [...map.values()].sort((a, b) => a.timestamp.localeCompare(b.timestamp));
+  const values = records.filter(r => isValidLevelValue(r.value)).map(r => r.value).sort((a,b)=>a-b);
+  const p = (arr, q) => {
+    if (!arr.length) return null;
+    const idx = (arr.length - 1) * q;
+    const lo = Math.floor(idx), hi = Math.ceil(idx);
+    if (lo === hi) return arr[lo];
+    return arr[lo] + (arr[hi] - arr[lo]) * (idx - lo);
+  };
+  const mean = values.reduce((s,v)=>s+v,0) / values.length;
+  const diffs = [];
+  const byTs = records.filter(r => isValidLevelValue(r.value));
+  for (let i = 24*7-1; i < byTs.length; i++) {
+    const window = byTs.slice(i-(24*7-1), i+1).map(r=>r.value);
+    const avg = window.reduce((s,v)=>s+v,0)/window.length;
+    diffs.push(byTs[i].value - avg);
+  }
+  diffs.sort((a,b)=>a-b);
+  const meta = historical.meta || {};
+  return {
+    meta: {
+      ...meta,
+      dataset_start: records[0]?.timestamp || meta.dataset_start || null,
+      dataset_end: records[records.length - 1]?.timestamp || meta.dataset_end || null,
+      record_count: records.length,
+      annual_stats: {
+        min: values[0],
+        mean,
+        max: values[values.length - 1],
+        p90: p(values, 0.9),
+        p95: p(values, 0.95)
+      },
+      rise_mode_b_thresholds: {
+        moderate: p(diffs, 0.9) ?? meta.rise_mode_b_thresholds?.moderate ?? 0.12,
+        high: p(diffs, 0.95) ?? meta.rise_mode_b_thresholds?.high ?? 0.26
+      },
+      notes: [
+        ...(meta.notes || []),
+        'recent_hourly.json がある場合は同一時刻を上書きし、長期履歴と統合表示します。'
+      ]
+    },
+    records
+  };
+}
+
 let rawData = null;
 let chart = null;
 let currentMode = 'A';
@@ -13,6 +80,7 @@ const els = {
   toggleAnnualLines: document.getElementById('toggleAnnualLines'),
   modeButtons: document.querySelectorAll('.mode-btn'),
   presetButtons: document.querySelectorAll('.preset-btn'),
+  shiftButtons: document.querySelectorAll('.shift-btn'),
   rangeMin: document.getElementById('rangeMin'),
   rangeMean: document.getElementById('rangeMean'),
   rangeMax: document.getElementById('rangeMax'),
@@ -30,9 +98,13 @@ const els = {
   statusMode: document.getElementById('statusMode')
 };
 
+
 async function init() {
-  const response = await fetch('./data/water_level_kuji_nukada_2025_2026.json', { cache: 'no-cache' });
-  rawData = await response.json();
+  const [historical, recent] = await Promise.all([
+    fetchJson('./data/historical_hourly.json'),
+    fetchJson('./data/recent_hourly.json', true)
+  ]);
+  rawData = mergeDatasets(historical, recent);
 
   const records = rawData.records;
   const firstDate = records[0].timestamp.slice(0, 10);
@@ -44,7 +116,8 @@ async function init() {
   els.endDate.max = lastDate;
   els.startDate.value = firstDate;
   els.endDate.value = lastDate;
-  setActivePreset('365');
+  setPresetRange('183');
+  setActivePreset('183');
 
   populateAnnualStats();
   bindEvents();
@@ -81,6 +154,14 @@ function bindEvents() {
       render();
     });
   });
+
+  els.shiftButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      shiftRange(btn.dataset.shiftUnit, Number(btn.dataset.shiftAmount));
+      clearActivePreset();
+      render();
+    });
+  });
 }
 
 function clearActivePreset() {
@@ -112,7 +193,7 @@ function setPresetRange(days) {
   const records = rawData.records;
   const lastTs = new Date(records[records.length - 1].timestamp);
   const firstTs = new Date(records[0].timestamp);
-  if (days === 'all' || days === '365') {
+  if (days === 'all') {
     els.startDate.value = records[0].timestamp.slice(0, 10);
     els.endDate.value = records[records.length - 1].timestamp.slice(0, 10);
     return;
@@ -130,6 +211,52 @@ function toDateInput(date) {
   const m = String(date.getMonth() + 1).padStart(2, '0');
   const d = String(date.getDate()).padStart(2, '0');
   return `${y}-${m}-${d}`;
+}
+
+
+function clampDate(date, minDate, maxDate) {
+  if (date < minDate) return new Date(minDate);
+  if (date > maxDate) return new Date(maxDate);
+  return date;
+}
+
+function shiftRange(unit, amount) {
+  ensureDateInputs();
+  const records = rawData.records;
+  const minDate = new Date(`${records[0].timestamp.slice(0, 10)}T00:00:00`);
+  const maxDate = new Date(`${records[records.length - 1].timestamp.slice(0, 10)}T00:00:00`);
+  let start = new Date(`${els.startDate.value}T00:00:00`);
+  let end = new Date(`${els.endDate.value}T00:00:00`);
+
+  const shiftOne = (date) => {
+    const d = new Date(date);
+    if (unit === 'day') d.setDate(d.getDate() + amount);
+    if (unit === 'week') d.setDate(d.getDate() + amount * 7);
+    if (unit === 'month') d.setMonth(d.getMonth() + amount);
+    if (unit === 'year') d.setFullYear(d.getFullYear() + amount);
+    return d;
+  };
+
+  let newStart = shiftOne(start);
+  let newEnd = shiftOne(end);
+
+  if (newStart < minDate) {
+    const delta = minDate.getTime() - newStart.getTime();
+    newStart = new Date(minDate);
+    newEnd = new Date(newEnd.getTime() + delta);
+  }
+  if (newEnd > maxDate) {
+    const delta = newEnd.getTime() - maxDate.getTime();
+    newEnd = new Date(maxDate);
+    newStart = new Date(newStart.getTime() - delta);
+  }
+
+  newStart = clampDate(newStart, minDate, maxDate);
+  newEnd = clampDate(newEnd, minDate, maxDate);
+  if (newStart > newEnd) newStart = new Date(newEnd);
+
+  els.startDate.value = toDateInput(newStart);
+  els.endDate.value = toDateInput(newEnd);
 }
 
 function getRangeRecords() {
@@ -159,7 +286,7 @@ function getRangeRecords() {
 }
 
 function validValues(records) {
-  return records.filter(r => typeof r.value === 'number');
+  return records.filter(r => isValidLevelValue(r.value));
 }
 
 function mean(values) {
@@ -184,7 +311,7 @@ function getLast7DaysAverage(referenceTimestamp) {
   const ref = new Date(referenceTimestamp).getTime();
   const start = ref - (24 * 7 - 1) * 3600 * 1000;
   const values = rawData.records
-    .filter(r => typeof r.value === 'number')
+    .filter(r => isValidLevelValue(r.value))
     .filter(r => {
       const t = new Date(r.timestamp).getTime();
       return t >= start && t <= ref;
@@ -319,7 +446,7 @@ function render() {
   els.statusDescription.textContent = status.description;
   els.statusTimestamp.textContent = latest ? formatDateTime(latest.timestamp) : '-';
   els.statusCurrentLevel.textContent = latest ? formatLevel(latest.value) : '-';
-  els.statusMode.textContent = currentMode === 'A' ? 'A 年間分布基準' : 'B 直近7日平均との差';
+  els.statusMode.textContent = currentMode === 'A' ? 'A 全期間分布基準' : 'B 直近7日平均との差';
 
   const dataSeries = records.map(r => ({ x: r.timestamp, y: r.value }));
   const annualMean = rawData.meta.annual_stats.mean;
@@ -374,7 +501,7 @@ function render() {
   if (els.toggleAnnualLines.checked) {
     datasets.push(
       {
-        label: '年間平均',
+        label: '全期間平均',
         data: buildLineSeries(records, annualMean),
         borderColor: 'rgba(190,220,255,.72)',
         borderDash: [3, 6],
@@ -382,7 +509,7 @@ function render() {
         pointRadius: 0
       },
       {
-        label: '年間90%',
+        label: '全期間90%',
         data: buildLineSeries(records, annualP90),
         borderColor: 'rgba(255,94,120,.8)',
         borderDash: [3, 6],
