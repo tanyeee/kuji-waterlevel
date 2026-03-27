@@ -12,8 +12,20 @@ async function fetchJson(url, optional = false) {
 }
 
 
+function isMissingRecord(record) {
+  const flag = String(record?.flag ?? '').trim();
+  if (flag === '-' || flag === '$' || flag === '#') return true;
+  const v = record?.value;
+  if (v == null) return true;
+  return !(typeof v === "number" && Number.isFinite(v) && v > -9999);
+}
+
 function isValidLevelValue(v) {
   return typeof v === "number" && Number.isFinite(v) && v > -9999;
+}
+
+function isDrawableRecord(record) {
+  return !isMissingRecord(record) && isValidLevelValue(record.value);
 }
 
 function mergeDatasets(historical, recent) {
@@ -21,7 +33,8 @@ function mergeDatasets(historical, recent) {
   for (const r of historical.records || []) map.set(r.timestamp, r);
   for (const r of recent.records || []) map.set(r.timestamp, r);
   const records = [...map.values()].sort((a, b) => a.timestamp.localeCompare(b.timestamp));
-  const values = records.filter(r => isValidLevelValue(r.value)).map(r => r.value).sort((a,b)=>a-b);
+  const validRecords = records.filter(r => isDrawableRecord(r));
+  const values = validRecords.map(r => r.value).sort((a,b)=>a-b);
   const p = (arr, q) => {
     if (!arr.length) return null;
     const idx = (arr.length - 1) * q;
@@ -31,7 +44,7 @@ function mergeDatasets(historical, recent) {
   };
   const mean = values.reduce((s,v)=>s+v,0) / values.length;
   const diffs = [];
-  const byTs = records.filter(r => isValidLevelValue(r.value));
+  const byTs = validRecords;
   for (let i = 24*7-1; i < byTs.length; i++) {
     const window = byTs.slice(i-(24*7-1), i+1).map(r=>r.value);
     const avg = window.reduce((s,v)=>s+v,0)/window.length;
@@ -43,7 +56,8 @@ function mergeDatasets(historical, recent) {
     meta: {
       ...meta,
       dataset_start: records[0]?.timestamp || meta.dataset_start || null,
-      dataset_end: records[records.length - 1]?.timestamp || meta.dataset_end || null,
+      dataset_end: validRecords[validRecords.length - 1]?.timestamp || records[records.length - 1]?.timestamp || meta.dataset_end || null,
+      latest_valid_timestamp: validRecords[validRecords.length - 1]?.timestamp || null,
       record_count: records.length,
       annual_stats: {
         min: values[0],
@@ -81,6 +95,7 @@ const els = {
   modeButtons: document.querySelectorAll('.mode-btn'),
   presetButtons: document.querySelectorAll('.preset-btn'),
   shiftButtons: document.querySelectorAll('.shift-btn'),
+  todayButton: document.getElementById('todayButton'),
   rangeMin: document.getElementById('rangeMin'),
   rangeMean: document.getElementById('rangeMean'),
   rangeMax: document.getElementById('rangeMax'),
@@ -108,7 +123,8 @@ async function init() {
 
   const records = rawData.records;
   const firstDate = records[0].timestamp.slice(0, 10);
-  const lastDate = records[records.length - 1].timestamp.slice(0, 10);
+  const latestValid = getLatestOverallValid();
+  const lastDate = latestValid ? latestValid.timestamp.slice(0, 10) : records[records.length - 1].timestamp.slice(0, 10);
 
   els.startDate.min = firstDate;
   els.startDate.max = lastDate;
@@ -157,11 +173,20 @@ function bindEvents() {
 
   els.shiftButtons.forEach(btn => {
     btn.addEventListener('click', () => {
+      if (btn.id === 'todayButton') return;
       shiftRange(btn.dataset.shiftUnit, Number(btn.dataset.shiftAmount));
       clearActivePreset();
       render();
     });
   });
+
+  if (els.todayButton) {
+    els.todayButton.addEventListener('click', () => {
+      shiftRangeToToday();
+      clearActivePreset();
+      render();
+    });
+  }
 }
 
 function clearActivePreset() {
@@ -175,7 +200,8 @@ function setActivePreset(value) {
 function ensureDateInputs() {
   const records = rawData.records;
   const firstDate = records[0].timestamp.slice(0, 10);
-  const lastDate = records[records.length - 1].timestamp.slice(0, 10);
+  const latestValid = getLatestOverallValid();
+  const lastDate = latestValid ? latestValid.timestamp.slice(0, 10) : records[records.length - 1].timestamp.slice(0, 10);
 
   if (!els.startDate.value) els.startDate.value = firstDate;
   if (!els.endDate.value) els.endDate.value = lastDate;
@@ -191,7 +217,8 @@ function ensureDateInputs() {
 
 function setPresetRange(days) {
   const records = rawData.records;
-  const lastTs = new Date(records[records.length - 1].timestamp);
+  const latestValid = getLatestOverallValid();
+  const lastTs = latestValid ? new Date(latestValid.timestamp) : new Date(records[records.length - 1].timestamp);
   const firstTs = new Date(records[0].timestamp);
   if (days === 'all') {
     els.startDate.value = records[0].timestamp.slice(0, 10);
@@ -224,7 +251,8 @@ function shiftRange(unit, amount) {
   ensureDateInputs();
   const records = rawData.records;
   const minDate = new Date(`${records[0].timestamp.slice(0, 10)}T00:00:00`);
-  const maxDate = new Date(`${records[records.length - 1].timestamp.slice(0, 10)}T00:00:00`);
+  const latestValid = getLatestOverallValid();
+  const maxDate = new Date(`${(latestValid ? latestValid.timestamp.slice(0, 10) : records[records.length - 1].timestamp.slice(0, 10))}T00:00:00`);
   let start = new Date(`${els.startDate.value}T00:00:00`);
   let end = new Date(`${els.endDate.value}T00:00:00`);
 
@@ -259,6 +287,25 @@ function shiftRange(unit, amount) {
   els.endDate.value = toDateInput(newEnd);
 }
 
+function shiftRangeToToday() {
+  ensureDateInputs();
+  const latestValid = getLatestOverallValid();
+  if (!latestValid) return;
+
+  const currentStart = new Date(`${els.startDate.value}T00:00:00`);
+  const currentEnd = new Date(`${els.endDate.value}T00:00:00`);
+  const spanDays = Math.max(1, Math.round((currentEnd - currentStart) / (24 * 3600 * 1000)) + 1);
+  const end = new Date(`${latestValid.timestamp.slice(0, 10)}T00:00:00`);
+  const start = new Date(end);
+  start.setDate(start.getDate() - (spanDays - 1));
+
+  const minDate = new Date(`${rawData.records[0].timestamp.slice(0, 10)}T00:00:00`);
+  if (start < minDate) start.setTime(minDate.getTime());
+
+  els.startDate.value = toDateInput(start);
+  els.endDate.value = toDateInput(end);
+}
+
 function getRangeRecords() {
   ensureDateInputs();
 
@@ -268,9 +315,10 @@ function getRangeRecords() {
   if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) {
     const records = rawData.records;
     start = new Date(`${records[0].timestamp.slice(0, 10)}T00:00:00`);
-    end = new Date(`${records[records.length - 1].timestamp.slice(0, 10)}T23:59:59`);
+    const latestValid = getLatestOverallValid();
+    end = new Date(`${(latestValid ? latestValid.timestamp.slice(0, 10) : records[records.length - 1].timestamp.slice(0, 10))}T23:59:59`);
     els.startDate.value = records[0].timestamp.slice(0, 10);
-    els.endDate.value = records[records.length - 1].timestamp.slice(0, 10);
+    els.endDate.value = (latestValid ? latestValid.timestamp.slice(0, 10) : records[records.length - 1].timestamp.slice(0, 10));
   }
 
   if (start > end) {
@@ -279,14 +327,18 @@ function getRangeRecords() {
     els.endDate.value = toDateInput(end);
   }
 
+  const latestValid = getLatestOverallValid();
+  const latestTs = latestValid ? new Date(latestValid.timestamp) : null;
+
   return rawData.records.filter(r => {
     const t = new Date(r.timestamp);
+    if (latestTs && t > latestTs) return false;
     return t >= start && t <= end;
   });
 }
 
 function validValues(records) {
-  return records.filter(r => isValidLevelValue(r.value));
+  return records.filter(r => isDrawableRecord(r));
 }
 
 function mean(values) {
@@ -448,7 +500,7 @@ function render() {
   els.statusCurrentLevel.textContent = latest ? formatLevel(latest.value) : '-';
   els.statusMode.textContent = currentMode === 'A' ? 'A 全期間分布基準' : 'B 直近7日平均との差';
 
-  const dataSeries = records.map(r => ({ x: r.timestamp, y: r.value }));
+  const dataSeries = records.map(r => ({ x: r.timestamp, y: isDrawableRecord(r) ? r.value : null }));
   const annualMean = rawData.meta.annual_stats.mean;
   const annualP90 = rawData.meta.annual_stats.p90;
 
