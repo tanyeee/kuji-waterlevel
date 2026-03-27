@@ -11,12 +11,17 @@ async function fetchJson(url, optional = false) {
   }
 }
 
+
+function isValidLevelValue(v) {
+  return typeof v === "number" && Number.isFinite(v) && v > -9999;
+}
+
 function mergeDatasets(historical, recent) {
   const map = new Map();
   for (const r of historical.records || []) map.set(r.timestamp, r);
   for (const r of recent.records || []) map.set(r.timestamp, r);
   const records = [...map.values()].sort((a, b) => a.timestamp.localeCompare(b.timestamp));
-  const values = records.filter(r => typeof r.value === 'number').map(r => r.value).sort((a,b)=>a-b);
+  const values = records.filter(r => isValidLevelValue(r.value)).map(r => r.value).sort((a,b)=>a-b);
   const p = (arr, q) => {
     if (!arr.length) return null;
     const idx = (arr.length - 1) * q;
@@ -26,7 +31,7 @@ function mergeDatasets(historical, recent) {
   };
   const mean = values.reduce((s,v)=>s+v,0) / values.length;
   const diffs = [];
-  const byTs = records.filter(r => typeof r.value === 'number');
+  const byTs = records.filter(r => isValidLevelValue(r.value));
   for (let i = 24*7-1; i < byTs.length; i++) {
     const window = byTs.slice(i-(24*7-1), i+1).map(r=>r.value);
     const avg = window.reduce((s,v)=>s+v,0)/window.length;
@@ -281,7 +286,7 @@ function getRangeRecords() {
 }
 
 function validValues(records) {
-  return records.filter(r => typeof r.value === 'number');
+  return records.filter(r => isValidLevelValue(r.value));
 }
 
 function mean(values) {
@@ -306,7 +311,7 @@ function getLast7DaysAverage(referenceTimestamp) {
   const ref = new Date(referenceTimestamp).getTime();
   const start = ref - (24 * 7 - 1) * 3600 * 1000;
   const values = rawData.records
-    .filter(r => typeof r.value === 'number')
+    .filter(r => isValidLevelValue(r.value))
     .filter(r => {
       const t = new Date(r.timestamp).getTime();
       return t >= start && t <= ref;
