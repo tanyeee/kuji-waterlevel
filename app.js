@@ -31,29 +31,40 @@ const els = {
 };
 
 async function init() {
-  const response = await fetch('./data/water_level_kuji_nukada_2025_2026.json');
+  const response = await fetch('./data/water_level_kuji_nukada_2025_2026.json', { cache: 'no-cache' });
   rawData = await response.json();
 
   const records = rawData.records;
   const firstDate = records[0].timestamp.slice(0, 10);
   const lastDate = records[records.length - 1].timestamp.slice(0, 10);
 
-  els.startDate.value = firstDate;
-  els.endDate.value = lastDate;
   els.startDate.min = firstDate;
   els.startDate.max = lastDate;
   els.endDate.min = firstDate;
   els.endDate.max = lastDate;
+  els.startDate.value = firstDate;
+  els.endDate.value = lastDate;
+  setActivePreset('365');
 
   populateAnnualStats();
   bindEvents();
-  render();
+
+  // モバイルブラウザで type=date の値反映やレイアウト確定が遅れることがあるため、
+  // 1フレーム待ってから初回描画します。
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      ensureDateInputs();
+      render();
+    });
+  });
 }
 
 function bindEvents() {
   els.applyButton.addEventListener('click', () => render());
   els.toggleRangeLines.addEventListener('change', () => render());
   els.toggleAnnualLines.addEventListener('change', () => render());
+  els.startDate.addEventListener('change', () => clearActivePreset());
+  els.endDate.addEventListener('change', () => clearActivePreset());
 
   els.modeButtons.forEach(btn => {
     btn.addEventListener('click', () => {
@@ -72,8 +83,29 @@ function bindEvents() {
   });
 }
 
+function clearActivePreset() {
+  els.presetButtons.forEach(btn => btn.classList.remove('active'));
+}
+
 function setActivePreset(value) {
   els.presetButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.days === value));
+}
+
+function ensureDateInputs() {
+  const records = rawData.records;
+  const firstDate = records[0].timestamp.slice(0, 10);
+  const lastDate = records[records.length - 1].timestamp.slice(0, 10);
+
+  if (!els.startDate.value) els.startDate.value = firstDate;
+  if (!els.endDate.value) els.endDate.value = lastDate;
+
+  // 稀に min/max 設定との兼ね合いで空になる端末向けの保険
+  if (els.startDate.value < firstDate || els.startDate.value > lastDate) {
+    els.startDate.value = firstDate;
+  }
+  if (els.endDate.value < firstDate || els.endDate.value > lastDate) {
+    els.endDate.value = lastDate;
+  }
 }
 
 function setPresetRange(days) {
@@ -101,8 +133,18 @@ function toDateInput(date) {
 }
 
 function getRangeRecords() {
+  ensureDateInputs();
+
   let start = new Date(`${els.startDate.value}T00:00:00`);
   let end = new Date(`${els.endDate.value}T23:59:59`);
+
+  if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) {
+    const records = rawData.records;
+    start = new Date(`${records[0].timestamp.slice(0, 10)}T00:00:00`);
+    end = new Date(`${records[records.length - 1].timestamp.slice(0, 10)}T23:59:59`);
+    els.startDate.value = records[0].timestamp.slice(0, 10);
+    els.endDate.value = records[records.length - 1].timestamp.slice(0, 10);
+  }
 
   if (start > end) {
     [start, end] = [end, start];
@@ -124,23 +166,13 @@ function mean(values) {
   return values.reduce((a, b) => a + b, 0) / values.length;
 }
 
-function percentile(sortedValues, p) {
-  if (!sortedValues.length) return null;
-  const idx = (sortedValues.length - 1) * p;
-  const lo = Math.floor(idx);
-  const hi = Math.ceil(idx);
-  if (lo === hi) return sortedValues[lo];
-  const frac = idx - lo;
-  return sortedValues[lo] * (1 - frac) + sortedValues[hi] * frac;
-}
-
 function formatLevel(value) {
   return `${fmt.format(value)} m`;
 }
 
 function formatDateTime(ts) {
   const d = new Date(ts);
-  return `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:00`;
+  return `${d.getFullYear()}/${String(d.getMonth() + 1).padStart(2, '0')}/${String(d.getDate()).padStart(2, '0')} ${String(d.getHours()).padStart(2, '0')}:00`;
 }
 
 function getLatestValid(records) {
@@ -168,8 +200,7 @@ function evaluateStatus(latestRecord) {
     return {
       label: '判定不可',
       cssClass: 'neutral',
-      description: '選択期間に有効なデータがありません。',
-      detail: '-'
+      description: '選択期間に有効なデータがありません。'
     };
   }
 
@@ -259,9 +290,18 @@ function buildLineSeries(records, yValue) {
 }
 
 function render() {
+  if (!rawData || !rawData.records || !rawData.records.length) {
+    return;
+  }
+
   const records = getRangeRecords();
   const valid = validValues(records);
-  if (!valid.length) return;
+  if (!valid.length) {
+    els.statusBadge.textContent = '判定不可';
+    els.statusBadge.className = 'status-badge neutral';
+    els.statusDescription.textContent = 'この期間には有効なデータがありません。';
+    return;
+  }
 
   const values = valid.map(r => r.value);
   const minValue = Math.min(...values);
@@ -356,6 +396,7 @@ function render() {
     chart.data.datasets = datasets;
     chart.options.scales.x.min = records[0].timestamp;
     chart.options.scales.x.max = records[records.length - 1].timestamp;
+    chart.options.scales.x.time.unit = chooseTimeUnit(records.length);
     chart.options.scales.y.min = yMin;
     chart.options.scales.y.max = yMax;
     chart.update();
@@ -434,8 +475,11 @@ function chooseTimeUnit(length) {
   return 'month';
 }
 
-init().catch(err => {
-  console.error(err);
-  els.statusBadge.textContent = '読み込み失敗';
-  els.statusDescription.textContent = 'データまたはスクリプトの読み込みに失敗しました。';
+window.addEventListener('load', () => {
+  init().catch(err => {
+    console.error(err);
+    els.statusBadge.textContent = '読み込み失敗';
+    els.statusBadge.className = 'status-badge neutral';
+    els.statusDescription.textContent = 'データまたはスクリプトの読み込みに失敗しました。';
+  });
 });
