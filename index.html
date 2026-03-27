@@ -16,11 +16,22 @@
         <h1>久慈川 額田 水位ビューア</h1>
         <p class="subtext">1年分の時刻水位データを表示し、期間ごとの最低・平均・最高や増水傾向を確認できます。</p>
       </div>
-      <div class="hero-badge">
-        <span>初期表示</span>
-        <strong>1年分</strong>
-      </div>
     </header>
+
+    <section class="panel chart-panel">
+      <div class="chart-header">
+        <div>
+          <div class="panel-title">水位グラフ</div>
+          <p id="rangeLabel" class="chart-subtext"></p>
+        </div>
+        <div class="legend-note">
+          実線: 水位 / 破線・点線は下の表示設定でオンオフできます
+        </div>
+      </div>
+      <div class="chart-wrap">
+        <canvas id="waterLevelChart"></canvas>
+      </div>
+    </section>
 
     <section class="controls panel">
       <div class="control-grid">
@@ -43,7 +54,6 @@
           <span>表示操作</span>
           <div class="action-row">
             <button type="button" id="applyButton" class="primary">グラフ更新</button>
-            <button type="button" id="resetButton">1年表示に戻す</button>
           </div>
         </div>
       </div>
@@ -54,8 +64,16 @@
         <button type="button" class="preset-btn" data-days="7">7日</button>
         <button type="button" class="preset-btn" data-days="30">30日</button>
         <button type="button" class="preset-btn" data-days="90">90日</button>
+        <button type="button" class="preset-btn" data-days="120">120日</button>
+        <button type="button" class="preset-btn" data-days="183">半年</button>
         <button type="button" class="preset-btn" data-days="365">1年</button>
         <button type="button" class="preset-btn" data-days="all">全期間</button>
+      </div>
+
+      <div class="toggle-row">
+        <span class="preset-label">表示設定</span>
+        <label class="toggle-chip"><input type="checkbox" id="toggleRangeLines" checked /> 選択期間の破線</label>
+        <label class="toggle-chip"><input type="checkbox" id="toggleAnnualLines" checked /> 年間基準線</label>
       </div>
     </section>
 
@@ -115,21 +133,6 @@
           </div>
         </div>
       </article>
-    </section>
-
-    <section class="panel chart-panel">
-      <div class="chart-header">
-        <div>
-          <div class="panel-title">水位グラフ</div>
-          <p id="rangeLabel" class="chart-subtext"></p>
-        </div>
-        <div class="legend-note">
-          実線: 水位 / 破線: 選択期間の最低・平均・最高 / 点線: 年間平均・年間90%
-        </div>
-      </div>
-      <div class="chart-wrap">
-        <canvas id="waterLevelChart"></canvas>
-      </div>
     </section>
 
     <section class="panel footnote">

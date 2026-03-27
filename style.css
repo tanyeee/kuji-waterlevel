@@ -57,23 +57,7 @@ h1{
   color:var(--muted);
   line-height:1.6;
 }
-.hero-badge{
-  min-width:110px;
-  align-self:flex-start;
-  text-align:center;
-  background:linear-gradient(180deg, rgba(79,179,255,.18), rgba(79,179,255,.06));
-  border:1px solid rgba(79,179,255,.28);
-  border-radius:18px;
-  padding:14px 12px;
-}
-.hero-badge span{
-  display:block;
-  color:var(--muted);
-  font-size:.78rem;
-  margin-bottom:4px;
-}
-.hero-badge strong{font-size:1.2rem}
-.controls{padding:18px; margin-bottom:16px}
+.controls{padding:18px; margin:16px 0}
 .control-grid{
   display:grid;
   grid-template-columns:repeat(4, minmax(0,1fr));
@@ -107,7 +91,7 @@ button.primary{
   color:#04111d;
   font-weight:700;
 }
-.action-row,.segmented,.preset-row{
+.action-row,.segmented,.preset-row,.toggle-row{
   display:flex;
   flex-wrap:wrap;
   gap:8px;
@@ -116,7 +100,7 @@ button.primary{
   background:rgba(79,179,255,.18);
   border-color:rgba(79,179,255,.42);
 }
-.preset-row{
+.preset-row,.toggle-row{
   margin-top:14px;
   align-items:center;
 }
@@ -124,6 +108,20 @@ button.primary{
   color:var(--muted);
   font-size:.88rem;
   margin-right:2px;
+}
+.toggle-chip{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:10px 12px;
+  border-radius:999px;
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(130,177,222,.16);
+  color:var(--text);
+  font-size:.92rem;
+}
+.toggle-chip input{
+  accent-color: var(--accent);
 }
 .summary-grid{
   display:grid;
@@ -150,6 +148,11 @@ button.primary{
   background:rgba(79,179,255,.14);
   border:1px solid rgba(79,179,255,.28);
 }
+.status-badge.ok{background:rgba(99,214,255,.14); border-color:rgba(99,214,255,.35)}
+.status-badge.warn{background:rgba(255,209,102,.14); border-color:rgba(255,209,102,.35)}
+.status-badge.high{background:rgba(255,140,105,.14); border-color:rgba(255,140,105,.35)}
+.status-badge.top{background:rgba(255,94,120,.14); border-color:rgba(255,94,120,.35)}
+.status-badge.neutral{background:rgba(200,215,230,.12); border-color:rgba(200,215,230,.28)}
 .status-description{
   color:var(--muted);
   line-height:1.6;
@@ -226,15 +229,21 @@ button.primary{
   .control-grid, .summary-grid, .stats-grid{
     grid-template-columns:1fr;
   }
+  .panel{padding:16px}
   .chart-header{
     flex-direction:column;
     align-items:flex-start;
   }
   .chart-wrap{
-    height:46vh;
+    height:48vh;
     min-height:300px;
   }
-  h1{
-    font-size:1.55rem;
+  button, input[type="date"]{
+    width:100%;
+  }
+  .preset-row .preset-btn,
+  .segmented .mode-btn{
+    width:auto;
+    flex:1 1 calc(50% - 8px);
   }
 }

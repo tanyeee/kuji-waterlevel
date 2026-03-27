@@ -9,7 +9,8 @@ const els = {
   startDate: document.getElementById('startDate'),
   endDate: document.getElementById('endDate'),
   applyButton: document.getElementById('applyButton'),
-  resetButton: document.getElementById('resetButton'),
+  toggleRangeLines: document.getElementById('toggleRangeLines'),
+  toggleAnnualLines: document.getElementById('toggleAnnualLines'),
   modeButtons: document.querySelectorAll('.mode-btn'),
   presetButtons: document.querySelectorAll('.preset-btn'),
   rangeMin: document.getElementById('rangeMin'),
@@ -51,13 +52,8 @@ async function init() {
 
 function bindEvents() {
   els.applyButton.addEventListener('click', () => render());
-  els.resetButton.addEventListener('click', () => {
-    const records = rawData.records;
-    els.startDate.value = records[0].timestamp.slice(0, 10);
-    els.endDate.value = records[records.length - 1].timestamp.slice(0, 10);
-    setActivePreset('365');
-    render();
-  });
+  els.toggleRangeLines.addEventListener('change', () => render());
+  els.toggleAnnualLines.addEventListener('change', () => render());
 
   els.modeButtons.forEach(btn => {
     btn.addEventListener('click', () => {
@@ -303,48 +299,58 @@ function render() {
       pointRadius: 0,
       spanGaps: false,
       tension: 0.15
-    },
-    {
-      label: '選択期間 最低',
-      data: buildLineSeries(records, minValue),
-      borderColor: '#7ee0ff',
-      borderDash: [8, 6],
-      borderWidth: 1.4,
-      pointRadius: 0
-    },
-    {
-      label: '選択期間 平均',
-      data: buildLineSeries(records, meanValue),
-      borderColor: '#ffd166',
-      borderDash: [8, 6],
-      borderWidth: 1.4,
-      pointRadius: 0
-    },
-    {
-      label: '選択期間 最高',
-      data: buildLineSeries(records, maxValue),
-      borderColor: '#ff7f6a',
-      borderDash: [8, 6],
-      borderWidth: 1.4,
-      pointRadius: 0
-    },
-    {
-      label: '年間平均',
-      data: buildLineSeries(records, annualMean),
-      borderColor: 'rgba(190,220,255,.72)',
-      borderDash: [3, 6],
-      borderWidth: 1.1,
-      pointRadius: 0
-    },
-    {
-      label: '年間90%',
-      data: buildLineSeries(records, annualP90),
-      borderColor: 'rgba(255,94,120,.8)',
-      borderDash: [3, 6],
-      borderWidth: 1.1,
-      pointRadius: 0
     }
   ];
+
+  if (els.toggleRangeLines.checked) {
+    datasets.push(
+      {
+        label: '選択期間 最低',
+        data: buildLineSeries(records, minValue),
+        borderColor: '#7ee0ff',
+        borderDash: [8, 6],
+        borderWidth: 1.4,
+        pointRadius: 0
+      },
+      {
+        label: '選択期間 平均',
+        data: buildLineSeries(records, meanValue),
+        borderColor: '#ffd166',
+        borderDash: [8, 6],
+        borderWidth: 1.4,
+        pointRadius: 0
+      },
+      {
+        label: '選択期間 最高',
+        data: buildLineSeries(records, maxValue),
+        borderColor: '#ff7f6a',
+        borderDash: [8, 6],
+        borderWidth: 1.4,
+        pointRadius: 0
+      }
+    );
+  }
+
+  if (els.toggleAnnualLines.checked) {
+    datasets.push(
+      {
+        label: '年間平均',
+        data: buildLineSeries(records, annualMean),
+        borderColor: 'rgba(190,220,255,.72)',
+        borderDash: [3, 6],
+        borderWidth: 1.1,
+        pointRadius: 0
+      },
+      {
+        label: '年間90%',
+        data: buildLineSeries(records, annualP90),
+        borderColor: 'rgba(255,94,120,.8)',
+        borderDash: [3, 6],
+        borderWidth: 1.1,
+        pointRadius: 0
+      }
+    );
+  }
 
   if (chart) {
     chart.data.datasets = datasets;
