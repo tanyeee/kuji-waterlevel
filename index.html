@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>久慈川 額田 水位ビューア</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">Kujigawa Water Level</p>
+        <h1>久慈川 額田 水位ビューア</h1>
+        <p class="subtext">1年分の時刻水位データを表示し、期間ごとの最低・平均・最高や増水傾向を確認できます。</p>
+      </div>
+      <div class="hero-badge">
+        <span>初期表示</span>
+        <strong>1年分</strong>
+      </div>
+    </header>
+
+    <section class="controls panel">
+      <div class="control-grid">
+        <label class="field">
+          <span>開始日</span>
+          <input type="date" id="startDate" />
+        </label>
+        <label class="field">
+          <span>終了日</span>
+          <input type="date" id="endDate" />
+        </label>
+        <div class="field">
+          <span>増水判定モード</span>
+          <div class="segmented">
+            <button type="button" class="mode-btn active" data-mode="A">A 年間分布基準</button>
+            <button type="button" class="mode-btn" data-mode="B">B 直近7日平均との差</button>
+          </div>
+        </div>
+        <div class="field">
+          <span>表示操作</span>
+          <div class="action-row">
+            <button type="button" id="applyButton" class="primary">グラフ更新</button>
+            <button type="button" id="resetButton">1年表示に戻す</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="preset-row">
+        <span class="preset-label">プリセット</span>
+        <button type="button" class="preset-btn" data-days="1">1日</button>
+        <button type="button" class="preset-btn" data-days="7">7日</button>
+        <button type="button" class="preset-btn" data-days="30">30日</button>
+        <button type="button" class="preset-btn" data-days="90">90日</button>
+        <button type="button" class="preset-btn" data-days="365">1年</button>
+        <button type="button" class="preset-btn" data-days="all">全期間</button>
+      </div>
+    </section>
+
+    <section class="summary-grid">
+      <article class="panel emphasis">
+        <div class="panel-title">現在の判定</div>
+        <div id="statusBadge" class="status-badge">読み込み中</div>
+        <p id="statusDescription" class="status-description"></p>
+        <dl class="status-meta">
+          <div><dt>判定時点</dt><dd id="statusTimestamp">-</dd></div>
+          <div><dt>現在水位</dt><dd id="statusCurrentLevel">-</dd></div>
+          <div><dt>判定方式</dt><dd id="statusMode">-</dd></div>
+        </dl>
+      </article>
+
+      <article class="panel">
+        <div class="panel-title">選択期間の統計</div>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <span>最低</span><strong id="rangeMin">-</strong>
+          </div>
+          <div class="stat-card">
+            <span>平均</span><strong id="rangeMean">-</strong>
+          </div>
+          <div class="stat-card">
+            <span>最高</span><strong id="rangeMax">-</strong>
+          </div>
+        </div>
+      </article>
+
+      <article class="panel">
+        <div class="panel-title">年間全体の統計</div>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <span>年間最低</span><strong id="annualMin">-</strong>
+          </div>
+          <div class="stat-card">
+            <span>年間平均</span><strong id="annualMean">-</strong>
+          </div>
+          <div class="stat-card">
+            <span>年間最高</span><strong id="annualMax">-</strong>
+          </div>
+        </div>
+      </article>
+
+      <article class="panel">
+        <div class="panel-title">基準線</div>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <span>年間90%</span><strong id="annualP90">-</strong>
+          </div>
+          <div class="stat-card">
+            <span>年間95%</span><strong id="annualP95">-</strong>
+          </div>
+          <div class="stat-card">
+            <span>Bモード 増水目安</span><strong id="bThreshold">-</strong>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="panel chart-panel">
+      <div class="chart-header">
+        <div>
+          <div class="panel-title">水位グラフ</div>
+          <p id="rangeLabel" class="chart-subtext"></p>
+        </div>
+        <div class="legend-note">
+          実線: 水位 / 破線: 選択期間の最低・平均・最高 / 点線: 年間平均・年間90%
+        </div>
+      </div>
+      <div class="chart-wrap">
+        <canvas id="waterLevelChart"></canvas>
+      </div>
+    </section>
+
+    <section class="panel footnote">
+      <div class="panel-title">データの扱い</div>
+      <ul>
+        <li>$、#、- は欠損として扱い、線をつなげていません。</li>
+        <li>* は暫定値ですが有効値として扱っています。</li>
+        <li>Bモードは、判定時点の水位と直近7日平均の差で評価しています。</li>
+      </ul>
+    </section>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
