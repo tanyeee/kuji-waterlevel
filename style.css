@@ -249,3 +249,9 @@ button.primary{
     flex:1 1 calc(50% - 8px);
   }
 }
+
+.data-source-note {
+  margin: 0 0 10px;
+  color: #9bb4cc;
+  font-size: 0.95rem;
+}

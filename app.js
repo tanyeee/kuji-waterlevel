@@ -1,3 +1,65 @@
+async function fetchJson(url, optional = false) {
+  try {
+    const response = await fetch(url, { cache: 'no-cache' });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    return await response.json();
+  } catch (err) {
+    if (optional) {
+      return { meta: { source: 'optional-empty', record_count: 0 }, records: [] };
+    }
+    throw err;
+  }
+}
+
+function mergeDatasets(historical, recent) {
+  const map = new Map();
+  for (const r of historical.records || []) map.set(r.timestamp, r);
+  for (const r of recent.records || []) map.set(r.timestamp, r);
+  const records = [...map.values()].sort((a, b) => a.timestamp.localeCompare(b.timestamp));
+  const values = records.filter(r => typeof r.value === 'number').map(r => r.value).sort((a,b)=>a-b);
+  const p = (arr, q) => {
+    if (!arr.length) return null;
+    const idx = (arr.length - 1) * q;
+    const lo = Math.floor(idx), hi = Math.ceil(idx);
+    if (lo === hi) return arr[lo];
+    return arr[lo] + (arr[hi] - arr[lo]) * (idx - lo);
+  };
+  const mean = values.reduce((s,v)=>s+v,0) / values.length;
+  const diffs = [];
+  const byTs = records.filter(r => typeof r.value === 'number');
+  for (let i = 24*7-1; i < byTs.length; i++) {
+    const window = byTs.slice(i-(24*7-1), i+1).map(r=>r.value);
+    const avg = window.reduce((s,v)=>s+v,0)/window.length;
+    diffs.push(byTs[i].value - avg);
+  }
+  diffs.sort((a,b)=>a-b);
+  const meta = historical.meta || {};
+  return {
+    meta: {
+      ...meta,
+      dataset_start: records[0]?.timestamp || meta.dataset_start || null,
+      dataset_end: records[records.length - 1]?.timestamp || meta.dataset_end || null,
+      record_count: records.length,
+      annual_stats: {
+        min: values[0],
+        mean,
+        max: values[values.length - 1],
+        p90: p(values, 0.9),
+        p95: p(values, 0.95)
+      },
+      rise_mode_b_thresholds: {
+        moderate: p(diffs, 0.9) ?? meta.rise_mode_b_thresholds?.moderate ?? 0.12,
+        high: p(diffs, 0.95) ?? meta.rise_mode_b_thresholds?.high ?? 0.26
+      },
+      notes: [
+        ...(meta.notes || []),
+        'recent_hourly.json がある場合は同一時刻を上書きし、長期履歴と統合表示します。'
+      ]
+    },
+    records
+  };
+}
+
 let rawData = null;
 let chart = null;
 let currentMode = 'A';
@@ -31,9 +93,13 @@ const els = {
   statusMode: document.getElementById('statusMode')
 };
 
+
 async function init() {
-  const response = await fetch('./data/water_level_kuji_nukada_2025_2026.json', { cache: 'no-cache' });
-  rawData = await response.json();
+  const [historical, recent] = await Promise.all([
+    fetchJson('./data/historical_hourly.json'),
+    fetchJson('./data/recent_hourly.json', true)
+  ]);
+  rawData = mergeDatasets(historical, recent);
 
   const records = rawData.records;
   const firstDate = records[0].timestamp.slice(0, 10);
