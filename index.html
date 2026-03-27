@@ -14,7 +14,7 @@
       <div>
         <p class="eyebrow">Kujigawa Water Level</p>
         <h1>久慈川 額田 水位ビューア</h1>
-        <p class="subtext">1年分の時刻水位データを表示し、期間ごとの最低・平均・最高や増水傾向を確認できます。</p>
+        <p class="subtext">2016年からの履歴データを表示し、期間ごとの最低・平均・最高や増水傾向を確認できます。</p>
       </div>
     </header>
 
@@ -46,7 +46,7 @@
         <div class="field">
           <span>増水判定モード</span>
           <div class="segmented">
-            <button type="button" class="mode-btn active" data-mode="A">A 年間分布基準</button>
+            <button type="button" class="mode-btn active" data-mode="A">A 全期間分布基準</button>
             <button type="button" class="mode-btn" data-mode="B">B 直近7日平均との差</button>
           </div>
         </div>
@@ -73,7 +73,7 @@
       <div class="toggle-row">
         <span class="preset-label">表示設定</span>
         <label class="toggle-chip"><input type="checkbox" id="toggleRangeLines" checked /> 選択期間の破線</label>
-        <label class="toggle-chip"><input type="checkbox" id="toggleAnnualLines" checked /> 年間基準線</label>
+        <label class="toggle-chip"><input type="checkbox" id="toggleAnnualLines" checked /> 全期間基準線</label>
       </div>
     </section>
 
@@ -105,16 +105,16 @@
       </article>
 
       <article class="panel">
-        <div class="panel-title">年間全体の統計</div>
+        <div class="panel-title">全期間の統計</div>
         <div class="stats-grid">
           <div class="stat-card">
-            <span>年間最低</span><strong id="annualMin">-</strong>
+            <span>全期間最低</span><strong id="annualMin">-</strong>
           </div>
           <div class="stat-card">
-            <span>年間平均</span><strong id="annualMean">-</strong>
+            <span>全期間平均</span><strong id="annualMean">-</strong>
           </div>
           <div class="stat-card">
-            <span>年間最高</span><strong id="annualMax">-</strong>
+            <span>全期間最高</span><strong id="annualMax">-</strong>
           </div>
         </div>
       </article>
@@ -123,10 +123,10 @@
         <div class="panel-title">基準線</div>
         <div class="stats-grid">
           <div class="stat-card">
-            <span>年間90%</span><strong id="annualP90">-</strong>
+            <span>全期間90%</span><strong id="annualP90">-</strong>
           </div>
           <div class="stat-card">
-            <span>年間95%</span><strong id="annualP95">-</strong>
+            <span>全期間95%</span><strong id="annualP95">-</strong>
           </div>
           <div class="stat-card">
             <span>Bモード 増水目安</span><strong id="bThreshold">-</strong>

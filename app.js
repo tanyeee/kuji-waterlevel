@@ -44,7 +44,8 @@ async function init() {
   els.endDate.max = lastDate;
   els.startDate.value = firstDate;
   els.endDate.value = lastDate;
-  setActivePreset('365');
+  setPresetRange('183');
+  setActivePreset('183');
 
   populateAnnualStats();
   bindEvents();
@@ -319,7 +320,7 @@ function render() {
   els.statusDescription.textContent = status.description;
   els.statusTimestamp.textContent = latest ? formatDateTime(latest.timestamp) : '-';
   els.statusCurrentLevel.textContent = latest ? formatLevel(latest.value) : '-';
-  els.statusMode.textContent = currentMode === 'A' ? 'A 年間分布基準' : 'B 直近7日平均との差';
+  els.statusMode.textContent = currentMode === 'A' ? 'A 全期間分布基準' : 'B 直近7日平均との差';
 
   const dataSeries = records.map(r => ({ x: r.timestamp, y: r.value }));
   const annualMean = rawData.meta.annual_stats.mean;
