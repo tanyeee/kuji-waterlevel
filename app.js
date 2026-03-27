@@ -13,6 +13,7 @@ const els = {
   toggleAnnualLines: document.getElementById('toggleAnnualLines'),
   modeButtons: document.querySelectorAll('.mode-btn'),
   presetButtons: document.querySelectorAll('.preset-btn'),
+  shiftButtons: document.querySelectorAll('.shift-btn'),
   rangeMin: document.getElementById('rangeMin'),
   rangeMean: document.getElementById('rangeMean'),
   rangeMax: document.getElementById('rangeMax'),
@@ -44,7 +45,8 @@ async function init() {
   els.endDate.max = lastDate;
   els.startDate.value = firstDate;
   els.endDate.value = lastDate;
-  setActivePreset('365');
+  setPresetRange('183');
+  setActivePreset('183');
 
   populateAnnualStats();
   bindEvents();
@@ -81,6 +83,14 @@ function bindEvents() {
       render();
     });
   });
+
+  els.shiftButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      shiftRange(btn.dataset.shiftUnit, Number(btn.dataset.shiftAmount));
+      clearActivePreset();
+      render();
+    });
+  });
 }
 
 function clearActivePreset() {
@@ -112,7 +122,7 @@ function setPresetRange(days) {
   const records = rawData.records;
   const lastTs = new Date(records[records.length - 1].timestamp);
   const firstTs = new Date(records[0].timestamp);
-  if (days === 'all' || days === '365') {
+  if (days === 'all') {
     els.startDate.value = records[0].timestamp.slice(0, 10);
     els.endDate.value = records[records.length - 1].timestamp.slice(0, 10);
     return;
@@ -130,6 +140,52 @@ function toDateInput(date) {
   const m = String(date.getMonth() + 1).padStart(2, '0');
   const d = String(date.getDate()).padStart(2, '0');
   return `${y}-${m}-${d}`;
+}
+
+
+function clampDate(date, minDate, maxDate) {
+  if (date < minDate) return new Date(minDate);
+  if (date > maxDate) return new Date(maxDate);
+  return date;
+}
+
+function shiftRange(unit, amount) {
+  ensureDateInputs();
+  const records = rawData.records;
+  const minDate = new Date(`${records[0].timestamp.slice(0, 10)}T00:00:00`);
+  const maxDate = new Date(`${records[records.length - 1].timestamp.slice(0, 10)}T00:00:00`);
+  let start = new Date(`${els.startDate.value}T00:00:00`);
+  let end = new Date(`${els.endDate.value}T00:00:00`);
+
+  const shiftOne = (date) => {
+    const d = new Date(date);
+    if (unit === 'day') d.setDate(d.getDate() + amount);
+    if (unit === 'week') d.setDate(d.getDate() + amount * 7);
+    if (unit === 'month') d.setMonth(d.getMonth() + amount);
+    if (unit === 'year') d.setFullYear(d.getFullYear() + amount);
+    return d;
+  };
+
+  let newStart = shiftOne(start);
+  let newEnd = shiftOne(end);
+
+  if (newStart < minDate) {
+    const delta = minDate.getTime() - newStart.getTime();
+    newStart = new Date(minDate);
+    newEnd = new Date(newEnd.getTime() + delta);
+  }
+  if (newEnd > maxDate) {
+    const delta = newEnd.getTime() - maxDate.getTime();
+    newEnd = new Date(maxDate);
+    newStart = new Date(newStart.getTime() - delta);
+  }
+
+  newStart = clampDate(newStart, minDate, maxDate);
+  newEnd = clampDate(newEnd, minDate, maxDate);
+  if (newStart > newEnd) newStart = new Date(newEnd);
+
+  els.startDate.value = toDateInput(newStart);
+  els.endDate.value = toDateInput(newEnd);
 }
 
 function getRangeRecords() {
@@ -319,7 +375,7 @@ function render() {
   els.statusDescription.textContent = status.description;
   els.statusTimestamp.textContent = latest ? formatDateTime(latest.timestamp) : '-';
   els.statusCurrentLevel.textContent = latest ? formatLevel(latest.value) : '-';
-  els.statusMode.textContent = currentMode === 'A' ? 'A 年間分布基準' : 'B 直近7日平均との差';
+  els.statusMode.textContent = currentMode === 'A' ? 'A 全期間分布基準' : 'B 直近7日平均との差';
 
   const dataSeries = records.map(r => ({ x: r.timestamp, y: r.value }));
   const annualMean = rawData.meta.annual_stats.mean;
@@ -374,7 +430,7 @@ function render() {
   if (els.toggleAnnualLines.checked) {
     datasets.push(
       {
-        label: '年間平均',
+        label: '全期間平均',
         data: buildLineSeries(records, annualMean),
         borderColor: 'rgba(190,220,255,.72)',
         borderDash: [3, 6],
@@ -382,7 +438,7 @@ function render() {
         pointRadius: 0
       },
       {
-        label: '年間90%',
+        label: '全期間90%',
         data: buildLineSeries(records, annualP90),
         borderColor: 'rgba(255,94,120,.8)',
         borderDash: [3, 6],

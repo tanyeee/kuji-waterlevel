@@ -91,7 +91,7 @@ button.primary{
   color:#04111d;
   font-weight:700;
 }
-.action-row,.segmented,.preset-row,.toggle-row{
+.action-row,.segmented,.preset-row,.toggle-row,.shift-row{
   display:flex;
   flex-wrap:wrap;
   gap:8px;
@@ -100,7 +100,7 @@ button.primary{
   background:rgba(79,179,255,.18);
   border-color:rgba(79,179,255,.42);
 }
-.preset-row,.toggle-row{
+.preset-row,.toggle-row,.shift-row{
   margin-top:14px;
   align-items:center;
 }
@@ -184,7 +184,8 @@ button.primary{
   grid-template-columns:repeat(3,minmax(0,1fr));
   gap:10px;
 }
-.chart-panel{padding-bottom:12px}
+.chart-panel{padding-bottom:18px}
+.chart-toggle-row{margin-top:14px; padding-top:8px; border-top:1px solid rgba(130,177,222,.12);}
 .chart-header{
   display:flex;
   justify-content:space-between;
@@ -242,6 +243,7 @@ button.primary{
     width:100%;
   }
   .preset-row .preset-btn,
+  .shift-row .shift-btn,
   .segmented .mode-btn{
     width:auto;
     flex:1 1 calc(50% - 8px);
