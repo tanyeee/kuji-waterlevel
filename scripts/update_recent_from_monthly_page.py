@@ -84,9 +84,6 @@ def parse_monthly_dat(text: str) -> list[Record]:
             except ValueError:
                 records.append(Record(timestamp=ts, value=None, flag=flag or value_text))
                 continue
-            if flag in {"-", "$", "#"}:
-                records.append(Record(timestamp=ts, value=None, flag=flag))
-                continue
             if value <= -9999:
                 records.append(Record(timestamp=ts, value=None, flag=flag or 'missing'))
                 continue
