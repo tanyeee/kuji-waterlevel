@@ -124,8 +124,8 @@ async function init() {
   els.endDate.max = lastDate;
   els.startDate.value = firstDate;
   els.endDate.value = lastDate;
-  setPresetRange('183');
-  setActivePreset('183');
+  setPresetRange('7', { anchor: 'latest' });
+  setActivePreset('7');
 
   populateAnnualStats();
   bindEvents();
@@ -157,7 +157,7 @@ function bindEvents() {
 
   els.presetButtons.forEach(btn => {
     btn.addEventListener('click', () => {
-      setPresetRange(btn.dataset.days);
+      setPresetRange(btn.dataset.days, { anchor: 'current-start' });
       setActivePreset(btn.dataset.days);
       render();
     });
@@ -198,22 +198,38 @@ function ensureDateInputs() {
   }
 }
 
-function setPresetRange(days) {
+function setPresetRange(days, options = {}) {
   const records = rawData.records;
   const latestValid = getLatestValid(rawData.records);
-  const lastTs = new Date((latestValid || records[records.length - 1]).timestamp);
+  const latestTs = new Date((latestValid || records[records.length - 1]).timestamp);
   const firstTs = new Date(records[0].timestamp);
+  const anchor = options.anchor || 'current-start';
+
   if (days === 'all') {
     els.startDate.value = records[0].timestamp.slice(0, 10);
-    els.endDate.value = records[records.length - 1].timestamp.slice(0, 10);
+    els.endDate.value = toDateInput(latestTs);
     return;
   }
+
   const n = Number(days);
-  const start = new Date(lastTs);
-  start.setDate(start.getDate() - (n - 1));
-  if (start < firstTs) start.setTime(firstTs.getTime());
+  let start;
+  if (anchor === 'latest') {
+    start = new Date(latestTs);
+    start.setDate(start.getDate() - (n - 1));
+  } else {
+    ensureDateInputs();
+    start = new Date(`${els.startDate.value}T00:00:00`);
+  }
+
+  if (start < firstTs) start = new Date(firstTs);
+
+  const end = new Date(start);
+  end.setDate(end.getDate() + (n - 1));
+
+  const clampedEnd = end > latestTs ? new Date(latestTs) : end;
+
   els.startDate.value = toDateInput(start);
-  els.endDate.value = toDateInput(lastTs);
+  els.endDate.value = toDateInput(clampedEnd);
 }
 
 function toDateInput(date) {
