@@ -16,12 +16,19 @@ function isValidLevelValue(v) {
   return typeof v === "number" && Number.isFinite(v) && v > -9999;
 }
 
+function isRenderableRecord(record) {
+  if (!record) return false;
+  const invalidFlags = new Set(['-', '$', '#']);
+  if (invalidFlags.has(record.flag)) return false;
+  return isValidLevelValue(record.value);
+}
+
 function mergeDatasets(historical, recent) {
   const map = new Map();
   for (const r of historical.records || []) map.set(r.timestamp, r);
   for (const r of recent.records || []) map.set(r.timestamp, r);
   const records = [...map.values()].sort((a, b) => a.timestamp.localeCompare(b.timestamp));
-  const values = records.filter(r => isValidLevelValue(r.value)).map(r => r.value).sort((a,b)=>a-b);
+  const values = records.filter(r => isRenderableRecord(r)).map(r => r.value).sort((a,b)=>a-b);
   const p = (arr, q) => {
     if (!arr.length) return null;
     const idx = (arr.length - 1) * q;
@@ -31,7 +38,7 @@ function mergeDatasets(historical, recent) {
   };
   const mean = values.reduce((s,v)=>s+v,0) / values.length;
   const diffs = [];
-  const byTs = records.filter(r => isValidLevelValue(r.value));
+  const byTs = records.filter(r => isRenderableRecord(r));
   for (let i = 24*7-1; i < byTs.length; i++) {
     const window = byTs.slice(i-(24*7-1), i+1).map(r=>r.value);
     const avg = window.reduce((s,v)=>s+v,0)/window.length;
@@ -108,7 +115,8 @@ async function init() {
 
   const records = rawData.records;
   const firstDate = records[0].timestamp.slice(0, 10);
-  const lastDate = records[records.length - 1].timestamp.slice(0, 10);
+  const latestValid = getLatestValid(rawData.records);
+  const lastDate = (latestValid || records[records.length - 1]).timestamp.slice(0, 10);
 
   els.startDate.min = firstDate;
   els.startDate.max = lastDate;
@@ -175,7 +183,8 @@ function setActivePreset(value) {
 function ensureDateInputs() {
   const records = rawData.records;
   const firstDate = records[0].timestamp.slice(0, 10);
-  const lastDate = records[records.length - 1].timestamp.slice(0, 10);
+  const latestValid = getLatestValid(rawData.records);
+  const lastDate = (latestValid || records[records.length - 1]).timestamp.slice(0, 10);
 
   if (!els.startDate.value) els.startDate.value = firstDate;
   if (!els.endDate.value) els.endDate.value = lastDate;
@@ -191,7 +200,8 @@ function ensureDateInputs() {
 
 function setPresetRange(days) {
   const records = rawData.records;
-  const lastTs = new Date(records[records.length - 1].timestamp);
+  const latestValid = getLatestValid(rawData.records);
+  const lastTs = new Date((latestValid || records[records.length - 1]).timestamp);
   const firstTs = new Date(records[0].timestamp);
   if (days === 'all') {
     els.startDate.value = records[0].timestamp.slice(0, 10);
@@ -223,8 +233,9 @@ function clampDate(date, minDate, maxDate) {
 function shiftRange(unit, amount) {
   ensureDateInputs();
   const records = rawData.records;
+  const latestValid = getLatestValid(rawData.records);
   const minDate = new Date(`${records[0].timestamp.slice(0, 10)}T00:00:00`);
-  const maxDate = new Date(`${records[records.length - 1].timestamp.slice(0, 10)}T00:00:00`);
+  const maxDate = new Date(`${(latestValid || records[records.length - 1]).timestamp.slice(0, 10)}T00:00:00`);
   let start = new Date(`${els.startDate.value}T00:00:00`);
   let end = new Date(`${els.endDate.value}T00:00:00`);
 
@@ -267,10 +278,11 @@ function getRangeRecords() {
 
   if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) {
     const records = rawData.records;
+    const latestValid = getLatestValid(rawData.records);
     start = new Date(`${records[0].timestamp.slice(0, 10)}T00:00:00`);
-    end = new Date(`${records[records.length - 1].timestamp.slice(0, 10)}T23:59:59`);
+    end = new Date(`${(latestValid || records[records.length - 1]).timestamp.slice(0, 10)}T23:59:59`);
     els.startDate.value = records[0].timestamp.slice(0, 10);
-    els.endDate.value = records[records.length - 1].timestamp.slice(0, 10);
+    els.endDate.value = (latestValid || records[records.length - 1]).timestamp.slice(0, 10);
   }
 
   if (start > end) {
@@ -286,7 +298,7 @@ function getRangeRecords() {
 }
 
 function validValues(records) {
-  return records.filter(r => isValidLevelValue(r.value));
+  return records.filter(r => isRenderableRecord(r));
 }
 
 function mean(values) {
@@ -302,18 +314,6 @@ function formatDateTime(ts) {
   return `${d.getFullYear()}/${String(d.getMonth() + 1).padStart(2, '0')}/${String(d.getDate()).padStart(2, '0')} ${String(d.getHours()).padStart(2, '0')}:00`;
 }
 
-function formatXAxisLabel(value, unit) {
-  const d = new Date(value);
-  if (Number.isNaN(d.getTime())) return '';
-  const yy = String(d.getFullYear()).slice(-2);
-  const m = d.getMonth() + 1;
-  const day = d.getDate();
-  const h = d.getHours();
-  if (unit === 'month') return `${yy}年${m}月`;
-  if (unit === 'week' || unit === 'day') return `${m}/${day}`;
-  return `${h}時`;
-}
-
 function getLatestValid(records) {
   const valid = validValues(records);
   return valid.length ? valid[valid.length - 1] : null;
@@ -323,7 +323,7 @@ function getLast7DaysAverage(referenceTimestamp) {
   const ref = new Date(referenceTimestamp).getTime();
   const start = ref - (24 * 7 - 1) * 3600 * 1000;
   const values = rawData.records
-    .filter(r => isValidLevelValue(r.value))
+    .filter(r => isRenderableRecord(r))
     .filter(r => {
       const t = new Date(r.timestamp).getTime();
       return t >= start && t <= ref;
@@ -460,7 +460,7 @@ function render() {
   els.statusCurrentLevel.textContent = latest ? formatLevel(latest.value) : '-';
   els.statusMode.textContent = currentMode === 'A' ? 'A 全期間分布基準' : 'B 直近7日平均との差';
 
-  const dataSeries = records.map(r => ({ x: r.timestamp, y: r.value }));
+  const dataSeries = records.map(r => ({ x: r.timestamp, y: isRenderableRecord(r) ? r.value : null }));
   const annualMean = rawData.meta.annual_stats.mean;
   const annualP90 = rawData.meta.annual_stats.p90;
 
@@ -531,10 +531,13 @@ function render() {
     );
   }
 
+  const latestRenderable = valid[valid.length - 1];
+  const xMax = latestRenderable ? latestRenderable.timestamp : records[records.length - 1].timestamp;
+
   if (chart) {
     chart.data.datasets = datasets;
     chart.options.scales.x.min = records[0].timestamp;
-    chart.options.scales.x.max = records[records.length - 1].timestamp;
+    chart.options.scales.x.max = xMax;
     chart.options.scales.x.time.unit = chooseTimeUnit(records.length);
     chart.options.scales.y.min = yMin;
     chart.options.scales.y.max = yMax;
@@ -575,7 +578,7 @@ function render() {
         x: {
           type: 'time',
           min: records[0].timestamp,
-          max: records[records.length - 1].timestamp,
+          max: xMax,
           time: {
             tooltipFormat: 'yyyy/MM/dd HH:mm',
             unit: chooseTimeUnit(records.length)
@@ -583,10 +586,7 @@ function render() {
           ticks: {
             color: '#9bb4cc',
             maxRotation: 0,
-            autoSkip: true,
-            callback(value) {
-              return formatXAxisLabel(value, this.chart.options.scales.x.time.unit);
-            }
+            autoSkip: true
           },
           grid: {
             color: 'rgba(119,156,193,.12)'
@@ -598,7 +598,7 @@ function render() {
           ticks: {
             color: '#9bb4cc',
             callback(value) {
-              return `${Number(value).toFixed(1)} m`;
+              return `${Number(value).toFixed(2)} m`;
             }
           },
           grid: {
