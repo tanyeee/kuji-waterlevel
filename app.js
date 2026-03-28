@@ -157,7 +157,7 @@ function bindEvents() {
 
   els.presetButtons.forEach(btn => {
     btn.addEventListener('click', () => {
-      setPresetRange(btn.dataset.days, { anchor: 'current-start' });
+      setPresetRange(btn.dataset.days, { anchor: 'current-end' });
       setActivePreset(btn.dataset.days);
       render();
     });
@@ -203,7 +203,7 @@ function setPresetRange(days, options = {}) {
   const latestValid = getLatestValid(rawData.records);
   const latestTs = new Date((latestValid || records[records.length - 1]).timestamp);
   const firstTs = new Date(records[0].timestamp);
-  const anchor = options.anchor || 'current-start';
+  const anchor = options.anchor || 'current-end';
 
   if (days === 'all') {
     els.startDate.value = records[0].timestamp.slice(0, 10);
@@ -212,24 +212,24 @@ function setPresetRange(days, options = {}) {
   }
 
   const n = Number(days);
-  let start;
+  let end;
   if (anchor === 'latest') {
-    start = new Date(latestTs);
-    start.setDate(start.getDate() - (n - 1));
+    end = new Date(latestTs);
   } else {
     ensureDateInputs();
-    start = new Date(`${els.startDate.value}T00:00:00`);
+    end = new Date(`${els.endDate.value}T00:00:00`);
   }
 
-  if (start < firstTs) start = new Date(firstTs);
+  if (end > latestTs) end = new Date(latestTs);
+  if (end < firstTs) end = new Date(firstTs);
 
-  const end = new Date(start);
-  end.setDate(end.getDate() + (n - 1));
+  const start = new Date(end);
+  start.setDate(start.getDate() - (n - 1));
 
-  const clampedEnd = end > latestTs ? new Date(latestTs) : end;
+  const clampedStart = start < firstTs ? new Date(firstTs) : start;
 
-  els.startDate.value = toDateInput(start);
-  els.endDate.value = toDateInput(clampedEnd);
+  els.startDate.value = toDateInput(clampedStart);
+  els.endDate.value = toDateInput(end);
 }
 
 function toDateInput(date) {
