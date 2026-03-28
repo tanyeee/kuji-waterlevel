@@ -330,6 +330,18 @@ function formatDateTime(ts) {
   return `${d.getFullYear()}/${String(d.getMonth() + 1).padStart(2, '0')}/${String(d.getDate()).padStart(2, '0')} ${String(d.getHours()).padStart(2, '0')}:00`;
 }
 
+function formatXAxisLabel(value, unit) {
+  const d = new Date(value);
+  if (Number.isNaN(d.getTime())) return '';
+  const yy = String(d.getFullYear()).slice(-2);
+  const m = d.getMonth() + 1;
+  const day = d.getDate();
+  const h = d.getHours();
+  if (unit === 'month') return `${yy}年${m}月`;
+  if (unit === 'week' || unit === 'day') return `${m}/${day}`;
+  return `${h}時`;
+}
+
 function getLatestValid(records) {
   const valid = validValues(records);
   return valid.length ? valid[valid.length - 1] : null;
@@ -602,7 +614,10 @@ function render() {
           ticks: {
             color: '#9bb4cc',
             maxRotation: 0,
-            autoSkip: true
+            autoSkip: true,
+            callback(value) {
+              return formatXAxisLabel(value, this.chart.options.scales.x.time.unit);
+            }
           },
           grid: {
             color: 'rgba(119,156,193,.12)'
@@ -614,7 +629,7 @@ function render() {
           ticks: {
             color: '#9bb4cc',
             callback(value) {
-              return `${Number(value).toFixed(2)} m`;
+              return `${Number(value).toFixed(1)} m`;
             }
           },
           grid: {
