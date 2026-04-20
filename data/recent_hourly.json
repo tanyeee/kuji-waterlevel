@@ -4,7 +4,7 @@
     "station_id": "303011283322030",
     "record_count": 576,
     "window_days": 45,
-    "last_fetch_utc": "2026-04-20T23:02:37Z",
+    "last_fetch_utc": "2026-04-20T23:57:48Z",
     "months_fetched": [
       "2026-03",
       "2026-04"
@@ -1728,8 +1728,8 @@
     },
     {
       "timestamp": "2026-04-21T07:00",
-      "value": null,
-      "flag": "-"
+      "value": -1.03,
+      "flag": "*"
     },
     {
       "timestamp": "2026-04-21T08:00",
