@@ -2,20 +2,15 @@
   "meta": {
     "source": "monthly_page_dat",
     "station_id": "303011283322030",
-    "record_count": 720,
+    "record_count": 719,
     "window_days": 45,
-    "last_fetch_utc": "2026-05-15T23:10:44Z",
+    "last_fetch_utc": "2026-05-16T00:06:02Z",
     "months_fetched": [
       "2026-04",
       "2026-05"
     ]
   },
   "records": [
-    {
-      "timestamp": "2026-05-02T00:00",
-      "value": 1.34,
-      "flag": "*"
-    },
     {
       "timestamp": "2026-05-02T01:00",
       "value": 1.27,
