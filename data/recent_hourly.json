@@ -2,55 +2,15 @@
   "meta": {
     "source": "monthly_page_dat",
     "station_id": "303011283322030",
-    "record_count": 471,
+    "record_count": 463,
     "window_days": 45,
-    "last_fetch_utc": "2026-05-26T08:42:45Z",
+    "last_fetch_utc": "2026-05-26T16:52:09Z",
     "months_fetched": [
       "2026-04",
       "2026-05"
     ]
   },
   "records": [
-    {
-      "timestamp": "2026-05-12T09:00",
-      "value": -0.97,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-05-12T10:00",
-      "value": -0.96,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-05-12T11:00",
-      "value": -0.96,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-05-12T12:00",
-      "value": -0.96,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-05-12T13:00",
-      "value": -0.97,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-05-12T14:00",
-      "value": -0.97,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-05-12T15:00",
-      "value": -0.98,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-05-12T16:00",
-      "value": -0.97,
-      "flag": "*"
-    },
     {
       "timestamp": "2026-05-12T17:00",
       "value": -0.96,
@@ -1733,43 +1693,43 @@
     },
     {
       "timestamp": "2026-05-26T17:00",
-      "value": null,
-      "flag": "-"
+      "value": -0.98,
+      "flag": "*"
     },
     {
       "timestamp": "2026-05-26T18:00",
-      "value": null,
-      "flag": "-"
+      "value": -0.98,
+      "flag": "*"
     },
     {
       "timestamp": "2026-05-26T19:00",
-      "value": null,
-      "flag": "-"
+      "value": -0.98,
+      "flag": "*"
     },
     {
       "timestamp": "2026-05-26T20:00",
-      "value": null,
-      "flag": "-"
+      "value": -0.98,
+      "flag": "*"
     },
     {
       "timestamp": "2026-05-26T21:00",
-      "value": null,
-      "flag": "-"
+      "value": -0.98,
+      "flag": "*"
     },
     {
       "timestamp": "2026-05-26T22:00",
-      "value": null,
-      "flag": "-"
+      "value": -0.99,
+      "flag": "*"
     },
     {
       "timestamp": "2026-05-26T23:00",
-      "value": null,
-      "flag": "-"
+      "value": -0.99,
+      "flag": "*"
     },
     {
       "timestamp": "2026-05-27T00:00",
-      "value": null,
-      "flag": "-"
+      "value": -0.99,
+      "flag": "*"
     },
     {
       "timestamp": "2026-05-27T01:00",
