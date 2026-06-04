@@ -2,25 +2,15 @@
   "meta": {
     "source": "monthly_page_dat",
     "station_id": "303011283322030",
-    "record_count": 962,
+    "record_count": 960,
     "window_days": 45,
-    "last_fetch_utc": "2026-06-04T21:52:37Z",
+    "last_fetch_utc": "2026-06-04T23:35:25Z",
     "months_fetched": [
       "2026-05",
       "2026-06"
     ]
   },
   "records": [
-    {
-      "timestamp": "2026-05-21T22:00",
-      "value": -0.83,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-05-21T23:00",
-      "value": -0.84,
-      "flag": "*"
-    },
     {
       "timestamp": "2026-05-22T00:00",
       "value": -0.84,
@@ -1733,13 +1723,13 @@
     },
     {
       "timestamp": "2026-06-05T06:00",
-      "value": null,
-      "flag": "-"
+      "value": -0.51,
+      "flag": "*"
     },
     {
       "timestamp": "2026-06-05T07:00",
-      "value": null,
-      "flag": "-"
+      "value": -0.52,
+      "flag": "*"
     },
     {
       "timestamp": "2026-06-05T08:00",
