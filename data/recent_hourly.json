@@ -2,50 +2,15 @@
   "meta": {
     "source": "monthly_page_dat",
     "station_id": "303011283322030",
-    "record_count": 712,
+    "record_count": 705,
     "window_days": 45,
-    "last_fetch_utc": "2026-06-15T07:37:04Z",
+    "last_fetch_utc": "2026-06-15T14:34:17Z",
     "months_fetched": [
       "2026-05",
       "2026-06"
     ]
   },
   "records": [
-    {
-      "timestamp": "2026-06-01T08:00",
-      "value": -1.09,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-06-01T09:00",
-      "value": -1.1,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-06-01T10:00",
-      "value": -1.1,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-06-01T11:00",
-      "value": -1.09,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-06-01T12:00",
-      "value": -1.08,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-06-01T13:00",
-      "value": -1.08,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-06-01T14:00",
-      "value": null,
-      "flag": "#"
-    },
     {
       "timestamp": "2026-06-01T15:00",
       "value": -1.07,
@@ -1733,38 +1698,38 @@
     },
     {
       "timestamp": "2026-06-15T16:00",
-      "value": null,
-      "flag": "-"
+      "value": -0.89,
+      "flag": "*"
     },
     {
       "timestamp": "2026-06-15T17:00",
-      "value": null,
-      "flag": "-"
+      "value": -0.9,
+      "flag": "*"
     },
     {
       "timestamp": "2026-06-15T18:00",
-      "value": null,
-      "flag": "-"
+      "value": -0.9,
+      "flag": "*"
     },
     {
       "timestamp": "2026-06-15T19:00",
-      "value": null,
-      "flag": "-"
+      "value": -0.9,
+      "flag": "*"
     },
     {
       "timestamp": "2026-06-15T20:00",
-      "value": null,
-      "flag": "-"
+      "value": -0.9,
+      "flag": "*"
     },
     {
       "timestamp": "2026-06-15T21:00",
-      "value": null,
-      "flag": "-"
+      "value": -0.9,
+      "flag": "*"
     },
     {
       "timestamp": "2026-06-15T22:00",
-      "value": null,
-      "flag": "-"
+      "value": -0.9,
+      "flag": "*"
     },
     {
       "timestamp": "2026-06-15T23:00",
