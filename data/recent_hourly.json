@@ -2,35 +2,15 @@
   "meta": {
     "source": "monthly_page_dat",
     "station_id": "303011283322030",
-    "record_count": 475,
+    "record_count": 471,
     "window_days": 45,
-    "last_fetch_utc": "2026-06-25T04:32:24Z",
+    "last_fetch_utc": "2026-06-25T08:30:45Z",
     "months_fetched": [
       "2026-05",
       "2026-06"
     ]
   },
   "records": [
-    {
-      "timestamp": "2026-06-11T05:00",
-      "value": -0.85,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-06-11T06:00",
-      "value": -0.86,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-06-11T07:00",
-      "value": -0.85,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-06-11T08:00",
-      "value": -0.86,
-      "flag": "*"
-    },
     {
       "timestamp": "2026-06-11T09:00",
       "value": -0.85,
@@ -1733,23 +1713,23 @@
     },
     {
       "timestamp": "2026-06-25T13:00",
-      "value": null,
-      "flag": "-"
+      "value": -0.92,
+      "flag": "*"
     },
     {
       "timestamp": "2026-06-25T14:00",
-      "value": null,
-      "flag": "-"
+      "value": -0.92,
+      "flag": "*"
     },
     {
       "timestamp": "2026-06-25T15:00",
-      "value": null,
-      "flag": "-"
+      "value": -0.92,
+      "flag": "*"
     },
     {
       "timestamp": "2026-06-25T16:00",
-      "value": null,
-      "flag": "-"
+      "value": -0.92,
+      "flag": "*"
     },
     {
       "timestamp": "2026-06-25T17:00",
