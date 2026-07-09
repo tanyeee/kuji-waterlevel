@@ -132,14 +132,20 @@ function mergeDatasets(historical, recent, recent10min) {
   };
 }
 
+let stationConfig = null;
+let currentStation = null;
 let rawData = null;
 let chart = null;
 let currentMode = 'A';
+let eventsBound = false;
 
 const fmt = new Intl.NumberFormat('ja-JP', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const fmt3 = new Intl.NumberFormat('ja-JP', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
 
 const els = {
+  pageTitle: document.getElementById('pageTitle'),
+  stationSummary: document.getElementById('stationSummary'),
+  stationSelect: document.getElementById('stationSelect'),
   startDate: document.getElementById('startDate'),
   endDate: document.getElementById('endDate'),
   applyButton: document.getElementById('applyButton'),
@@ -162,19 +168,94 @@ const els = {
   statusDescription: document.getElementById('statusDescription'),
   statusTimestamp: document.getElementById('statusTimestamp'),
   statusCurrentLevel: document.getElementById('statusCurrentLevel'),
-  statusMode: document.getElementById('statusMode')
+  statusMode: document.getElementById('statusMode'),
+  dataSourceNote: document.getElementById('dataSourceNote')
 };
 
 
 async function init() {
+  stationConfig = await fetchJson('./config/stations.json');
+  populateStationSelect();
+  bindEvents();
+  const defaultStationId = stationConfig.default_station || stationConfig.stations?.[0]?.id;
+  await loadStation(defaultStationId);
+}
+
+function populateStationSelect() {
+  const stations = stationConfig.stations || [];
+  const riverById = new Map((stationConfig.rivers || []).map(r => [r.id, r]));
+  els.stationSelect.innerHTML = '';
+
+  const grouped = new Map();
+  for (const station of stations) {
+    const riverId = station.river_id || 'default';
+    if (!grouped.has(riverId)) grouped.set(riverId, []);
+    grouped.get(riverId).push(station);
+  }
+
+  for (const [riverId, riverStations] of grouped.entries()) {
+    const river = riverById.get(riverId);
+    const group = document.createElement('optgroup');
+    group.label = river?.name || riverStations[0]?.river_name || '観測地点';
+    for (const station of riverStations) {
+      const option = document.createElement('option');
+      option.value = station.id;
+      option.textContent = station.name;
+      group.appendChild(option);
+    }
+    els.stationSelect.appendChild(group);
+  }
+}
+
+function stationById(id) {
+  return (stationConfig.stations || []).find(station => station.id === id) || null;
+}
+
+function stationDataUrl(station, filename) {
+  return `./${station.data_dir}/${filename}`;
+}
+
+function resetForLoading(station) {
+  els.statusBadge.textContent = '読み込み中';
+  els.statusBadge.className = 'status-badge neutral';
+  els.statusDescription.textContent = `${station.river_name || ''} ${station.name} のデータを読み込んでいます。`.trim();
+}
+
+function updateStationCopy() {
+  const stationName = currentStation ? `${currentStation.river_name || ''} ${currentStation.name}`.trim() : '久慈川';
+  els.pageTitle.textContent = `${stationName} 水位ビューア`;
+  document.title = `${stationName} 水位ビューア`;
+  els.stationSummary.textContent = `${stationName} 観測所の水位データと増水基準を閲覧できます。`;
+  els.dataSourceNote.textContent = `更新対応版: ${stationName} 観測所の水位データと増水基準を閲覧できます。直近約1日分は10分観測値を優先します。`;
+}
+
+async function loadStation(stationId) {
+  const station = stationById(stationId) || stationById(stationConfig.default_station) || stationConfig.stations?.[0];
+  if (!station) throw new Error('station config is empty');
+
+  currentStation = station;
+  els.stationSelect.value = station.id;
+  resetForLoading(station);
+
   const [historical, recent, recent10min] = await Promise.all([
-    fetchJson('./data/historical_hourly.json'),
-    fetchJson('./data/recent_hourly.json', true),
-    fetchJson('./data/recent_10min.json', true)
+    fetchJson(stationDataUrl(station, 'historical_hourly.json'), true),
+    fetchJson(stationDataUrl(station, 'recent_hourly.json'), true),
+    fetchJson(stationDataUrl(station, 'recent_10min.json'), true)
   ]);
   rawData = mergeDatasets(historical, recent, recent10min);
+  rawData.meta.station = station;
 
   const records = rawData.records;
+  updateStationCopy();
+  if (!records.length) {
+    els.startDate.value = '';
+    els.endDate.value = '';
+    els.statusBadge.textContent = 'データなし';
+    els.statusBadge.className = 'status-badge neutral';
+    els.statusDescription.textContent = 'この観測地点のデータはまだ取得されていません。GitHub Actions の更新後に表示されます。';
+    return;
+  }
+
   const firstDate = records[0].timestamp.slice(0, 10);
   const latestValid = getLatestValid(rawData.records);
   const lastDate = (latestValid || records[records.length - 1]).timestamp.slice(0, 10);
@@ -189,7 +270,6 @@ async function init() {
   setActivePreset('7');
 
   populateAnnualStats();
-  bindEvents();
 
   // モバイルブラウザで type=date の値反映やレイアウト確定が遅れることがあるため、
   // 1フレーム待ってから初回描画します。
@@ -202,6 +282,16 @@ async function init() {
 }
 
 function bindEvents() {
+  if (eventsBound) return;
+  eventsBound = true;
+  els.stationSelect.addEventListener('change', () => {
+    loadStation(els.stationSelect.value).catch(err => {
+      console.error(err);
+      els.statusBadge.textContent = '読み込み失敗';
+      els.statusBadge.className = 'status-badge neutral';
+      els.statusDescription.textContent = '選択した地点のデータまたはスクリプトの読み込みに失敗しました。';
+    });
+  });
   els.applyButton.addEventListener('click', () => render());
   els.toggleRangeLines.addEventListener('change', () => render());
   els.toggleAnnualLines.addEventListener('change', () => render());

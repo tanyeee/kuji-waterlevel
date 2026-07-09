@@ -6,9 +6,10 @@ GitHub Pages にそのまま配置できる静的Webアプリです。
 - `index.html`
 - `style.css`
 - `app.js`
-- `data/historical_hourly.json`
-- `data/recent_hourly.json`
-- `data/recent_10min.json`
+- `config/stations.json`
+- `data/stations/<station>/historical_hourly.json`
+- `data/stations/<station>/recent_hourly.json`
+- `data/stations/<station>/recent_10min.json`
 
 ## GitHub Pages での公開手順
 1. GitHubで新しいリポジトリを作成
@@ -29,7 +30,13 @@ GitHub Pages にそのまま配置できる静的Webアプリです。
 
 ## 第2段階: 月表からの更新
 
-この版では、長期履歴 `data/historical_hourly.json` に加えて、国土交通省の時刻水位月表ページから取得した直近の1時間データ `data/recent_hourly.json` を重ねて表示します。
+この版では、地点ごとの長期履歴 `data/stations/<station>/historical_hourly.json` に加えて、国土交通省の時刻水位月表ページから取得した直近の1時間データ `data/stations/<station>/recent_hourly.json` を重ねて表示します。
+
+地点一覧と取得IDは `config/stations.json` にまとめています。現在は久慈川の以下3地点を表示できます。
+
+- 額田: 時刻水位月表 `303011283322030` / 10分観測 `ofcCd=21271, itmkndCd=4, obsCd=7`
+- 榊橋: 時刻水位月表 `303011283322050` / 10分観測 `ofcCd=21271, itmkndCd=4, obsCd=4`
+- 久慈大橋: 時刻水位月表 `303011283322060` / 10分観測 `ofcCd=21271, itmkndCd=4, obsCd=8`
 
 ### 手動更新
 
@@ -53,11 +60,11 @@ python scripts/update_recent_10min_from_kawabou.py
 
 ### GitHub Actions
 
-`.github/workflows/update_monthly_hourly.yml` を有効にすると、毎時 `recent_hourly.json` を更新し、14日より古い recent データは `historical_hourly.json` に吸収します。
+`.github/workflows/update_monthly_hourly.yml` を有効にすると、毎時 `config/stations.json` の各地点の `recent_hourly.json` を更新し、14日より古い recent データは同じ地点の `historical_hourly.json` に吸収します。
 
 ## 第3段階: 直近10分データ
 
-河川防災情報の観測値タブで表示される10分値を、直近用の `data/recent_10min.json` として追加取得します。既存の長期履歴と1時間データは残し、同じ時刻がある場合は10分データを優先して表示します。
+河川防災情報の観測値タブで表示される10分値を、直近用の `data/stations/<station>/recent_10min.json` として追加取得します。既存の長期履歴と1時間データは残し、同じ時刻がある場合は10分データを優先して表示します。
 
 ### 額田の取得元
 
@@ -78,7 +85,20 @@ https://www.river.go.jp/kawabou/file/files/tmlist/stg/YYYYMMDD/HHMM/212710040000
 
 ### GitHub Actions
 
-`.github/workflows/update_recent_10min.yml` を有効にすると、10分ごとに `recent_10min.json` を更新します。1時間データの更新は従来どおり `.github/workflows/update_monthly_hourly.yml` が担当します。
+`.github/workflows/update_recent_10min.yml` を有効にすると、10分ごとに `config/stations.json` の各地点の `recent_10min.json` を更新します。1時間データの更新は従来どおり `.github/workflows/update_monthly_hourly.yml` が担当します。
+
+## 地点追加
+
+新しい地点は `config/stations.json` に追加します。
+
+- `id`: URLやファイルパスに使う英数字のID
+- `name`: 画面表示名
+- `river_id` / `river_name`: 将来の河川別切り替えに使う分類
+- `data_dir`: `data/stations/<id>` のような地点別データディレクトリ
+- `hourly.station_id`: 時刻水位月表の `ID`
+- `ten_min.ofc_cd` / `ten_min.itmknd_cd` / `ten_min.obs_cd`: 河川防災情報の10分観測値URLのパラメータ
+
+将来、河川を増やす場合は `rivers` に河川を追加し、各地点の `river_id` を対応する河川IDへ向けます。
 
 ### 注意
 

@@ -32,6 +32,16 @@ class FetchResult:
     errors: list[str]
 
 
+@dataclass(frozen=True)
+class StationTarget:
+    id: str
+    name: str
+    ofc_cd: str
+    itmknd_cd: str
+    obs_cd: str
+    output: Path
+
+
 def station_code(ofc_cd: str, itmknd_cd: str, obs_cd: str) -> str:
     return f"{int(ofc_cd):05d}{int(itmknd_cd):03d}{int(obs_cd):05d}"
 
@@ -205,7 +215,10 @@ def build_output_payload(
     source_payload: dict[str, Any],
     records: list[dict[str, Any]],
     code: str,
-    args: argparse.Namespace,
+    ofc_cd: str,
+    itmknd_cd: str,
+    obs_cd: str,
+    keep_hours: int,
     source_url: str | None,
     source_slot: datetime | None,
     errors: list[str] | None = None,
@@ -216,11 +229,11 @@ def build_output_payload(
         "meta": {
             "source": "kawabou_tmlist",
             "station_code": code,
-            "ofc_cd": args.ofc_cd,
-            "itmknd_cd": args.itmknd_cd,
-            "obs_cd": args.obs_cd,
+            "ofc_cd": ofc_cd,
+            "itmknd_cd": itmknd_cd,
+            "obs_cd": obs_cd,
             "record_count": len(records),
-            "window_hours": args.keep_hours,
+            "window_hours": keep_hours,
             "dataset_start": records[0]["timestamp"],
             "dataset_end": records[-1]["timestamp"],
             "latest_source_time": source_time,
@@ -237,21 +250,57 @@ def build_output_payload(
     }
 
 
-def main() -> None:
-    parser = argparse.ArgumentParser(description="河川防災情報の10分観測値から recent_10min.json を更新します。")
-    parser.add_argument("--ofc-cd", default=DEFAULT_OFC_CD)
-    parser.add_argument("--itmknd-cd", default=DEFAULT_ITMKND_CD)
-    parser.add_argument("--obs-cd", default=DEFAULT_OBS_CD)
-    parser.add_argument("--station-code", default=None)
-    parser.add_argument("--output", default="data/recent_10min.json")
-    parser.add_argument("--keep-hours", type=int, default=24)
-    parser.add_argument("--probe-steps", type=int, default=24)
-    parser.add_argument("--timeout", type=int, default=30)
-    parser.add_argument("--now", default=None, help="JST ISO timestamp for tests, e.g. 2026-07-09T12:04")
-    parser.add_argument("--input", default=None, help="Local kawabou tmlist JSON fixture for tests")
-    args = parser.parse_args()
+def load_config_targets(config_path: Path) -> list[StationTarget]:
+    config = json.loads(config_path.read_text(encoding="utf-8"))
+    targets: list[StationTarget] = []
+    for station in config.get("stations", []):
+        ten_min = station.get("ten_min") or {}
+        data_dir = station.get("data_dir")
+        if not data_dir:
+            continue
+        ofc_cd = ten_min.get("ofc_cd")
+        itmknd_cd = ten_min.get("itmknd_cd")
+        obs_cd = ten_min.get("obs_cd")
+        if not ofc_cd or not itmknd_cd or not obs_cd:
+            continue
+        targets.append(StationTarget(
+            id=station["id"],
+            name=station.get("name", station["id"]),
+            ofc_cd=str(ofc_cd),
+            itmknd_cd=str(itmknd_cd),
+            obs_cd=str(obs_cd),
+            output=Path(data_dir) / "recent_10min.json",
+        ))
+    return targets
 
-    code = args.station_code or station_code(args.ofc_cd, args.itmknd_cd, args.obs_cd)
+
+def build_targets(args: argparse.Namespace) -> list[StationTarget]:
+    if args.station_code or args.ofc_cd != DEFAULT_OFC_CD or args.itmknd_cd != DEFAULT_ITMKND_CD or args.obs_cd != DEFAULT_OBS_CD:
+        return [StationTarget(
+            id=args.station_code or station_code(args.ofc_cd, args.itmknd_cd, args.obs_cd),
+            name=args.station_code or station_code(args.ofc_cd, args.itmknd_cd, args.obs_cd),
+            ofc_cd=args.ofc_cd,
+            itmknd_cd=args.itmknd_cd,
+            obs_cd=args.obs_cd,
+            output=Path(args.output),
+        )]
+
+    config_path = Path(args.config)
+    if config_path.exists():
+        return load_config_targets(config_path)
+
+    return [StationTarget(
+        id="nukada",
+        name="額田",
+        ofc_cd=DEFAULT_OFC_CD,
+        itmknd_cd=DEFAULT_ITMKND_CD,
+        obs_cd=DEFAULT_OBS_CD,
+        output=Path(args.output),
+    )]
+
+
+def update_target(target: StationTarget, args: argparse.Namespace) -> None:
+    code = args.station_code or station_code(target.ofc_cd, target.itmknd_cd, target.obs_cd)
 
     if args.input:
         source_path = Path(args.input)
@@ -265,7 +314,7 @@ def main() -> None:
             "User-Agent": USER_AGENT,
             "Accept": "application/json, text/plain, */*",
             "Accept-Language": "ja,en-US;q=0.9,en;q=0.8",
-            "Referer": f"{KAWABOU_BASE}/mb/tm?ofcCd={args.ofc_cd}&itmkndCd={args.itmknd_cd}&obsCd={args.obs_cd}",
+            "Referer": f"{KAWABOU_BASE}/mb/tm?ofcCd={target.ofc_cd}&itmkndCd={target.itmknd_cd}&obsCd={target.obs_cd}",
         })
         result = fetch_latest_payload(session, code, parse_now(args.now), args.probe_steps, args.timeout)
         source_payload = result.payload
@@ -275,15 +324,50 @@ def main() -> None:
 
     records = clip_recent(parse_min10_values(source_payload), args.keep_hours)
     if not records:
-        raise SystemExit("no 10-minute records parsed from kawabou payload")
+        raise RuntimeError(f"no 10-minute records parsed from kawabou payload for {target.id}")
 
-    output_path = Path(args.output)
-    payload = build_output_payload(source_payload, records, code, args, source_url, source_slot, errors)
-    if is_same_observation_payload(output_path, payload):
-        print(f"unchanged {output_path} ({len(records)} records, latest {records[-1]['timestamp']})")
+    payload = build_output_payload(
+        source_payload,
+        records,
+        code,
+        target.ofc_cd,
+        target.itmknd_cd,
+        target.obs_cd,
+        args.keep_hours,
+        source_url,
+        source_slot,
+        errors,
+    )
+    if is_same_observation_payload(target.output, payload):
+        print(f"unchanged {target.output} ({len(records)} records, latest {records[-1]['timestamp']})")
         return
-    save_json(output_path, payload)
-    print(f"saved {output_path} ({len(records)} records, latest {records[-1]['timestamp']})")
+    save_json(target.output, payload)
+    print(f"saved {target.output} ({len(records)} records, latest {records[-1]['timestamp']})")
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description="河川防災情報の10分観測値から recent_10min.json を更新します。")
+    parser.add_argument("--config", default="config/stations.json")
+    parser.add_argument("--ofc-cd", default=DEFAULT_OFC_CD)
+    parser.add_argument("--itmknd-cd", default=DEFAULT_ITMKND_CD)
+    parser.add_argument("--obs-cd", default=DEFAULT_OBS_CD)
+    parser.add_argument("--station-code", default=None)
+    parser.add_argument("--output", default="data/recent_10min.json")
+    parser.add_argument("--keep-hours", type=int, default=24)
+    parser.add_argument("--probe-steps", type=int, default=24)
+    parser.add_argument("--timeout", type=int, default=30)
+    parser.add_argument("--now", default=None, help="JST ISO timestamp for tests, e.g. 2026-07-09T12:04")
+    parser.add_argument("--input", default=None, help="Local kawabou tmlist JSON fixture for tests")
+    args = parser.parse_args()
+
+    targets = build_targets(args)
+    if not targets:
+        raise SystemExit("no station targets configured")
+    for target in targets:
+        try:
+            update_target(target, args)
+        except RuntimeError as exc:
+            raise SystemExit(str(exc)) from exc
 
 
 if __name__ == "__main__":

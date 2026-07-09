@@ -2,70 +2,16 @@
   "meta": {
     "source": "monthly_page_dat",
     "station_id": "303011283322030",
-    "record_count": 882,
+    "station_name": "額田",
+    "record_count": 871,
     "window_days": 45,
-    "last_fetch_utc": "2026-07-09T05:04:34Z",
+    "last_fetch_utc": "2026-07-09T07:12:01Z",
     "months_fetched": [
       "2026-06",
       "2026-07"
     ]
   },
   "records": [
-    {
-      "timestamp": "2026-06-25T06:00",
-      "value": -0.93,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-06-25T07:00",
-      "value": -0.94,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-06-25T08:00",
-      "value": -0.94,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-06-25T09:00",
-      "value": -0.94,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-06-25T10:00",
-      "value": -0.93,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-06-25T11:00",
-      "value": -0.93,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-06-25T12:00",
-      "value": -0.93,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-06-25T13:00",
-      "value": -0.92,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-06-25T14:00",
-      "value": -0.92,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-06-25T15:00",
-      "value": -0.92,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-06-25T16:00",
-      "value": -0.92,
-      "flag": "*"
-    },
     {
       "timestamp": "2026-06-25T17:00",
       "value": -0.92,
@@ -1728,18 +1674,18 @@
     },
     {
       "timestamp": "2026-07-09T13:00",
-      "value": null,
-      "flag": "-"
+      "value": -0.97,
+      "flag": "*"
     },
     {
       "timestamp": "2026-07-09T14:00",
-      "value": null,
-      "flag": "-"
+      "value": -0.97,
+      "flag": "*"
     },
     {
       "timestamp": "2026-07-09T15:00",
-      "value": null,
-      "flag": "-"
+      "value": -0.96,
+      "flag": "*"
     },
     {
       "timestamp": "2026-07-09T16:00",

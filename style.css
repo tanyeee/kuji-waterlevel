@@ -68,7 +68,7 @@ h1{
   color:var(--muted);
   font-size:.88rem;
 }
-input[type="date"], button{
+input[type="date"], select, button{
   appearance:none;
   border:none;
   border-radius:14px;
@@ -77,8 +77,11 @@ input[type="date"], button{
   padding:12px 14px;
   font-size:.95rem;
 }
-input[type="date"]{
+input[type="date"], select{
   border:1px solid rgba(130,177,222,.16);
+}
+select{
+  width:100%;
 }
 button{
   cursor:pointer;
@@ -239,7 +242,7 @@ button.primary{
     height:48vh;
     min-height:300px;
   }
-  button, input[type="date"]{
+  button, input[type="date"], select{
     width:100%;
   }
   .preset-row .preset-btn,
