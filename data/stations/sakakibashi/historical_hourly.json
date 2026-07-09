@@ -4,8 +4,8 @@
     "station_id": "303011283322050",
     "station_name": "久慈川 榊橋",
     "dataset_start": null,
-    "dataset_end": "2026-06-25T21:00",
-    "record_count": 598,
+    "dataset_end": "2026-06-25T23:00",
+    "record_count": 600,
     "notes": [
       "初回の hourly 更新後に recent_hourly.json へデータが入ります。14日より古くなった recent データは historical_hourly.json に移動します。"
     ]
@@ -2999,6 +2999,16 @@
     {
       "timestamp": "2026-06-25T21:00",
       "value": 0.26,
+      "flag": "*"
+    },
+    {
+      "timestamp": "2026-06-25T22:00",
+      "value": 0.32,
+      "flag": "*"
+    },
+    {
+      "timestamp": "2026-06-25T23:00",
+      "value": 0.37,
       "flag": "*"
     }
   ]
