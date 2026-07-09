@@ -1,0 +1,18 @@
+{
+  "meta": {
+    "source": "kawabou_tmlist",
+    "station_code": "2127100400007",
+    "ofc_cd": "21271",
+    "itmknd_cd": "4",
+    "obs_cd": "7",
+    "record_count": 0,
+    "window_hours": 24,
+    "dataset_start": null,
+    "dataset_end": null,
+    "source_url": null,
+    "notes": [
+      "GitHub Actions または scripts/update_recent_10min_from_kawabou.py の初回実行後に10分観測値が入ります。"
+    ]
+  },
+  "records": []
+}

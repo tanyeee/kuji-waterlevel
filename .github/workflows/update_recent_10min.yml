@@ -1,9 +1,9 @@
-name: update_monthly_hourly
+name: update_recent_10min
 
 on:
   workflow_dispatch:
   schedule:
-    - cron: "15 * * * *"
+    - cron: "*/10 * * * *"
 
 permissions:
   contents: write
@@ -30,18 +30,17 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Update recent hourly data
+      - name: Update recent 10-minute data
         run: |
-          python scripts/update_recent_from_monthly_page.py
-          python scripts/merge_recent_into_historical.py
+          python scripts/update_recent_10min_from_kawabou.py
 
       - name: Commit and push if changed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/recent_hourly.json data/historical_hourly.json
+          git add data/recent_10min.json
           if ! git diff --cached --quiet; then
-            git commit -m "Auto update monthly hourly data"
+            git commit -m "Auto update recent 10-minute data"
             git pull --rebase origin "$GITHUB_REF_NAME"
             git push
           fi

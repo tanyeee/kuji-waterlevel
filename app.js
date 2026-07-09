@@ -23,29 +23,82 @@ function isRenderableRecord(record) {
   return isValidLevelValue(record.value);
 }
 
-function mergeDatasets(historical, recent) {
-  const map = new Map();
-  for (const r of historical.records || []) map.set(r.timestamp, r);
-  for (const r of recent.records || []) map.set(r.timestamp, r);
-  const records = [...map.values()].sort((a, b) => a.timestamp.localeCompare(b.timestamp));
-  const values = records.filter(r => isRenderableRecord(r)).map(r => r.value).sort((a,b)=>a-b);
-  const p = (arr, q) => {
-    if (!arr.length) return null;
-    const idx = (arr.length - 1) * q;
-    const lo = Math.floor(idx), hi = Math.ceil(idx);
-    if (lo === hi) return arr[lo];
-    return arr[lo] + (arr[hi] - arr[lo]) * (idx - lo);
-  };
-  const mean = values.reduce((s,v)=>s+v,0) / values.length;
+function isTenMinuteRecord(record) {
+  return record?.resolution === '10min';
+}
+
+const HOUR_MS = 3600 * 1000;
+const DAY_MS = 24 * HOUR_MS;
+const SEVEN_DAYS_MS = 7 * DAY_MS;
+
+function percentile(sortedValues, q) {
+  if (!sortedValues.length) return null;
+  const idx = (sortedValues.length - 1) * q;
+  const lo = Math.floor(idx);
+  const hi = Math.ceil(idx);
+  if (lo === hi) return sortedValues[lo];
+  return sortedValues[lo] + (sortedValues[hi] - sortedValues[lo]) * (idx - lo);
+}
+
+function getBaselineRecords(records) {
+  const hourlyRecords = records.filter(r => !isTenMinuteRecord(r) && isRenderableRecord(r));
+  return hourlyRecords.length >= 24 ? hourlyRecords : records.filter(r => isRenderableRecord(r));
+}
+
+function computeRolling7DayDiffs(records) {
+  const byTs = [...records]
+    .filter(r => isRenderableRecord(r))
+    .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
   const diffs = [];
-  const byTs = records.filter(r => isRenderableRecord(r));
-  for (let i = 24*7-1; i < byTs.length; i++) {
-    const window = byTs.slice(i-(24*7-1), i+1).map(r=>r.value);
-    const avg = window.reduce((s,v)=>s+v,0)/window.length;
-    diffs.push(byTs[i].value - avg);
+  let start = 0;
+  let sum = 0;
+
+  for (let i = 0; i < byTs.length; i++) {
+    const currentTime = new Date(byTs[i].timestamp).getTime();
+    sum += byTs[i].value;
+
+    while (start <= i) {
+      const startTime = new Date(byTs[start].timestamp).getTime();
+      if (startTime >= currentTime - SEVEN_DAYS_MS) break;
+      sum -= byTs[start].value;
+      start += 1;
+    }
+
+    const count = i - start + 1;
+    if (count >= 24) {
+      diffs.push(byTs[i].value - sum / count);
+    }
   }
-  diffs.sort((a,b)=>a-b);
+
+  return diffs.sort((a, b) => a - b);
+}
+
+function mergeDatasets(historical, recent, recent10min) {
+  const map = new Map();
+  const datasets = [
+    { payload: historical, source: 'historical_hourly' },
+    { payload: recent, source: 'recent_hourly' },
+    { payload: recent10min, source: 'recent_10min' }
+  ];
+
+  for (const dataset of datasets) {
+    for (const r of dataset.payload.records || []) {
+      const record = { ...r, source: r.source || dataset.source };
+      const existing = map.get(r.timestamp);
+      if (isTenMinuteRecord(record) && existing && !isTenMinuteRecord(existing)) {
+        record.fallback_record = existing;
+      }
+      map.set(r.timestamp, record);
+    }
+  }
+
+  const records = [...map.values()].sort((a, b) => a.timestamp.localeCompare(b.timestamp));
+  const baseline = getBaselineRecords(records);
+  const values = baseline.map(r => r.value).sort((a, b) => a - b);
+  const meanValue = values.length ? values.reduce((s, v) => s + v, 0) / values.length : null;
+  const diffs = computeRolling7DayDiffs(baseline);
   const meta = historical.meta || {};
+  const recent10minMeta = recent10min.meta || {};
   return {
     meta: {
       ...meta,
@@ -54,18 +107,25 @@ function mergeDatasets(historical, recent) {
       record_count: records.length,
       annual_stats: {
         min: values[0],
-        mean,
+        mean: meanValue,
         max: values[values.length - 1],
-        p90: p(values, 0.9),
-        p95: p(values, 0.95)
+        p90: percentile(values, 0.9),
+        p95: percentile(values, 0.95)
       },
       rise_mode_b_thresholds: {
-        moderate: p(diffs, 0.9) ?? meta.rise_mode_b_thresholds?.moderate ?? 0.12,
-        high: p(diffs, 0.95) ?? meta.rise_mode_b_thresholds?.high ?? 0.26
+        moderate: percentile(diffs, 0.9) ?? meta.rise_mode_b_thresholds?.moderate ?? 0.12,
+        high: percentile(diffs, 0.95) ?? meta.rise_mode_b_thresholds?.high ?? 0.26
+      },
+      recent_10min: {
+        record_count: recent10minMeta.record_count || (recent10min.records || []).length || 0,
+        dataset_start: (recent10min.records || [])[0]?.timestamp || null,
+        dataset_end: (recent10min.records || [])[(recent10min.records || []).length - 1]?.timestamp || null,
+        source_url: recent10minMeta.source_url || null
       },
       notes: [
         ...(meta.notes || []),
-        'recent_hourly.json がある場合は同一時刻を上書きし、長期履歴と統合表示します。'
+        'recent_hourly.json がある場合は同一時刻を上書きし、長期履歴と統合表示します。',
+        'recent_10min.json がある場合は直近の10分観測値を優先して重ねます。'
       ]
     },
     records
@@ -107,11 +167,12 @@ const els = {
 
 
 async function init() {
-  const [historical, recent] = await Promise.all([
+  const [historical, recent, recent10min] = await Promise.all([
     fetchJson('./data/historical_hourly.json'),
-    fetchJson('./data/recent_hourly.json', true)
+    fetchJson('./data/recent_hourly.json', true),
+    fetchJson('./data/recent_10min.json', true)
   ]);
-  rawData = mergeDatasets(historical, recent);
+  rawData = mergeDatasets(historical, recent, recent10min);
 
   const records = rawData.records;
   const firstDate = records[0].timestamp.slice(0, 10);
@@ -313,6 +374,36 @@ function getRangeRecords() {
   });
 }
 
+function isSingleDayRange() {
+  return Boolean(els.startDate.value && els.startDate.value === els.endDate.value);
+}
+
+function hasTenMinuteRecords(records) {
+  return records.some(r => isTenMinuteRecord(r));
+}
+
+function getHourlyDisplayRecords(records) {
+  const map = new Map();
+
+  for (const record of records) {
+    if (isTenMinuteRecord(record)) {
+      if (record.fallback_record) {
+        map.set(record.timestamp, record.fallback_record);
+      }
+      continue;
+    }
+    map.set(record.timestamp, record);
+  }
+
+  return [...map.values()].sort((a, b) => a.timestamp.localeCompare(b.timestamp));
+}
+
+function getDisplayRecords(records) {
+  if (isSingleDayRange()) return records;
+  const hourlyRecords = getHourlyDisplayRecords(records);
+  return hourlyRecords.length ? hourlyRecords : records;
+}
+
 function validValues(records) {
   return records.filter(r => isRenderableRecord(r));
 }
@@ -327,7 +418,7 @@ function formatLevel(value) {
 
 function formatDateTime(ts) {
   const d = new Date(ts);
-  return `${d.getFullYear()}/${String(d.getMonth() + 1).padStart(2, '0')}/${String(d.getDate()).padStart(2, '0')} ${String(d.getHours()).padStart(2, '0')}:00`;
+  return `${d.getFullYear()}/${String(d.getMonth() + 1).padStart(2, '0')}/${String(d.getDate()).padStart(2, '0')} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
 }
 
 function formatXAxisLabel(value, unit) {
@@ -337,8 +428,11 @@ function formatXAxisLabel(value, unit) {
   const m = d.getMonth() + 1;
   const day = d.getDate();
   const h = d.getHours();
+  const mm = String(d.getMinutes()).padStart(2, '0');
   if (unit === 'month') return `${yy}年${m}月`;
   if (unit === 'week' || unit === 'day') return `${m}/${day}`;
+  if (unit === 'minute') return `${h}:${mm}`;
+  if (mm !== '00') return `${h}:${mm}`;
   return `${h}時`;
 }
 
@@ -349,9 +443,8 @@ function getLatestValid(records) {
 
 function getLast7DaysAverage(referenceTimestamp) {
   const ref = new Date(referenceTimestamp).getTime();
-  const start = ref - (24 * 7 - 1) * 3600 * 1000;
-  const values = rawData.records
-    .filter(r => isRenderableRecord(r))
+  const start = ref - SEVEN_DAYS_MS;
+  const values = getBaselineRecords(rawData.records)
     .filter(r => {
       const t = new Date(r.timestamp).getTime();
       return t >= start && t <= ref;
@@ -461,7 +554,9 @@ function render() {
     return;
   }
 
-  const records = getRangeRecords();
+  const rawRangeRecords = getRangeRecords();
+  const useTenMinuteDisplay = isSingleDayRange() && hasTenMinuteRecords(rawRangeRecords);
+  const records = getDisplayRecords(rawRangeRecords);
   const valid = validValues(records);
   if (!valid.length) {
     els.statusBadge.textContent = '判定不可';
@@ -505,7 +600,7 @@ function render() {
       borderWidth: 2,
       pointRadius: 0,
       spanGaps: false,
-      tension: 0.15
+      tension: useTenMinuteDisplay ? 0.28 : 0.15
     }
   ];
 
@@ -561,12 +656,15 @@ function render() {
 
   const latestRenderable = valid[valid.length - 1];
   const xMax = latestRenderable ? latestRenderable.timestamp : records[records.length - 1].timestamp;
+  const timeUnit = chooseTimeUnit(records, useTenMinuteDisplay);
+  const timeStepSize = timeUnit === 'minute' ? 10 : undefined;
 
   if (chart) {
     chart.data.datasets = datasets;
     chart.options.scales.x.min = records[0].timestamp;
     chart.options.scales.x.max = xMax;
-    chart.options.scales.x.time.unit = chooseTimeUnit(records.length);
+    chart.options.scales.x.time.unit = timeUnit;
+    chart.options.scales.x.time.stepSize = timeStepSize;
     chart.options.scales.y.min = yMin;
     chart.options.scales.y.max = yMax;
     chart.update();
@@ -609,7 +707,8 @@ function render() {
           max: xMax,
           time: {
             tooltipFormat: 'yyyy/MM/dd HH:mm',
-            unit: chooseTimeUnit(records.length)
+            unit: timeUnit,
+            stepSize: timeStepSize
           },
           ticks: {
             color: '#9bb4cc',
@@ -641,10 +740,15 @@ function render() {
   });
 }
 
-function chooseTimeUnit(length) {
-  if (length <= 24 * 3) return 'hour';
-  if (length <= 24 * 45) return 'day';
-  if (length <= 24 * 180) return 'week';
+function chooseTimeUnit(records, preferTenMinute = false) {
+  if (!records || records.length < 2) return 'hour';
+  if (preferTenMinute) return 'minute';
+  const first = new Date(records[0].timestamp).getTime();
+  const last = new Date(records[records.length - 1].timestamp).getTime();
+  const span = Math.max(0, last - first);
+  if (span <= 3 * DAY_MS) return 'hour';
+  if (span <= 45 * DAY_MS) return 'day';
+  if (span <= 180 * DAY_MS) return 'week';
   return 'month';
 }
 
