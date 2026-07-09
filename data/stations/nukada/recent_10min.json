@@ -1,0 +1,524 @@
+{
+  "meta": {
+    "source": "kawabou_tmlist",
+    "station_code": "2127100400007",
+    "ofc_cd": "21271",
+    "itmknd_cd": "4",
+    "obs_cd": "7",
+    "record_count": 50,
+    "window_hours": 24,
+    "dataset_start": "2026-07-09T08:00",
+    "dataset_end": "2026-07-09T16:10",
+    "latest_source_time": "2026/07/09 16:00",
+    "source_slot_jst": "2026-07-09T16:10",
+    "source_url": "https://www.river.go.jp/kawabou/file/files/tmlist/stg/20260709/1610/2127100400007.json",
+    "last_fetch_utc": "2026-07-09T07:12:14Z",
+    "probe_errors": [],
+    "notes": [
+      "river.go.jp kawabou tmlist stg JSON の min10Values から作成。",
+      "既存の1時間データに直近10分観測値を重ねるためのファイルです。"
+    ]
+  },
+  "records": [
+    {
+      "timestamp": "2026-07-09T08:00",
+      "value": -0.97,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": 0
+    },
+    {
+      "timestamp": "2026-07-09T08:10",
+      "value": -0.97,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": 0
+    },
+    {
+      "timestamp": "2026-07-09T08:20",
+      "value": -0.97,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": 0
+    },
+    {
+      "timestamp": "2026-07-09T08:30",
+      "value": -0.97,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": 0
+    },
+    {
+      "timestamp": "2026-07-09T08:40",
+      "value": -0.97,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": 0
+    },
+    {
+      "timestamp": "2026-07-09T08:50",
+      "value": -0.97,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": 0
+    },
+    {
+      "timestamp": "2026-07-09T09:00",
+      "value": -0.97,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": 0
+    },
+    {
+      "timestamp": "2026-07-09T09:10",
+      "value": -0.96,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": 0.01
+    },
+    {
+      "timestamp": "2026-07-09T09:20",
+      "value": -0.96,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": 0
+    },
+    {
+      "timestamp": "2026-07-09T09:30",
+      "value": -0.96,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": 0
+    },
+    {
+      "timestamp": "2026-07-09T09:40",
+      "value": -0.97,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": -0.01
+    },
+    {
+      "timestamp": "2026-07-09T09:50",
+      "value": -0.97,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": 0
+    },
+    {
+      "timestamp": "2026-07-09T10:00",
+      "value": -0.96,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": 0.01
+    },
+    {
+      "timestamp": "2026-07-09T10:10",
+      "value": -0.96,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": 0
+    },
+    {
+      "timestamp": "2026-07-09T10:20",
+      "value": -0.96,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": 0
+    },
+    {
+      "timestamp": "2026-07-09T10:30",
+      "value": -0.96,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": 0
+    },
+    {
+      "timestamp": "2026-07-09T10:40",
+      "value": -0.96,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": 0
+    },
+    {
+      "timestamp": "2026-07-09T10:50",
+      "value": -0.96,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": 0
+    },
+    {
+      "timestamp": "2026-07-09T11:00",
+      "value": -0.96,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": 0
+    },
+    {
+      "timestamp": "2026-07-09T11:10",
+      "value": -0.96,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": 0
+    },
+    {
+      "timestamp": "2026-07-09T11:20",
+      "value": -0.96,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": 0
+    },
+    {
+      "timestamp": "2026-07-09T11:30",
+      "value": -0.96,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": 0
+    },
+    {
+      "timestamp": "2026-07-09T11:40",
+      "value": -0.96,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": 0
+    },
+    {
+      "timestamp": "2026-07-09T11:50",
+      "value": -0.96,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": 0
+    },
+    {
+      "timestamp": "2026-07-09T12:00",
+      "value": -0.96,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": 0
+    },
+    {
+      "timestamp": "2026-07-09T12:10",
+      "value": -0.96,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": 0
+    },
+    {
+      "timestamp": "2026-07-09T12:20",
+      "value": -0.96,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": 0
+    },
+    {
+      "timestamp": "2026-07-09T12:30",
+      "value": -0.96,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": 0
+    },
+    {
+      "timestamp": "2026-07-09T12:40",
+      "value": -0.97,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": -0.01
+    },
+    {
+      "timestamp": "2026-07-09T12:50",
+      "value": -0.96,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": 0.01
+    },
+    {
+      "timestamp": "2026-07-09T13:00",
+      "value": -0.96,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": 0
+    },
+    {
+      "timestamp": "2026-07-09T13:10",
+      "value": -0.97,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": -0.01
+    },
+    {
+      "timestamp": "2026-07-09T13:20",
+      "value": -0.97,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": 0
+    },
+    {
+      "timestamp": "2026-07-09T13:30",
+      "value": -0.96,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": 0.01
+    },
+    {
+      "timestamp": "2026-07-09T13:40",
+      "value": -0.96,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": 0
+    },
+    {
+      "timestamp": "2026-07-09T13:50",
+      "value": -0.96,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": 0
+    },
+    {
+      "timestamp": "2026-07-09T14:00",
+      "value": -0.97,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": -0.01
+    },
+    {
+      "timestamp": "2026-07-09T14:10",
+      "value": -0.97,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": 0
+    },
+    {
+      "timestamp": "2026-07-09T14:20",
+      "value": -0.97,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": 0
+    },
+    {
+      "timestamp": "2026-07-09T14:30",
+      "value": -0.97,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": 0
+    },
+    {
+      "timestamp": "2026-07-09T14:40",
+      "value": -0.97,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": 0
+    },
+    {
+      "timestamp": "2026-07-09T14:50",
+      "value": -0.97,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": 0
+    },
+    {
+      "timestamp": "2026-07-09T15:00",
+      "value": -0.97,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": 0
+    },
+    {
+      "timestamp": "2026-07-09T15:10",
+      "value": -0.96,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": 0.01
+    },
+    {
+      "timestamp": "2026-07-09T15:20",
+      "value": -0.96,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": 0
+    },
+    {
+      "timestamp": "2026-07-09T15:30",
+      "value": -0.96,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": 0
+    },
+    {
+      "timestamp": "2026-07-09T15:40",
+      "value": -0.96,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": 0
+    },
+    {
+      "timestamp": "2026-07-09T15:50",
+      "value": -0.96,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": 0
+    },
+    {
+      "timestamp": "2026-07-09T16:00",
+      "value": -0.96,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": 0
+    },
+    {
+      "timestamp": "2026-07-09T16:10",
+      "value": null,
+      "flag": "missing",
+      "resolution": "10min",
+      "quality_code": null,
+      "quality_flag": null,
+      "over_level": null,
+      "change_10min": null
+    }
+  ]
+}

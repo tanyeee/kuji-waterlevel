@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>久慈川 額田 水位ビューア</title>
+  <title>久慈川 水位ビューア</title>
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3"></script>
@@ -13,9 +13,9 @@
     <header class="hero">
       <div>
         <p class="eyebrow">Kujigawa Water Level</p>
-        <h1>久慈川 額田 水位ビューア</h1>
+        <h1 id="pageTitle">久慈川 水位ビューア</h1>
         <p class="subtext">初期画面では、直近1週間の水位グラフを表示します。</p>
-        <p class="subtext">2016年から直近までの久慈川 額田観測所の水位データと増水基準を閲覧できます。</p>
+        <p id="stationSummary" class="subtext">観測地点を選んで、水位データと増水基準を閲覧できます。</p>
         <p class="subtext">直近は河川防災情報の10分観測値を重ねて表示します。</p>
       </div>
     </header>
@@ -42,6 +42,10 @@
 
     <section class="controls panel">
       <div class="control-grid">
+        <label class="field">
+          <span>観測地点</span>
+          <select id="stationSelect"></select>
+        </label>
         <label class="field">
           <span>開始日</span>
           <input type="date" id="startDate" />
@@ -153,7 +157,7 @@
 
     <section class="panel footnote">
       <div class="panel-title">データの扱い</div>
-      <p class="data-source-note">更新対応版: 2016年から直近までの久慈川 額田観測所の水位データと増水基準を閲覧できます。直近約1日分は10分観測値を優先します。</p>
+      <p id="dataSourceNote" class="data-source-note">更新対応版: 選択した観測地点の水位データと増水基準を閲覧できます。直近約1日分は10分観測値を優先します。</p>
       <ul>
         <li>$、#、- は欠損として扱い、線をつなげていません。</li>
         <li>* は暫定値ですが有効値として扱っています。</li>

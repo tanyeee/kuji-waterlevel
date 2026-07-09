@@ -39,7 +39,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/recent_hourly.json data/historical_hourly.json
+          git add data/stations
           if ! git diff --cached --quiet; then
             git commit -m "Auto update monthly hourly data"
             git pull --rebase origin "$GITHUB_REF_NAME"

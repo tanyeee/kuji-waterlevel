@@ -1,0 +1,69 @@
+{
+  "default_station": "nukada",
+  "rivers": [
+    {
+      "id": "kuji",
+      "name": "久慈川",
+      "station_ids": ["nukada", "sakakibashi", "kuji-ohashi"]
+    }
+  ],
+  "stations": [
+    {
+      "id": "nukada",
+      "name": "額田",
+      "river_id": "kuji",
+      "river_name": "久慈川",
+      "data_dir": "data/stations/nukada",
+      "hourly": {
+        "station_id": "303011283322030"
+      },
+      "ten_min": {
+        "ofc_cd": "21271",
+        "itmknd_cd": "4",
+        "obs_cd": "7"
+      },
+      "location": {
+        "lat": 36.5038889,
+        "lon": 140.5466325203125
+      }
+    },
+    {
+      "id": "sakakibashi",
+      "name": "榊橋",
+      "river_id": "kuji",
+      "river_name": "久慈川",
+      "data_dir": "data/stations/sakakibashi",
+      "hourly": {
+        "station_id": "303011283322050"
+      },
+      "ten_min": {
+        "ofc_cd": "21271",
+        "itmknd_cd": "4",
+        "obs_cd": "4"
+      },
+      "location": {
+        "lat": 36.495,
+        "lon": 140.5949658203125
+      }
+    },
+    {
+      "id": "kuji-ohashi",
+      "name": "久慈大橋",
+      "river_id": "kuji",
+      "river_name": "久慈川",
+      "data_dir": "data/stations/kuji-ohashi",
+      "hourly": {
+        "station_id": "303011283322060"
+      },
+      "ten_min": {
+        "ofc_cd": "21271",
+        "itmknd_cd": "4",
+        "obs_cd": "8"
+      },
+      "location": {
+        "lat": 36.4808333,
+        "lon": 140.62178851015625
+      }
+    }
+  ]
+}

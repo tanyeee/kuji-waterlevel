@@ -29,6 +29,14 @@ class Record:
     flag: str = ""
 
 
+@dataclass(frozen=True)
+class StationTarget:
+    id: str
+    name: str
+    station_id: str
+    output: Path
+
+
 def decode_html(content: bytes) -> str:
     for enc in ("cp932", "shift_jis", "utf-8", "euc_jp", "latin1"):
         try:
@@ -101,6 +109,7 @@ def load_json(path: Path) -> dict:
 
 
 def save_json(path: Path, payload: dict) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
@@ -130,9 +139,80 @@ def fetch_month_records(session: requests.Session, station_id: str, year: int, m
     return parse_monthly_dat(text)
 
 
+def load_config_targets(config_path: Path) -> list[StationTarget]:
+    config = json.loads(config_path.read_text(encoding="utf-8"))
+    targets: list[StationTarget] = []
+    for station in config.get("stations", []):
+        hourly = station.get("hourly") or {}
+        station_id = hourly.get("station_id")
+        data_dir = station.get("data_dir")
+        if not station_id or not data_dir:
+            continue
+        targets.append(StationTarget(
+            id=station["id"],
+            name=station.get("name", station["id"]),
+            station_id=str(station_id),
+            output=Path(data_dir) / "recent_hourly.json",
+        ))
+    return targets
+
+
+def build_targets(args: argparse.Namespace) -> list[StationTarget]:
+    if args.station_id:
+        return [StationTarget(
+            id=args.station_id,
+            name=args.station_id,
+            station_id=args.station_id,
+            output=Path(args.output),
+        )]
+
+    config_path = Path(args.config)
+    if config_path.exists():
+        return load_config_targets(config_path)
+
+    return [StationTarget(
+        id="nukada",
+        name="額田",
+        station_id="303011283322030",
+        output=Path(args.output),
+    )]
+
+
+def update_target(
+    target: StationTarget,
+    session: requests.Session,
+    today: date,
+    keep_days: int,
+    timeout: int,
+) -> None:
+    fetched: list[dict] = []
+    for year, month in month_iter(today):
+        month_records = fetch_month_records(session, target.station_id, year, month, timeout)
+        for r in month_records:
+            fetched.append({"timestamp": r.timestamp, "value": r.value, "flag": r.flag})
+
+    now_ts = datetime.now()
+    latest_data = clip_recent(fetched, keep_days, now_ts)
+    payload = {
+        "meta": {
+            "source": "monthly_page_dat",
+            "station_id": target.station_id,
+            "station_name": target.name,
+            "record_count": len(latest_data),
+            "window_days": keep_days,
+            "last_fetch_utc": datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
+            "months_fetched": [f"{y:04d}-{m:02d}" for y, m in month_iter(today)],
+        },
+        "records": latest_data,
+    }
+    save_json(target.output, payload)
+    print(f"saved {target.output} ({len(latest_data)} records)")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="時刻水位月表から直近の1時間データを更新します。")
-    parser.add_argument("--station-id", default="303011283322030")
+    parser.add_argument("--config", default="config/stations.json")
+    parser.add_argument("--station-id", default=None)
     parser.add_argument("--output", default="data/recent_hourly.json")
     parser.add_argument("--keep-days", type=int, default=45)
     parser.add_argument("--timeout", type=int, default=60)
@@ -140,35 +220,17 @@ def main() -> None:
     args = parser.parse_args()
 
     today = date.fromisoformat(args.today) if args.today else datetime.now().date()
-    output_path = Path(args.output)
-    output_path.parent.mkdir(parents=True, exist_ok=True)
 
     session = requests.Session()
     session.headers.update({
         "User-Agent": "Mozilla/5.0 (compatible; KujiWaterLevelBot/1.0)",
     })
 
-    fetched: list[dict] = []
-    for year, month in month_iter(today):
-        month_records = fetch_month_records(session, args.station_id, year, month, args.timeout)
-        for r in month_records:
-            fetched.append({"timestamp": r.timestamp, "value": r.value, "flag": r.flag})
-
-    now_ts = datetime.now()
-    latest_data = clip_recent(fetched, args.keep_days, now_ts)
-    payload = {
-        "meta": {
-            "source": "monthly_page_dat",
-            "station_id": args.station_id,
-            "record_count": len(latest_data),
-            "window_days": args.keep_days,
-            "last_fetch_utc": datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
-            "months_fetched": [f"{y:04d}-{m:02d}" for y, m in month_iter(today)],
-        },
-        "records": latest_data,
-    }
-    save_json(output_path, payload)
-    print(f"saved {output_path} ({len(latest_data)} records)")
+    targets = build_targets(args)
+    if not targets:
+        raise SystemExit("no station targets configured")
+    for target in targets:
+        update_target(target, session, today, args.keep_days, args.timeout)
 
 
 if __name__ == "__main__":
