@@ -7,12 +7,12 @@
     "obs_cd": "8",
     "record_count": 50,
     "window_hours": 24,
-    "dataset_start": "2026-07-09T08:00",
-    "dataset_end": "2026-07-09T16:10",
-    "latest_source_time": "2026/07/09 16:00",
-    "source_slot_jst": "2026-07-09T16:10",
-    "source_url": "https://www.river.go.jp/kawabou/file/files/tmlist/stg/20260709/1610/2127100400008.json",
-    "last_fetch_utc": "2026-07-09T07:12:15Z",
+    "dataset_start": "2026-07-09T11:00",
+    "dataset_end": "2026-07-09T19:10",
+    "latest_source_time": "2026/07/09 19:10",
+    "source_slot_jst": "2026-07-09T19:10",
+    "source_url": "https://www.river.go.jp/kawabou/file/files/tmlist/stg/20260709/1910/2127100400008.json",
+    "last_fetch_utc": "2026-07-09T10:14:56Z",
     "probe_errors": [],
     "notes": [
       "river.go.jp kawabou tmlist stg JSON の min10Values から作成。",
@@ -20,186 +20,6 @@
     ]
   },
   "records": [
-    {
-      "timestamp": "2026-07-09T08:00",
-      "value": 1.11,
-      "flag": "",
-      "resolution": "10min",
-      "quality_code": 0,
-      "quality_flag": null,
-      "over_level": 0,
-      "change_10min": 0.03
-    },
-    {
-      "timestamp": "2026-07-09T08:10",
-      "value": 1.11,
-      "flag": "",
-      "resolution": "10min",
-      "quality_code": 0,
-      "quality_flag": null,
-      "over_level": 0,
-      "change_10min": 0
-    },
-    {
-      "timestamp": "2026-07-09T08:20",
-      "value": 1.14,
-      "flag": "",
-      "resolution": "10min",
-      "quality_code": 0,
-      "quality_flag": null,
-      "over_level": 0,
-      "change_10min": 0.03
-    },
-    {
-      "timestamp": "2026-07-09T08:30",
-      "value": 1.16,
-      "flag": "",
-      "resolution": "10min",
-      "quality_code": 0,
-      "quality_flag": null,
-      "over_level": 0,
-      "change_10min": 0.02
-    },
-    {
-      "timestamp": "2026-07-09T08:40",
-      "value": 1.15,
-      "flag": "",
-      "resolution": "10min",
-      "quality_code": 0,
-      "quality_flag": null,
-      "over_level": 0,
-      "change_10min": -0.01
-    },
-    {
-      "timestamp": "2026-07-09T08:50",
-      "value": 1.21,
-      "flag": "",
-      "resolution": "10min",
-      "quality_code": 0,
-      "quality_flag": null,
-      "over_level": 0,
-      "change_10min": 0.06
-    },
-    {
-      "timestamp": "2026-07-09T09:00",
-      "value": 1.2,
-      "flag": "",
-      "resolution": "10min",
-      "quality_code": 0,
-      "quality_flag": null,
-      "over_level": 0,
-      "change_10min": -0.01
-    },
-    {
-      "timestamp": "2026-07-09T09:10",
-      "value": 1.23,
-      "flag": "",
-      "resolution": "10min",
-      "quality_code": 0,
-      "quality_flag": null,
-      "over_level": 0,
-      "change_10min": 0.03
-    },
-    {
-      "timestamp": "2026-07-09T09:20",
-      "value": 1.23,
-      "flag": "",
-      "resolution": "10min",
-      "quality_code": 0,
-      "quality_flag": null,
-      "over_level": 0,
-      "change_10min": 0
-    },
-    {
-      "timestamp": "2026-07-09T09:30",
-      "value": 1.26,
-      "flag": "",
-      "resolution": "10min",
-      "quality_code": 0,
-      "quality_flag": null,
-      "over_level": 0,
-      "change_10min": 0.03
-    },
-    {
-      "timestamp": "2026-07-09T09:40",
-      "value": 1.27,
-      "flag": "",
-      "resolution": "10min",
-      "quality_code": 0,
-      "quality_flag": null,
-      "over_level": 0,
-      "change_10min": 0.01
-    },
-    {
-      "timestamp": "2026-07-09T09:50",
-      "value": 1.28,
-      "flag": "",
-      "resolution": "10min",
-      "quality_code": 0,
-      "quality_flag": null,
-      "over_level": 0,
-      "change_10min": 0.01
-    },
-    {
-      "timestamp": "2026-07-09T10:00",
-      "value": 1.27,
-      "flag": "",
-      "resolution": "10min",
-      "quality_code": 0,
-      "quality_flag": null,
-      "over_level": 0,
-      "change_10min": -0.01
-    },
-    {
-      "timestamp": "2026-07-09T10:10",
-      "value": 1.27,
-      "flag": "",
-      "resolution": "10min",
-      "quality_code": 0,
-      "quality_flag": null,
-      "over_level": 0,
-      "change_10min": 0
-    },
-    {
-      "timestamp": "2026-07-09T10:20",
-      "value": 1.27,
-      "flag": "",
-      "resolution": "10min",
-      "quality_code": 0,
-      "quality_flag": null,
-      "over_level": 0,
-      "change_10min": 0
-    },
-    {
-      "timestamp": "2026-07-09T10:30",
-      "value": 1.29,
-      "flag": "",
-      "resolution": "10min",
-      "quality_code": 0,
-      "quality_flag": null,
-      "over_level": 0,
-      "change_10min": 0.02
-    },
-    {
-      "timestamp": "2026-07-09T10:40",
-      "value": 1.32,
-      "flag": "",
-      "resolution": "10min",
-      "quality_code": 0,
-      "quality_flag": null,
-      "over_level": 0,
-      "change_10min": 0.03
-    },
-    {
-      "timestamp": "2026-07-09T10:50",
-      "value": 1.32,
-      "flag": "",
-      "resolution": "10min",
-      "quality_code": 0,
-      "quality_flag": null,
-      "over_level": 0,
-      "change_10min": 0
-    },
     {
       "timestamp": "2026-07-09T11:00",
       "value": 1.32,
@@ -512,13 +332,193 @@
     },
     {
       "timestamp": "2026-07-09T16:10",
-      "value": null,
-      "flag": "missing",
+      "value": 1.25,
+      "flag": "",
       "resolution": "10min",
-      "quality_code": null,
+      "quality_code": 0,
       "quality_flag": null,
-      "over_level": null,
-      "change_10min": null
+      "over_level": 0,
+      "change_10min": 0
+    },
+    {
+      "timestamp": "2026-07-09T16:20",
+      "value": 1.25,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": 0
+    },
+    {
+      "timestamp": "2026-07-09T16:30",
+      "value": 1.24,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": -0.01
+    },
+    {
+      "timestamp": "2026-07-09T16:40",
+      "value": 1.26,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": 0.02
+    },
+    {
+      "timestamp": "2026-07-09T16:50",
+      "value": 1.25,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": -0.01
+    },
+    {
+      "timestamp": "2026-07-09T17:00",
+      "value": 1.26,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": 0.01
+    },
+    {
+      "timestamp": "2026-07-09T17:10",
+      "value": 1.3,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": 0.04
+    },
+    {
+      "timestamp": "2026-07-09T17:20",
+      "value": 1.32,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": 0.02
+    },
+    {
+      "timestamp": "2026-07-09T17:30",
+      "value": 1.31,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": -0.01
+    },
+    {
+      "timestamp": "2026-07-09T17:40",
+      "value": 1.33,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": 0.02
+    },
+    {
+      "timestamp": "2026-07-09T17:50",
+      "value": 1.32,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": -0.01
+    },
+    {
+      "timestamp": "2026-07-09T18:00",
+      "value": 1.37,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": 0.05
+    },
+    {
+      "timestamp": "2026-07-09T18:10",
+      "value": 1.37,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": 0
+    },
+    {
+      "timestamp": "2026-07-09T18:20",
+      "value": 1.38,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": 0.01
+    },
+    {
+      "timestamp": "2026-07-09T18:30",
+      "value": 1.38,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": 0
+    },
+    {
+      "timestamp": "2026-07-09T18:40",
+      "value": 1.41,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": 0.03
+    },
+    {
+      "timestamp": "2026-07-09T18:50",
+      "value": 1.41,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": 0
+    },
+    {
+      "timestamp": "2026-07-09T19:00",
+      "value": 1.43,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": 0.02
+    },
+    {
+      "timestamp": "2026-07-09T19:10",
+      "value": 1.42,
+      "flag": "",
+      "resolution": "10min",
+      "quality_code": 0,
+      "quality_flag": null,
+      "over_level": 0,
+      "change_10min": -0.01
     }
   ]
 }
