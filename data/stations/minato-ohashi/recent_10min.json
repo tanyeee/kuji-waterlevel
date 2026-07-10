@@ -7,11 +7,11 @@
     "river_name": "那珂川",
     "record_count": 145,
     "window_hours": 24,
-    "dataset_start": "2026-07-09T11:20",
-    "dataset_end": "2026-07-10T11:20",
+    "dataset_start": "2026-07-09T14:00",
+    "dataset_end": "2026-07-10T14:00",
     "index_url": "https://www1.river.go.jp/cgi-bin/DspWaterData.exe?KIND=9&ID=303021283322010",
-    "source_url": "https://www1.river.go.jp/dat/dload/download/29303021283322010202607032114730.dat",
-    "last_fetch_utc": "2026-07-10T02:36:46Z",
+    "source_url": "https://www1.river.go.jp/dat/dload/download/29303021283322010202607032213657.dat",
+    "last_fetch_utc": "2026-07-10T05:12:47Z",
     "probe_errors": [],
     "notes": [
       "水文水質データベースのリアルタイム10分水位一覧表からDLした dat ファイルで作成。",
@@ -19,102 +19,6 @@
     ]
   },
   "records": [
-    {
-      "timestamp": "2026-07-09T11:20",
-      "value": 0.78,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-07-09T11:30",
-      "value": 0.74,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-07-09T11:40",
-      "value": 0.77,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-07-09T11:50",
-      "value": 0.77,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-07-09T12:00",
-      "value": 0.78,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-07-09T12:10",
-      "value": 0.77,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-07-09T12:20",
-      "value": 0.76,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-07-09T12:30",
-      "value": 0.75,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-07-09T12:40",
-      "value": 0.76,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-07-09T12:50",
-      "value": 0.76,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-07-09T13:00",
-      "value": 0.74,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-07-09T13:10",
-      "value": 0.74,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-07-09T13:20",
-      "value": 0.73,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-07-09T13:30",
-      "value": 0.72,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-07-09T13:40",
-      "value": 0.72,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-07-09T13:50",
-      "value": 0.74,
-      "flag": "",
-      "resolution": "10min"
-    },
     {
       "timestamp": "2026-07-09T14:00",
       "value": 0.73,
@@ -886,6 +790,102 @@
     {
       "timestamp": "2026-07-10T11:20",
       "value": 0.74,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-07-10T11:30",
+      "value": 0.75,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-07-10T11:40",
+      "value": 0.74,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-07-10T11:50",
+      "value": 0.73,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-07-10T12:00",
+      "value": 0.76,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-07-10T12:10",
+      "value": 0.79,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-07-10T12:20",
+      "value": 0.79,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-07-10T12:30",
+      "value": 0.82,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-07-10T12:40",
+      "value": 0.83,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-07-10T12:50",
+      "value": 0.83,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-07-10T13:00",
+      "value": 0.81,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-07-10T13:10",
+      "value": 0.8,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-07-10T13:20",
+      "value": 0.82,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-07-10T13:30",
+      "value": 0.82,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-07-10T13:40",
+      "value": 0.84,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-07-10T13:50",
+      "value": 0.84,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-07-10T14:00",
+      "value": 0.84,
       "flag": "",
       "resolution": "10min"
     }
