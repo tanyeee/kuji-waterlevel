@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>久慈川 水位ビューア</title>
+  <title>茨城県河川水位ビューア</title>
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3"></script>
@@ -13,10 +13,9 @@
     <header class="hero">
       <div>
         <p class="eyebrow">Kujigawa Water Level</p>
-        <h1 id="pageTitle">久慈川 水位ビューア</h1>
-        <p class="subtext">初期画面では、直近1週間の水位グラフを表示します。</p>
+        <h1 id="pageTitle">茨城県河川水位ビューア</h1>
         <p id="stationSummary" class="subtext">観測地点を選んで、水位データと増水基準を閲覧できます。</p>
-        <p class="subtext">直近は河川防災情報の10分観測値を重ねて表示します。</p>
+        <p class="subtext">24時間モードだけ10分ごとの詳細な観測値を表示します。</p>
       </div>
     </header>
 
@@ -71,7 +70,7 @@
 
       <div class="preset-row">
         <span class="preset-label">プリセット</span>
-        <button type="button" class="preset-btn" data-days="1">1日</button>
+        <button type="button" class="preset-btn" data-days="24h">24時間</button>
         <button type="button" class="preset-btn" data-days="3">3日</button>
         <button type="button" class="preset-btn" data-days="7">1週間</button>
         <button type="button" class="preset-btn" data-days="30">1か月</button>
