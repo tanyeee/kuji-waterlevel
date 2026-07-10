@@ -3,50 +3,15 @@
     "source": "monthly_page_dat",
     "station_id": "303011283322050",
     "station_name": "榊橋",
-    "record_count": 871,
+    "record_count": 864,
     "window_days": 45,
-    "last_fetch_utc": "2026-07-09T07:12:01Z",
+    "last_fetch_utc": "2026-07-09T23:35:23Z",
     "months_fetched": [
       "2026-06",
       "2026-07"
     ]
   },
   "records": [
-    {
-      "timestamp": "2026-06-25T17:00",
-      "value": 0.07,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-06-25T18:00",
-      "value": 0.07,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-06-25T19:00",
-      "value": 0.07,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-06-25T20:00",
-      "value": 0.19,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-06-25T21:00",
-      "value": 0.26,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-06-25T22:00",
-      "value": 0.32,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-06-25T23:00",
-      "value": 0.37,
-      "flag": "*"
-    },
     {
       "timestamp": "2026-06-26T00:00",
       "value": 0.27,
@@ -1689,83 +1654,83 @@
     },
     {
       "timestamp": "2026-07-09T16:00",
-      "value": null,
-      "flag": "-"
+      "value": 0.0,
+      "flag": "*"
     },
     {
       "timestamp": "2026-07-09T17:00",
-      "value": null,
-      "flag": "-"
+      "value": 0.06,
+      "flag": "*"
     },
     {
       "timestamp": "2026-07-09T18:00",
-      "value": null,
-      "flag": "-"
+      "value": 0.15,
+      "flag": "*"
     },
     {
       "timestamp": "2026-07-09T19:00",
-      "value": null,
-      "flag": "-"
+      "value": 0.23,
+      "flag": "*"
     },
     {
       "timestamp": "2026-07-09T20:00",
-      "value": null,
-      "flag": "-"
+      "value": 0.32,
+      "flag": "*"
     },
     {
       "timestamp": "2026-07-09T21:00",
-      "value": null,
-      "flag": "-"
+      "value": 0.34,
+      "flag": "*"
     },
     {
       "timestamp": "2026-07-09T22:00",
-      "value": null,
-      "flag": "-"
+      "value": 0.37,
+      "flag": "*"
     },
     {
       "timestamp": "2026-07-09T23:00",
-      "value": null,
-      "flag": "-"
+      "value": 0.24,
+      "flag": "*"
     },
     {
       "timestamp": "2026-07-10T00:00",
-      "value": null,
-      "flag": "-"
+      "value": 0.14,
+      "flag": "*"
     },
     {
       "timestamp": "2026-07-10T01:00",
-      "value": null,
-      "flag": "-"
+      "value": -0.01,
+      "flag": "*"
     },
     {
       "timestamp": "2026-07-10T02:00",
-      "value": null,
-      "flag": "-"
+      "value": -0.17,
+      "flag": "*"
     },
     {
       "timestamp": "2026-07-10T03:00",
-      "value": null,
-      "flag": "-"
+      "value": -0.29,
+      "flag": "*"
     },
     {
       "timestamp": "2026-07-10T04:00",
-      "value": null,
-      "flag": "-"
+      "value": -0.35,
+      "flag": "*"
     },
     {
       "timestamp": "2026-07-10T05:00",
-      "value": null,
-      "flag": "-"
+      "value": -0.37,
+      "flag": "*"
     },
     {
       "timestamp": "2026-07-10T06:00",
-      "value": null,
-      "flag": "-"
+      "value": -0.37,
+      "flag": "*"
     },
     {
       "timestamp": "2026-07-10T07:00",
-      "value": null,
-      "flag": "-"
+      "value": -0.38,
+      "flag": "*"
     },
     {
       "timestamp": "2026-07-10T08:00",
