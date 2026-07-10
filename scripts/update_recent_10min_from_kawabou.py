@@ -143,6 +143,37 @@ def clip_recent(records: list[dict[str, Any]], keep_hours: int) -> list[dict[str
     return [r for r in records if parse_output_timestamp(r["timestamp"]) >= threshold]
 
 
+def load_existing_records(path: Path) -> list[dict[str, Any]]:
+    if not path.exists():
+        return []
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return []
+    records = payload.get("records")
+    if not isinstance(records, list):
+        return []
+    return [record for record in records if isinstance(record, dict) and record.get("timestamp")]
+
+
+def merge_observations(
+    existing_records: list[dict[str, Any]],
+    fetched_records: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    """Merge by observation time, preferring the latest fetch for duplicate timestamps."""
+    records_by_ts: dict[str, dict[str, Any]] = {}
+    for record in [*existing_records, *fetched_records]:
+        timestamp = record.get("timestamp")
+        if not isinstance(timestamp, str):
+            continue
+        try:
+            parse_output_timestamp(timestamp)
+        except ValueError:
+            continue
+        records_by_ts[timestamp] = record
+    return [records_by_ts[timestamp] for timestamp in sorted(records_by_ts)]
+
+
 def fetch_hydro_10min_dat(
     session: requests.Session,
     station_id: str,
@@ -298,6 +329,9 @@ def update_target(target: StationTarget, args: argparse.Namespace) -> None:
         result = fetch_hydro_10min_dat(session, target.hydrology_station_id, args.timeout)
         records = result.records
 
+    # KIND=9 normally exposes only about 24 hours. Accumulate successive fetches
+    # locally so a 48-hour comparison window can be retained.
+    records = merge_observations(load_existing_records(target.output), records)
     records = clip_recent(records, args.keep_hours)
     if not records:
         raise RuntimeError(f"no 10-minute records parsed for {target.id}")
@@ -320,7 +354,7 @@ def main() -> None:
     parser.add_argument("--config", default="config/stations.json")
     parser.add_argument("--station-code", default=None, help="水文水質データベースの観測所記号")
     parser.add_argument("--output", default="data/recent_10min.json")
-    parser.add_argument("--keep-hours", type=int, default=24)
+    parser.add_argument("--keep-hours", type=int, default=48)
     parser.add_argument("--timeout", type=int, default=30)
     parser.add_argument("--input", default=None, help="Local hydrology dat fixture for tests")
     parser.add_argument("--input-encoding", default="cp932")
