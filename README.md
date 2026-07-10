@@ -49,6 +49,14 @@ python scripts/merge_recent_into_historical.py
 python scripts/update_recent_10min_from_kawabou.py
 ```
 
+2016年以降の長期履歴を初期構築または再構築する場合は、次を実行します。
+
+```bash
+python scripts/bootstrap_historical_hourly_from_monthly_page.py --start-year 2016
+```
+
+このスクリプトは `config/stations.json` の全地点について、時刻水位月表を月ごとに取得し、`historical_hourly.json` を作り直します。通常は当月ページに含まれる未来の未登録枠を保存しません。
+
 ### 更新元URLの考え方
 
 時刻水位月表の固定URLを直接組み立てます。
