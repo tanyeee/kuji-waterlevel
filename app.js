@@ -148,6 +148,7 @@ const fmt3 = new Intl.NumberFormat('ja-JP', { minimumFractionDigits: 3, maximumF
 const els = {
   pageTitle: document.getElementById('pageTitle'),
   stationSummary: document.getElementById('stationSummary'),
+  riverSelect: document.getElementById('riverSelect'),
   stationSelect: document.getElementById('stationSelect'),
   startDate: document.getElementById('startDate'),
   endDate: document.getElementById('endDate'),
@@ -179,43 +180,79 @@ const els = {
 async function init() {
   stationConfig = await fetchJson('./config/stations.json');
   pendingInitialState = loadViewState();
-  populateStationSelect();
+  const savedStation = stationById(pendingInitialState?.stationId);
+  const initialRiverId = savedStation?.river_id || pendingInitialState?.riverId || stationConfig.default_river || stationConfig.rivers?.[0]?.id;
+  populateRiverSelect(initialRiverId);
+  populateStationSelect(initialRiverId);
   bindEvents();
   applySavedMode(pendingInitialState);
-  const savedStation = stationById(pendingInitialState?.stationId);
   const defaultStationId = savedStation?.id || stationConfig.default_station || stationConfig.stations?.[0]?.id;
   await loadStation(defaultStationId, { rangeState: pendingInitialState });
   pendingInitialState = null;
 }
 
-function populateStationSelect() {
-  const stations = stationConfig.stations || [];
-  const riverById = new Map((stationConfig.rivers || []).map(r => [r.id, r]));
-  els.stationSelect.innerHTML = '';
-
-  const grouped = new Map();
-  for (const station of stations) {
-    const riverId = station.river_id || 'default';
-    if (!grouped.has(riverId)) grouped.set(riverId, []);
-    grouped.get(riverId).push(station);
+function populateRiverSelect(selectedRiverId) {
+  const rivers = stationConfig.rivers || [];
+  els.riverSelect.innerHTML = '';
+  for (const river of rivers) {
+    const option = document.createElement('option');
+    option.value = river.id;
+    option.textContent = river.name;
+    els.riverSelect.appendChild(option);
   }
+  if (selectedRiverId && rivers.some(river => river.id === selectedRiverId)) {
+    els.riverSelect.value = selectedRiverId;
+  } else if (rivers.length) {
+    els.riverSelect.value = rivers[0].id;
+  }
+}
 
-  for (const [riverId, riverStations] of grouped.entries()) {
-    const river = riverById.get(riverId);
-    const group = document.createElement('optgroup');
-    group.label = river?.name || riverStations[0]?.river_name || '観測地点';
-    for (const station of riverStations) {
-      const option = document.createElement('option');
-      option.value = station.id;
-      option.textContent = station.name;
-      group.appendChild(option);
+function stationsForRiver(riverId) {
+  const stations = stationConfig.stations || [];
+  const river = (stationConfig.rivers || []).find(item => item.id === riverId);
+  if (!river) return stations.filter(station => (station.river_id || 'default') === riverId);
+  const byId = new Map(stations.map(station => [station.id, station]));
+  return (river.station_ids || []).map(id => byId.get(id)).filter(Boolean);
+}
+
+function populateStationSelect(riverId, selectedStationId = null) {
+  const riverStations = stationsForRiver(riverId);
+  els.stationSelect.innerHTML = '';
+  for (const station of riverStations) {
+    const option = document.createElement('option');
+    option.value = station.id;
+    option.textContent = station.name;
+    if (station.observation_name && station.observation_name !== station.name) {
+      option.textContent += `（観測所名: ${station.observation_name}）`;
     }
-    els.stationSelect.appendChild(group);
+    els.stationSelect.appendChild(option);
+  }
+  if (selectedStationId && riverStations.some(station => station.id === selectedStationId)) {
+    els.stationSelect.value = selectedStationId;
+  } else if (riverStations.length) {
+    els.stationSelect.value = riverStations[0].id;
   }
 }
 
 function stationById(id) {
   return (stationConfig.stations || []).find(station => station.id === id) || null;
+}
+
+function riverById(id) {
+  return (stationConfig.rivers || []).find(river => river.id === id) || null;
+}
+
+function riverLabelForStation(station) {
+  return riverById(station?.river_id)?.name || station?.river_name || '';
+}
+
+function stationDisplayName(station) {
+  return `${riverLabelForStation(station) || ''} ${station?.name || ''}`.trim();
+}
+
+function observationNote(station) {
+  if (!station?.observation_name || station.observation_name === station.name) return '';
+  return `（観測所名: ${station.observation_name}）`;
 }
 
 function stationDataUrl(station, filename) {
@@ -225,15 +262,16 @@ function stationDataUrl(station, filename) {
 function resetForLoading(station) {
   els.statusBadge.textContent = '読み込み中';
   els.statusBadge.className = 'status-badge neutral';
-  els.statusDescription.textContent = `${station.river_name || ''} ${station.name} のデータを読み込んでいます。`.trim();
+  els.statusDescription.textContent = `${stationDisplayName(station)} のデータを読み込んでいます。`.trim();
 }
 
 function updateStationCopy() {
-  const stationName = currentStation ? `${currentStation.river_name || ''} ${currentStation.name}`.trim() : '久慈川';
+  const stationName = currentStation ? stationDisplayName(currentStation) : '観測地点';
+  const note = currentStation ? observationNote(currentStation) : '';
   els.pageTitle.textContent = '茨城県河川水位ビューア';
   document.title = '茨城県河川水位ビューア';
-  els.stationSummary.textContent = `${stationName} 観測所の水位データと増水基準を閲覧できます。`;
-  els.dataSourceNote.textContent = `更新対応版: ${stationName} 観測所の水位データと増水基準を閲覧できます。24時間モードでは10分観測値を優先します。`;
+  els.stationSummary.textContent = `${stationName}${note}の水位データと増水基準を閲覧できます。`;
+  els.dataSourceNote.textContent = `更新対応版: ${stationName}${note}の水位データと増水基準を閲覧できます。24時間モードでは10分観測値を優先します。`;
 }
 
 function loadViewState() {
@@ -248,6 +286,7 @@ function saveViewState() {
   if (!currentStation) return;
   const state = {
     stationId: currentStation.id,
+    riverId: currentStation.river_id || null,
     preset: activePresetValue,
     startDate: els.startDate.value || null,
     endDate: els.endDate.value || null,
@@ -301,6 +340,12 @@ async function loadStation(stationId, options = {}) {
   const hasRangeState = Object.prototype.hasOwnProperty.call(options, 'rangeState');
   const rangeState = hasRangeState ? options.rangeState : currentRangeState();
   currentStation = station;
+  if (station.river_id && els.riverSelect.value !== station.river_id) {
+    els.riverSelect.value = station.river_id;
+    populateStationSelect(station.river_id, station.id);
+  } else {
+    populateStationSelect(station.river_id || els.riverSelect.value, station.id);
+  }
   els.stationSelect.value = station.id;
   resetForLoading(station);
 
@@ -352,6 +397,18 @@ async function loadStation(stationId, options = {}) {
 function bindEvents() {
   if (eventsBound) return;
   eventsBound = true;
+  els.riverSelect.addEventListener('change', () => {
+    const rangeState = currentRangeState();
+    populateStationSelect(els.riverSelect.value);
+    const nextStationId = els.stationSelect.value;
+    if (!nextStationId) return;
+    loadStation(nextStationId, { rangeState }).catch(err => {
+      console.error(err);
+      els.statusBadge.textContent = '読み込み失敗';
+      els.statusBadge.className = 'status-badge neutral';
+      els.statusDescription.textContent = '選択した水系のデータまたはスクリプトの読み込みに失敗しました。';
+    });
+  });
   els.stationSelect.addEventListener('change', () => {
     const rangeState = currentRangeState();
     loadStation(els.stationSelect.value, { rangeState }).catch(err => {

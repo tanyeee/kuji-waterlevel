@@ -1,18 +1,40 @@
 {
   "default_station": "nukada",
+  "default_river": "kuji",
   "rivers": [
     {
       "id": "kuji",
-      "name": "久慈川",
-      "station_ids": ["nukada", "sakakibashi", "kuji-ohashi"]
+      "name": "久慈川水系",
+      "station_ids": ["tomioka-bashi", "nukada", "sakakibashi", "kuji-ohashi"]
+    },
+    {
+      "id": "hinuma-nakagawa",
+      "name": "涸沼・那珂川水系",
+      "station_ids": ["hinuma-bashi", "minato-ohashi", "suifu-bashi", "kunita-ohashi", "nakagawa-ohashi"]
     }
   ],
   "stations": [
     {
-      "id": "nukada",
-      "name": "額田",
+      "id": "tomioka-bashi",
+      "name": "富岡橋",
+      "observation_name": "富岡橋",
       "river_id": "kuji",
-      "river_name": "久慈川",
+      "river_name": "久慈川水系",
+      "data_dir": "data/stations/tomioka-bashi",
+      "hourly": {
+        "station_id": "303011283322020"
+      },
+      "ten_min": {
+        "station_id": "303011283322020"
+      },
+      "location": {}
+    },
+    {
+      "id": "nukada",
+      "name": "幸久橋",
+      "observation_name": "額田",
+      "river_id": "kuji",
+      "river_name": "久慈川水系",
       "data_dir": "data/stations/nukada",
       "hourly": {
         "station_id": "303011283322030"
@@ -31,8 +53,9 @@
     {
       "id": "sakakibashi",
       "name": "榊橋",
+      "observation_name": "榊橋",
       "river_id": "kuji",
-      "river_name": "久慈川",
+      "river_name": "久慈川水系",
       "data_dir": "data/stations/sakakibashi",
       "hourly": {
         "station_id": "303011283322050"
@@ -51,8 +74,9 @@
     {
       "id": "kuji-ohashi",
       "name": "久慈大橋",
+      "observation_name": "久慈大橋",
       "river_id": "kuji",
-      "river_name": "久慈川",
+      "river_name": "久慈川水系",
       "data_dir": "data/stations/kuji-ohashi",
       "hourly": {
         "station_id": "303011283322060"
@@ -67,6 +91,81 @@
         "lat": 36.4808333,
         "lon": 140.62178851015625
       }
+    },
+    {
+      "id": "hinuma-bashi",
+      "name": "涸沼橋",
+      "observation_name": "涸沼橋",
+      "river_id": "hinuma-nakagawa",
+      "river_name": "涸沼・那珂川水系",
+      "data_dir": "data/stations/hinuma-bashi",
+      "hourly": {
+        "station_id": "303021283322110"
+      },
+      "ten_min": {
+        "station_id": "303021283322110"
+      },
+      "location": {}
+    },
+    {
+      "id": "minato-ohashi",
+      "name": "湊大橋",
+      "observation_name": "湊大橋",
+      "river_id": "hinuma-nakagawa",
+      "river_name": "涸沼・那珂川水系",
+      "data_dir": "data/stations/minato-ohashi",
+      "hourly": {
+        "station_id": "303021283322010"
+      },
+      "ten_min": {
+        "station_id": "303021283322010"
+      },
+      "location": {}
+    },
+    {
+      "id": "suifu-bashi",
+      "name": "水府橋",
+      "observation_name": "水府橋",
+      "river_id": "hinuma-nakagawa",
+      "river_name": "涸沼・那珂川水系",
+      "data_dir": "data/stations/suifu-bashi",
+      "hourly": {
+        "station_id": "303021283322020"
+      },
+      "ten_min": {
+        "station_id": "303021283322020"
+      },
+      "location": {}
+    },
+    {
+      "id": "kunita-ohashi",
+      "name": "国田大橋",
+      "observation_name": "下国井",
+      "river_id": "hinuma-nakagawa",
+      "river_name": "涸沼・那珂川水系",
+      "data_dir": "data/stations/kunita-ohashi",
+      "hourly": {
+        "station_id": "303021283322030"
+      },
+      "ten_min": {
+        "station_id": "303021283322030"
+      },
+      "location": {}
+    },
+    {
+      "id": "nakagawa-ohashi",
+      "name": "那珂川大橋",
+      "observation_name": "野口",
+      "river_id": "hinuma-nakagawa",
+      "river_name": "涸沼・那珂川水系",
+      "data_dir": "data/stations/nakagawa-ohashi",
+      "hourly": {
+        "station_id": "303021283322040"
+      },
+      "ten_min": {
+        "station_id": "303021283322040"
+      },
+      "location": {}
     }
   ]
 }
