@@ -30,6 +30,7 @@ function isTenMinuteRecord(record) {
 const HOUR_MS = 3600 * 1000;
 const DAY_MS = 24 * HOUR_MS;
 const SEVEN_DAYS_MS = 7 * DAY_MS;
+const VIEW_STATE_KEY = 'ibaraki-water-level-view-state';
 
 function percentile(sortedValues, q) {
   if (!sortedValues.length) return null;
@@ -138,6 +139,8 @@ let rawData = null;
 let chart = null;
 let currentMode = 'A';
 let eventsBound = false;
+let activePresetValue = null;
+let pendingInitialState = null;
 
 const fmt = new Intl.NumberFormat('ja-JP', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const fmt3 = new Intl.NumberFormat('ja-JP', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
@@ -175,10 +178,14 @@ const els = {
 
 async function init() {
   stationConfig = await fetchJson('./config/stations.json');
+  pendingInitialState = loadViewState();
   populateStationSelect();
   bindEvents();
-  const defaultStationId = stationConfig.default_station || stationConfig.stations?.[0]?.id;
-  await loadStation(defaultStationId);
+  applySavedMode(pendingInitialState);
+  const savedStation = stationById(pendingInitialState?.stationId);
+  const defaultStationId = savedStation?.id || stationConfig.default_station || stationConfig.stations?.[0]?.id;
+  await loadStation(defaultStationId, { rangeState: pendingInitialState });
+  pendingInitialState = null;
 }
 
 function populateStationSelect() {
@@ -223,16 +230,76 @@ function resetForLoading(station) {
 
 function updateStationCopy() {
   const stationName = currentStation ? `${currentStation.river_name || ''} ${currentStation.name}`.trim() : '久慈川';
-  els.pageTitle.textContent = `${stationName} 水位ビューア`;
-  document.title = `${stationName} 水位ビューア`;
+  els.pageTitle.textContent = '茨城県河川水位ビューア';
+  document.title = '茨城県河川水位ビューア';
   els.stationSummary.textContent = `${stationName} 観測所の水位データと増水基準を閲覧できます。`;
-  els.dataSourceNote.textContent = `更新対応版: ${stationName} 観測所の水位データと増水基準を閲覧できます。直近約1日分は10分観測値を優先します。`;
+  els.dataSourceNote.textContent = `更新対応版: ${stationName} 観測所の水位データと増水基準を閲覧できます。24時間モードでは10分観測値を優先します。`;
 }
 
-async function loadStation(stationId) {
+function loadViewState() {
+  try {
+    return JSON.parse(localStorage.getItem(VIEW_STATE_KEY) || 'null');
+  } catch (err) {
+    return null;
+  }
+}
+
+function saveViewState() {
+  if (!currentStation) return;
+  const state = {
+    stationId: currentStation.id,
+    preset: activePresetValue,
+    startDate: els.startDate.value || null,
+    endDate: els.endDate.value || null,
+    mode: currentMode
+  };
+  try {
+    localStorage.setItem(VIEW_STATE_KEY, JSON.stringify(state));
+  } catch (err) {
+    // Storage may be unavailable in private or file contexts; rendering should continue.
+  }
+}
+
+function applySavedMode(state) {
+  if (!state?.mode) return;
+  currentMode = state.mode === 'B' ? 'B' : 'A';
+  els.modeButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.mode === currentMode));
+}
+
+function currentRangeState() {
+  return {
+    preset: activePresetValue,
+    startDate: els.startDate.value || null,
+    endDate: els.endDate.value || null,
+    mode: currentMode
+  };
+}
+
+function applyRangeState(state) {
+  if (!state) {
+    setPresetRange('7', { anchor: 'latest' });
+    setActivePreset('7');
+    return;
+  }
+
+  if (state.preset) {
+    setPresetRange(state.preset, { anchor: 'latest' });
+    setActivePreset(state.preset);
+    return;
+  }
+
+  clearActivePreset();
+  if (state?.startDate) els.startDate.value = state.startDate;
+  if (state?.endDate) els.endDate.value = state.endDate;
+  ensureDateInputs();
+}
+
+async function loadStation(stationId, options = {}) {
   const station = stationById(stationId) || stationById(stationConfig.default_station) || stationConfig.stations?.[0];
   if (!station) throw new Error('station config is empty');
 
+  const hasRangeState = Object.prototype.hasOwnProperty.call(options, 'rangeState');
+  const rangeState = hasRangeState ? options.rangeState : currentRangeState();
   currentStation = station;
   els.stationSelect.value = station.id;
   resetForLoading(station);
@@ -266,8 +333,8 @@ async function loadStation(stationId) {
   els.endDate.max = lastDate;
   els.startDate.value = firstDate;
   els.endDate.value = lastDate;
-  setPresetRange('7', { anchor: 'latest' });
-  setActivePreset('7');
+  applySavedMode(rangeState);
+  applyRangeState(rangeState);
 
   populateAnnualStats();
 
@@ -277,6 +344,7 @@ async function loadStation(stationId) {
     requestAnimationFrame(() => {
       ensureDateInputs();
       render();
+      saveViewState();
     });
   });
 }
@@ -285,7 +353,8 @@ function bindEvents() {
   if (eventsBound) return;
   eventsBound = true;
   els.stationSelect.addEventListener('change', () => {
-    loadStation(els.stationSelect.value).catch(err => {
+    const rangeState = currentRangeState();
+    loadStation(els.stationSelect.value, { rangeState }).catch(err => {
       console.error(err);
       els.statusBadge.textContent = '読み込み失敗';
       els.statusBadge.className = 'status-badge neutral';
@@ -293,16 +362,29 @@ function bindEvents() {
     });
   });
   els.applyButton.addEventListener('click', () => render());
-  els.toggleRangeLines.addEventListener('change', () => render());
-  els.toggleAnnualLines.addEventListener('change', () => render());
-  els.startDate.addEventListener('change', () => clearActivePreset());
-  els.endDate.addEventListener('change', () => clearActivePreset());
+  els.toggleRangeLines.addEventListener('change', () => {
+    render();
+    saveViewState();
+  });
+  els.toggleAnnualLines.addEventListener('change', () => {
+    render();
+    saveViewState();
+  });
+  els.startDate.addEventListener('change', () => {
+    clearActivePreset();
+    saveViewState();
+  });
+  els.endDate.addEventListener('change', () => {
+    clearActivePreset();
+    saveViewState();
+  });
 
   els.modeButtons.forEach(btn => {
     btn.addEventListener('click', () => {
       currentMode = btn.dataset.mode;
       els.modeButtons.forEach(b => b.classList.toggle('active', b === btn));
       render();
+      saveViewState();
     });
   });
 
@@ -311,6 +393,7 @@ function bindEvents() {
       setPresetRange(btn.dataset.days, { anchor: 'current-end' });
       setActivePreset(btn.dataset.days);
       render();
+      saveViewState();
     });
   });
 
@@ -319,15 +402,18 @@ function bindEvents() {
       shiftRange(btn.dataset.shiftUnit, Number(btn.dataset.shiftAmount));
       clearActivePreset();
       render();
+      saveViewState();
     });
   });
 }
 
 function clearActivePreset() {
+  activePresetValue = null;
   els.presetButtons.forEach(btn => btn.classList.remove('active'));
 }
 
 function setActivePreset(value) {
+  activePresetValue = value;
   els.presetButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.days === value));
 }
 
@@ -355,6 +441,13 @@ function setPresetRange(days, options = {}) {
   const latestTs = new Date((latestValid || records[records.length - 1]).timestamp);
   const firstTs = new Date(records[0].timestamp);
   const anchor = options.anchor || 'current-end';
+
+  if (days === '24h') {
+    const start = new Date(Math.max(firstTs.getTime(), latestTs.getTime() - DAY_MS));
+    els.startDate.value = toDateInput(start);
+    els.endDate.value = toDateInput(latestTs);
+    return;
+  }
 
   if (days === 'all') {
     els.startDate.value = records[0].timestamp.slice(0, 10);
@@ -440,8 +533,18 @@ function shiftRange(unit, amount) {
 function getRangeRecords() {
   ensureDateInputs();
 
-  let start = new Date(`${els.startDate.value}T00:00:00`);
-  let end = new Date(`${els.endDate.value}T23:59:59`);
+  let start;
+  let end;
+
+  if (isTwentyFourHourMode()) {
+    const records = rawData.records;
+    const latestValid = getLatestValid(rawData.records);
+    end = new Date((latestValid || records[records.length - 1]).timestamp);
+    start = new Date(end.getTime() - DAY_MS);
+  } else {
+    start = new Date(`${els.startDate.value}T00:00:00`);
+    end = new Date(`${els.endDate.value}T23:59:59`);
+  }
 
   if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) {
     const records = rawData.records;
@@ -464,8 +567,8 @@ function getRangeRecords() {
   });
 }
 
-function isSingleDayRange() {
-  return Boolean(els.startDate.value && els.startDate.value === els.endDate.value);
+function isTwentyFourHourMode() {
+  return activePresetValue === '24h';
 }
 
 function hasTenMinuteRecords(records) {
@@ -489,7 +592,7 @@ function getHourlyDisplayRecords(records) {
 }
 
 function getDisplayRecords(records) {
-  if (isSingleDayRange()) return records;
+  if (isTwentyFourHourMode()) return records;
   const hourlyRecords = getHourlyDisplayRecords(records);
   return hourlyRecords.length ? hourlyRecords : records;
 }
@@ -645,7 +748,7 @@ function render() {
   }
 
   const rawRangeRecords = getRangeRecords();
-  const useTenMinuteDisplay = isSingleDayRange() && hasTenMinuteRecords(rawRangeRecords);
+  const useTenMinuteDisplay = isTwentyFourHourMode() && hasTenMinuteRecords(rawRangeRecords);
   const records = getDisplayRecords(rawRangeRecords);
   const valid = validValues(records);
   if (!valid.length) {
@@ -665,7 +768,11 @@ function render() {
   els.rangeMin.textContent = formatLevel(minValue);
   els.rangeMean.textContent = formatLevel(meanValue);
   els.rangeMax.textContent = formatLevel(maxValue);
-  els.rangeLabel.textContent = `${els.startDate.value} ～ ${els.endDate.value} の表示`;
+  if (isTwentyFourHourMode()) {
+    els.rangeLabel.textContent = `${formatDateTime(records[0].timestamp)} ～ ${formatDateTime(records[records.length - 1].timestamp)} の表示`;
+  } else {
+    els.rangeLabel.textContent = `${els.startDate.value} ～ ${els.endDate.value} の表示`;
+  }
   els.statusBadge.textContent = status.label;
   els.statusBadge.className = `status-badge ${status.cssClass || ''}`;
   els.statusDescription.textContent = status.description;
@@ -758,6 +865,7 @@ function render() {
     chart.options.scales.y.min = yMin;
     chart.options.scales.y.max = yMax;
     chart.update();
+    saveViewState();
     return;
   }
 
@@ -828,6 +936,7 @@ function render() {
       }
     }
   });
+  saveViewState();
 }
 
 function chooseTimeUnit(records, preferTenMinute = false) {
