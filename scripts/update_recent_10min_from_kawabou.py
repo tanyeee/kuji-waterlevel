@@ -1,18 +1,22 @@
 from __future__ import annotations
 
 import argparse
+import csv
 import json
 import math
+import re
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
+from urllib.parse import urljoin
 from zoneinfo import ZoneInfo
 
 import requests
 
 
-KAWABOU_BASE = "https://www.river.go.jp/kawabou"
+HYDRO_BASE = "https://www1.river.go.jp"
+HYDRO_WATER_DATA_URL = f"{HYDRO_BASE}/cgi-bin/DspWaterData.exe"
 DEFAULT_OFC_CD = "21271"
 DEFAULT_ITMKND_CD = "4"
 DEFAULT_OBS_CD = "7"
@@ -26,9 +30,10 @@ JST = ZoneInfo("Asia/Tokyo")
 
 @dataclass(frozen=True)
 class FetchResult:
-    payload: dict[str, Any]
+    records: list[dict[str, Any]]
+    station_meta: dict[str, str]
     source_url: str
-    source_slot: datetime
+    index_url: str
     errors: list[str]
 
 
@@ -36,46 +41,11 @@ class FetchResult:
 class StationTarget:
     id: str
     name: str
-    ofc_cd: str
-    itmknd_cd: str
-    obs_cd: str
+    hydrology_station_id: str
+    ofc_cd: str | None
+    itmknd_cd: str | None
+    obs_cd: str | None
     output: Path
-
-
-def station_code(ofc_cd: str, itmknd_cd: str, obs_cd: str) -> str:
-    return f"{int(ofc_cd):05d}{int(itmknd_cd):03d}{int(obs_cd):05d}"
-
-
-def round_down_to_10_minutes(value: datetime) -> datetime:
-    return value.replace(minute=(value.minute // 10) * 10, second=0, microsecond=0)
-
-
-def parse_now(value: str | None) -> datetime:
-    if not value:
-        return datetime.now(JST)
-    text = value.replace("Z", "+00:00")
-    dt = datetime.fromisoformat(text)
-    if dt.tzinfo is None:
-        return dt.replace(tzinfo=JST)
-    return dt.astimezone(JST)
-
-
-def candidate_slots(now: datetime, steps: int) -> list[datetime]:
-    start = round_down_to_10_minutes(now.astimezone(JST))
-    return [start - timedelta(minutes=10 * i) for i in range(steps)]
-
-
-def tmlist_url(slot: datetime, code: str) -> str:
-    return f"{KAWABOU_BASE}/file/files/tmlist/stg/{slot:%Y%m%d}/{slot:%H%M}/{code}.json"
-
-
-def parse_kawabou_time(value: str) -> datetime:
-    for fmt in ("%Y/%m/%d %H:%M", "%Y-%m-%dT%H:%M", "%Y-%m-%d %H:%M"):
-        try:
-            return datetime.strptime(value, fmt).replace(tzinfo=JST)
-        except ValueError:
-            continue
-    raise ValueError(f"unsupported kawabou timestamp: {value!r}")
 
 
 def parse_float(value: Any) -> float | None:
@@ -90,15 +60,6 @@ def parse_float(value: Any) -> float | None:
     return parsed
 
 
-def is_missing_code(value: Any) -> bool:
-    if value in (None, ""):
-        return False
-    try:
-        return int(value) >= 128
-    except (TypeError, ValueError):
-        return False
-
-
 def output_timestamp(value: datetime) -> str:
     return value.astimezone(JST).strftime("%Y-%m-%dT%H:%M")
 
@@ -107,41 +68,68 @@ def parse_output_timestamp(value: str) -> datetime:
     return datetime.fromisoformat(value).replace(tzinfo=JST)
 
 
-def parse_min10_values(payload: dict[str, Any]) -> list[dict[str, Any]]:
+def kind9_index_url(station_id: str) -> str:
+    return f"{HYDRO_WATER_DATA_URL}?KIND=9&ID={station_id}"
+
+
+def decode_response(response: requests.Response, encoding: str) -> str:
+    return response.content.decode(encoding, errors="replace")
+
+
+def fetch_text(session: requests.Session, url: str, timeout: int, encoding: str) -> str:
+    response = session.get(url, timeout=timeout)
+    response.raise_for_status()
+    return decode_response(response, encoding)
+
+
+def extract_first_dat_url(index_html: str) -> str | None:
+    match = re.search(r'href="([^"]+\.dat)"', index_html, re.IGNORECASE)
+    if not match:
+        return None
+    return urljoin(HYDRO_BASE, match.group(1))
+
+
+def parse_station_meta_from_dat(text: str) -> dict[str, str]:
+    meta: dict[str, str] = {}
+    for raw_line in text.splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("#"):
+            continue
+        if "," not in line:
+            continue
+        key, value = line.split(",", 1)
+        key = key.strip()
+        value = value.strip()
+        if key in {"水系名", "河川名", "観測所名", "観測所記号"}:
+            meta[key] = value
+    return meta
+
+
+def parse_hydro_timestamp(date_text: str, time_text: str) -> datetime:
+    observed_date = datetime.strptime(date_text, "%Y/%m/%d").replace(tzinfo=JST)
+    if time_text == "24:00":
+        return observed_date + timedelta(days=1)
+    hour, minute = [int(part) for part in time_text.split(":", 1)]
+    return observed_date.replace(hour=hour, minute=minute)
+
+
+def parse_hydro_10min_dat(text: str) -> list[dict[str, Any]]:
     records_by_ts: dict[str, dict[str, Any]] = {}
-    rows = payload.get("min10Values") or []
-    if not isinstance(rows, list):
-        return []
-
-    for row in rows:
-        if not isinstance(row, dict):
+    reader = csv.reader(text.splitlines())
+    for row in reader:
+        if len(row) < 3 or not re.match(r"^\d{4}/\d{2}/\d{2}$", row[0]):
             continue
-        raw_time = row.get("obsTime")
-        if not raw_time:
-            continue
-        try:
-            observed_at = parse_kawabou_time(str(raw_time))
-        except ValueError:
+        value = parse_float(row[2])
+        if value is None:
             continue
 
-        quality_code = row.get("stgCcd")
-        quality_flag = row.get("stgQmflg")
-        value = parse_float(row.get("stg"))
-        flag = ""
-        if value is None or is_missing_code(quality_code):
-            value = None
-            flag = str(quality_flag or quality_code or "missing")
-
+        observed_at = parse_hydro_timestamp(row[0], row[1])
         ts = output_timestamp(observed_at)
         records_by_ts[ts] = {
             "timestamp": ts,
             "value": value,
-            "flag": flag,
+            "flag": row[3].strip() if len(row) >= 4 else "",
             "resolution": "10min",
-            "quality_code": quality_code,
-            "quality_flag": quality_flag,
-            "over_level": row.get("stgOvlvl"),
-            "change_10min": row.get("stg10mChg"),
         }
 
     return [records_by_ts[ts] for ts in sorted(records_by_ts)]
@@ -155,36 +143,29 @@ def clip_recent(records: list[dict[str, Any]], keep_hours: int) -> list[dict[str
     return [r for r in records if parse_output_timestamp(r["timestamp"]) >= threshold]
 
 
-def fetch_latest_payload(
+def fetch_hydro_10min_dat(
     session: requests.Session,
-    code: str,
-    now: datetime,
-    probe_steps: int,
+    station_id: str,
     timeout: int,
 ) -> FetchResult:
-    errors: list[str] = []
-    for slot in candidate_slots(now, probe_steps):
-        url = tmlist_url(slot, code)
-        try:
-            response = session.get(url, timeout=timeout)
-            if response.status_code == 404:
-                errors.append(f"{slot:%Y-%m-%dT%H:%M}: 404")
-                continue
-            response.raise_for_status()
-            payload = response.json()
-        except (requests.RequestException, ValueError) as exc:
-            errors.append(f"{slot:%Y-%m-%dT%H:%M}: {exc}")
-            continue
+    index_url = kind9_index_url(station_id)
+    index_html = fetch_text(session, index_url, timeout, "euc_jp")
+    dat_url = extract_first_dat_url(index_html)
+    if not dat_url:
+        raise RuntimeError(f"download .dat link not found in {index_url}")
 
-        if not (payload.get("min10Values") or []):
-            errors.append(f"{slot:%Y-%m-%dT%H:%M}: min10Values empty")
-            continue
-        return FetchResult(payload=payload, source_url=url, source_slot=slot, errors=errors)
+    dat_text = fetch_text(session, dat_url, timeout, "cp932")
+    records = parse_hydro_10min_dat(dat_text)
+    if not records:
+        raise RuntimeError(f"no 10-minute records parsed from {dat_url}")
 
-    summary = "; ".join(errors[:10])
-    if len(errors) > 10:
-        summary += f"; ... ({len(errors)} attempts)"
-    raise RuntimeError(f"no kawabou 10-minute payload found. tried {summary}")
+    return FetchResult(
+        records=records,
+        station_meta=parse_station_meta_from_dat(dat_text),
+        source_url=dat_url,
+        index_url=index_url,
+        errors=[],
+    )
 
 
 def save_json(path: Path, payload: dict[str, Any]) -> None:
@@ -204,7 +185,7 @@ def is_same_observation_payload(path: Path, payload: dict[str, Any]) -> bool:
 
     existing_meta = existing.get("meta") or {}
     next_meta = payload.get("meta") or {}
-    stable_meta_keys = ("station_code", "ofc_cd", "itmknd_cd", "obs_cd", "window_hours")
+    stable_meta_keys = ("source", "station_code", "window_hours")
     return (
         existing.get("records") == payload.get("records")
         and all(existing_meta.get(key) == next_meta.get(key) for key in stable_meta_keys)
@@ -212,37 +193,28 @@ def is_same_observation_payload(path: Path, payload: dict[str, Any]) -> bool:
 
 
 def build_output_payload(
-    source_payload: dict[str, Any],
     records: list[dict[str, Any]],
-    code: str,
-    ofc_cd: str,
-    itmknd_cd: str,
-    obs_cd: str,
+    result: FetchResult,
+    station_id: str,
     keep_hours: int,
-    source_url: str | None,
-    source_slot: datetime | None,
-    errors: list[str] | None = None,
 ) -> dict[str, Any]:
-    obs_value = source_payload.get("obsValue") or {}
-    source_time = obs_value.get("obsTime") or records[-1]["timestamp"]
     return {
         "meta": {
-            "source": "kawabou_tmlist",
-            "station_code": code,
-            "ofc_cd": ofc_cd,
-            "itmknd_cd": itmknd_cd,
-            "obs_cd": obs_cd,
+            "source": "river_go_jp_hydro_kind9_dat",
+            "station_code": station_id,
+            "station_name": result.station_meta.get("観測所名"),
+            "river_system": result.station_meta.get("水系名"),
+            "river_name": result.station_meta.get("河川名"),
             "record_count": len(records),
             "window_hours": keep_hours,
             "dataset_start": records[0]["timestamp"],
             "dataset_end": records[-1]["timestamp"],
-            "latest_source_time": source_time,
-            "source_slot_jst": output_timestamp(source_slot) if source_slot else None,
-            "source_url": source_url,
+            "index_url": result.index_url,
+            "source_url": result.source_url,
             "last_fetch_utc": datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
-            "probe_errors": errors or [],
+            "probe_errors": result.errors,
             "notes": [
-                "river.go.jp kawabou tmlist stg JSON の min10Values から作成。",
+                "水文水質データベースのリアルタイム10分水位一覧表からDLした dat ファイルで作成。",
                 "既存の1時間データに直近10分観測値を重ねるためのファイルです。",
             ],
         },
@@ -255,33 +227,37 @@ def load_config_targets(config_path: Path) -> list[StationTarget]:
     targets: list[StationTarget] = []
     for station in config.get("stations", []):
         ten_min = station.get("ten_min") or {}
+        hourly = station.get("hourly") or {}
         data_dir = station.get("data_dir")
         if not data_dir:
+            continue
+        hydrology_station_id = ten_min.get("station_id") or hourly.get("station_id")
+        if not hydrology_station_id:
             continue
         ofc_cd = ten_min.get("ofc_cd")
         itmknd_cd = ten_min.get("itmknd_cd")
         obs_cd = ten_min.get("obs_cd")
-        if not ofc_cd or not itmknd_cd or not obs_cd:
-            continue
         targets.append(StationTarget(
             id=station["id"],
             name=station.get("name", station["id"]),
-            ofc_cd=str(ofc_cd),
-            itmknd_cd=str(itmknd_cd),
-            obs_cd=str(obs_cd),
+            hydrology_station_id=str(hydrology_station_id),
+            ofc_cd=str(ofc_cd) if ofc_cd else None,
+            itmknd_cd=str(itmknd_cd) if itmknd_cd else None,
+            obs_cd=str(obs_cd) if obs_cd else None,
             output=Path(data_dir) / "recent_10min.json",
         ))
     return targets
 
 
 def build_targets(args: argparse.Namespace) -> list[StationTarget]:
-    if args.station_code or args.ofc_cd != DEFAULT_OFC_CD or args.itmknd_cd != DEFAULT_ITMKND_CD or args.obs_cd != DEFAULT_OBS_CD:
+    if args.station_code:
         return [StationTarget(
-            id=args.station_code or station_code(args.ofc_cd, args.itmknd_cd, args.obs_cd),
-            name=args.station_code or station_code(args.ofc_cd, args.itmknd_cd, args.obs_cd),
-            ofc_cd=args.ofc_cd,
-            itmknd_cd=args.itmknd_cd,
-            obs_cd=args.obs_cd,
+            id=args.station_code,
+            name=args.station_code,
+            hydrology_station_id=args.station_code,
+            ofc_cd=None,
+            itmknd_cd=None,
+            obs_cd=None,
             output=Path(args.output),
         )]
 
@@ -292,6 +268,7 @@ def build_targets(args: argparse.Namespace) -> list[StationTarget]:
     return [StationTarget(
         id="nukada",
         name="額田",
+        hydrology_station_id="303011283322030",
         ofc_cd=DEFAULT_OFC_CD,
         itmknd_cd=DEFAULT_ITMKND_CD,
         obs_cd=DEFAULT_OBS_CD,
@@ -300,43 +277,36 @@ def build_targets(args: argparse.Namespace) -> list[StationTarget]:
 
 
 def update_target(target: StationTarget, args: argparse.Namespace) -> None:
-    code = args.station_code or station_code(target.ofc_cd, target.itmknd_cd, target.obs_cd)
-
     if args.input:
         source_path = Path(args.input)
-        source_payload = json.loads(source_path.read_text(encoding="utf-8"))
-        source_url = f"local:{source_path}"
-        source_slot = None
-        errors: list[str] = []
+        dat_text = source_path.read_text(encoding=args.input_encoding)
+        records = parse_hydro_10min_dat(dat_text)
+        result = FetchResult(
+            records=records,
+            station_meta=parse_station_meta_from_dat(dat_text),
+            source_url=f"local:{source_path}",
+            index_url=kind9_index_url(target.hydrology_station_id),
+            errors=[],
+        )
     else:
         session = requests.Session()
         session.headers.update({
             "User-Agent": USER_AGENT,
-            "Accept": "application/json, text/plain, */*",
+            "Accept": "text/html,application/xhtml+xml,text/plain,*/*",
             "Accept-Language": "ja,en-US;q=0.9,en;q=0.8",
-            "Referer": f"{KAWABOU_BASE}/mb/tm?ofcCd={target.ofc_cd}&itmkndCd={target.itmknd_cd}&obsCd={target.obs_cd}",
         })
-        result = fetch_latest_payload(session, code, parse_now(args.now), args.probe_steps, args.timeout)
-        source_payload = result.payload
-        source_url = result.source_url
-        source_slot = result.source_slot
-        errors = result.errors
+        result = fetch_hydro_10min_dat(session, target.hydrology_station_id, args.timeout)
+        records = result.records
 
-    records = clip_recent(parse_min10_values(source_payload), args.keep_hours)
+    records = clip_recent(records, args.keep_hours)
     if not records:
-        raise RuntimeError(f"no 10-minute records parsed from kawabou payload for {target.id}")
+        raise RuntimeError(f"no 10-minute records parsed for {target.id}")
 
     payload = build_output_payload(
-        source_payload,
         records,
-        code,
-        target.ofc_cd,
-        target.itmknd_cd,
-        target.obs_cd,
+        result,
+        target.hydrology_station_id,
         args.keep_hours,
-        source_url,
-        source_slot,
-        errors,
     )
     if is_same_observation_payload(target.output, payload):
         print(f"unchanged {target.output} ({len(records)} records, latest {records[-1]['timestamp']})")
@@ -346,18 +316,14 @@ def update_target(target: StationTarget, args: argparse.Namespace) -> None:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="河川防災情報の10分観測値から recent_10min.json を更新します。")
+    parser = argparse.ArgumentParser(description="水文水質データベースの10分水位 dat から recent_10min.json を更新します。")
     parser.add_argument("--config", default="config/stations.json")
-    parser.add_argument("--ofc-cd", default=DEFAULT_OFC_CD)
-    parser.add_argument("--itmknd-cd", default=DEFAULT_ITMKND_CD)
-    parser.add_argument("--obs-cd", default=DEFAULT_OBS_CD)
-    parser.add_argument("--station-code", default=None)
+    parser.add_argument("--station-code", default=None, help="水文水質データベースの観測所記号")
     parser.add_argument("--output", default="data/recent_10min.json")
     parser.add_argument("--keep-hours", type=int, default=24)
-    parser.add_argument("--probe-steps", type=int, default=24)
     parser.add_argument("--timeout", type=int, default=30)
-    parser.add_argument("--now", default=None, help="JST ISO timestamp for tests, e.g. 2026-07-09T12:04")
-    parser.add_argument("--input", default=None, help="Local kawabou tmlist JSON fixture for tests")
+    parser.add_argument("--input", default=None, help="Local hydrology dat fixture for tests")
+    parser.add_argument("--input-encoding", default="cp932")
     args = parser.parse_args()
 
     targets = build_targets(args)

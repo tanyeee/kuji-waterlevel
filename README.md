@@ -64,24 +64,19 @@ python scripts/update_recent_10min_from_kawabou.py
 
 ## 第3段階: 直近10分データ
 
-河川防災情報の観測値タブで表示される10分値を、直近用の `data/stations/<station>/recent_10min.json` として追加取得します。既存の長期履歴と1時間データは残し、同じ時刻がある場合は10分データを優先して表示します。
+水文水質データベースの「リアルタイム10分水位一覧表」から、直近用の `data/stations/<station>/recent_10min.json` を追加取得します。既存の長期履歴と1時間データは残し、同じ時刻がある場合は10分データを優先して表示します。
 
-### 額田の取得元
+### 10分データの取得元
 
-ユーザー指定URLのパラメータから、額田観測所のステーションコードを次のように組み立てます。
+各地点の観測所記号を使って、次の一覧ページを取得します。
 
-- `ofcCd=21271`
-- `itmkndCd=4` -> `004`
-- `obsCd=7` -> `00007`
-- station code: `2127100400007`
-
-取得URLは以下の形です。
+例: 額田
 
 ```text
-https://www.river.go.jp/kawabou/file/files/tmlist/stg/YYYYMMDD/HHMM/2127100400007.json
+https://www1.river.go.jp/cgi-bin/DspWaterData.exe?KIND=9&ID=303011283322030
 ```
 
-スクリプトはJSTの現在時刻を10分単位に丸め、データ反映遅れに備えて過去のスロットも順に確認します。取得したJSONの `min10Values` を `recent_10min.json` に変換します。
+一覧ページ内のフロッピーディスクアイコンの `.dat` リンクを抽出し、CP932テキストとして読み込んで `recent_10min.json` に変換します。`.dat` ファイル名にはPIDのような変動部分が含まれるため、URLを直接組み立てず、必ず一覧ページからリンクを抽出します。
 
 ### GitHub Actions
 
@@ -96,12 +91,13 @@ https://www.river.go.jp/kawabou/file/files/tmlist/stg/YYYYMMDD/HHMM/212710040000
 - `river_id` / `river_name`: 将来の河川別切り替えに使う分類
 - `data_dir`: `data/stations/<id>` のような地点別データディレクトリ
 - `hourly.station_id`: 時刻水位月表の `ID`
-- `ten_min.ofc_cd` / `ten_min.itmknd_cd` / `ten_min.obs_cd`: 河川防災情報の10分観測値URLのパラメータ
+- `ten_min.station_id`: 水文水質データベースの10分水位一覧表 `ID`
+- `ten_min.ofc_cd` / `ten_min.itmknd_cd` / `ten_min.obs_cd`: 旧河川防災情報URLの参照用パラメータ
 
 将来、河川を増やす場合は `rivers` に河川を追加し、各地点の `river_id` を対応する河川IDへ向けます。
 
 ### 注意
 
 - 国土交通省側のページ構造が変わった場合は、`update_recent_from_monthly_page.py` の dat リンク抽出部分の修正が必要です。
-- 河川防災情報側のJSONパスやキーが変わった場合は、`update_recent_10min_from_kawabou.py` の取得URLまたは `min10Values` 解析の修正が必要です。
+- 水文水質データベース側の一覧ページ構造や dat 形式が変わった場合は、`update_recent_10min_from_kawabou.py` の dat リンク抽出またはCSV解析の修正が必要です。
 - GitHub Pages では `file://` ではなく HTTP サーバ経由で確認してください。

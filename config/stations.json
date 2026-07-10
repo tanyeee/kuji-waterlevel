@@ -18,6 +18,7 @@
         "station_id": "303011283322030"
       },
       "ten_min": {
+        "station_id": "303011283322030",
         "ofc_cd": "21271",
         "itmknd_cd": "4",
         "obs_cd": "7"
@@ -37,6 +38,7 @@
         "station_id": "303011283322050"
       },
       "ten_min": {
+        "station_id": "303011283322050",
         "ofc_cd": "21271",
         "itmknd_cd": "4",
         "obs_cd": "4"
@@ -56,6 +58,7 @@
         "station_id": "303011283322060"
       },
       "ten_min": {
+        "station_id": "303011283322060",
         "ofc_cd": "21271",
         "itmknd_cd": "4",
         "obs_cd": "8"
