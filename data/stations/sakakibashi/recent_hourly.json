@@ -3,20 +3,15 @@
     "source": "monthly_page_dat",
     "station_id": "303011283322050",
     "station_name": "榊橋",
-    "record_count": 823,
+    "record_count": 822,
     "window_days": 45,
-    "last_fetch_utc": "2026-07-11T16:11:09Z",
+    "last_fetch_utc": "2026-07-11T17:15:00Z",
     "months_fetched": [
       "2026-06",
       "2026-07"
     ]
   },
   "records": [
-    {
-      "timestamp": "2026-06-27T17:00",
-      "value": 0.57,
-      "flag": "*"
-    },
     {
       "timestamp": "2026-06-27T18:00",
       "value": 0.55,
@@ -1734,8 +1729,8 @@
     },
     {
       "timestamp": "2026-07-12T01:00",
-      "value": null,
-      "flag": "-"
+      "value": 0.27,
+      "flag": "*"
     },
     {
       "timestamp": "2026-07-12T02:00",
