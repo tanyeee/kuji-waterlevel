@@ -354,7 +354,7 @@ def main() -> None:
     parser.add_argument("--config", default="config/stations.json")
     parser.add_argument("--station-code", default=None, help="水文水質データベースの観測所記号")
     parser.add_argument("--output", default="data/recent_10min.json")
-    parser.add_argument("--keep-hours", type=int, default=48)
+    parser.add_argument("--keep-hours", type=int, default=168)
     parser.add_argument("--timeout", type=int, default=30)
     parser.add_argument("--input", default=None, help="Local hydrology dat fixture for tests")
     parser.add_argument("--input-encoding", default="cp932")

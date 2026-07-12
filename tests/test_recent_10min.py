@@ -22,17 +22,17 @@ class RecentTenMinuteTests(unittest.TestCase):
         ])
         self.assertEqual(merged[1]["value"], 2.1)
 
-    def test_clip_keeps_a_48_hour_window_inclusively(self):
+    def test_clip_keeps_a_7_day_window_inclusively(self):
         records = [
-            record("2026-07-08T23:50", 0.9),
-            record("2026-07-09T00:00", 1.0),
-            record("2026-07-11T00:00", 1.2),
+            record("2026-07-05T23:50", 0.9),
+            record("2026-07-06T00:00", 1.0),
+            record("2026-07-13T00:00", 1.2),
         ]
 
-        clipped = recent_10min.clip_recent(records, 48)
+        clipped = recent_10min.clip_recent(records, 168)
 
         self.assertEqual([item["timestamp"] for item in clipped], [
-            "2026-07-09T00:00", "2026-07-11T00:00"
+            "2026-07-06T00:00", "2026-07-13T00:00"
         ])
 
     def test_load_existing_records_tolerates_invalid_files(self):

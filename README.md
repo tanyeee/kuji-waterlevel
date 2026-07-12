@@ -72,7 +72,7 @@ python scripts/bootstrap_historical_hourly_from_monthly_page.py --start-year 201
 
 ## 第3段階: 直近10分データ
 
-水文水質データベースの「リアルタイム10分水位一覧表」から、直近用の `data/stations/<station>/recent_10min.json` を追加取得します。取得済みデータと新規取得分を統合して直近48時間を保持します。既存の長期履歴と1時間データは残し、同じ時刻がある場合は10分データを優先して表示します。
+水文水質データベースの「リアルタイム10分水位一覧表」から、直近用の `data/stations/<station>/recent_10min.json` を追加取得します。取得済みデータと新規取得分を統合して直近7日間（168時間）を保持します。既存の長期履歴と1時間データは残し、同じ時刻がある場合は10分データを優先して表示します。
 
 ### 10分データの取得元
 
@@ -88,7 +88,7 @@ https://www1.river.go.jp/cgi-bin/DspWaterData.exe?KIND=9&ID=303011283322030
 
 ### GitHub Actions
 
-`.github/workflows/update_recent_10min.yml` を有効にすると、10分ごとに `config/stations.json` の各地点の `recent_10min.json` を更新します。国交省から1回に取得できるデータは約24時間分のため、既存JSONへ追記・重複更新して48時間窓を蓄積します。設定変更後、完全な48時間分になるまで約24時間かかります。1時間データの更新は従来どおり `.github/workflows/update_monthly_hourly.yml` が担当します。
+`.github/workflows/update_recent_10min.yml` を有効にすると、10分ごとに `config/stations.json` の各地点の `recent_10min.json` を更新します。国交省から1回に取得できるデータは約24時間分のため、既存JSONへ追記・重複更新して7日間（168時間）窓を蓄積します。設定変更後、完全な7日間分になるまで最大で約6日かかります。1時間データの更新は従来どおり `.github/workflows/update_monthly_hourly.yml` が担当します。
 
 ## 地点追加
 
