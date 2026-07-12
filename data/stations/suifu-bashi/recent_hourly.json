@@ -3,20 +3,15 @@
     "source": "monthly_page_dat",
     "station_id": "303021283322020",
     "station_name": "水府橋",
-    "record_count": 799,
+    "record_count": 798,
     "window_days": 45,
-    "last_fetch_utc": "2026-07-12T16:14:08Z",
+    "last_fetch_utc": "2026-07-12T17:19:07Z",
     "months_fetched": [
       "2026-06",
       "2026-07"
     ]
   },
   "records": [
-    {
-      "timestamp": "2026-06-28T17:00",
-      "value": 1.63,
-      "flag": "*"
-    },
     {
       "timestamp": "2026-06-28T18:00",
       "value": 1.54,
@@ -1734,8 +1729,8 @@
     },
     {
       "timestamp": "2026-07-13T01:00",
-      "value": null,
-      "flag": "-"
+      "value": 1.75,
+      "flag": "*"
     },
     {
       "timestamp": "2026-07-13T02:00",
