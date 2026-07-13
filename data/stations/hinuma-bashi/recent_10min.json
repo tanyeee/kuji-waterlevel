@@ -7,11 +7,11 @@
     "river_name": "涸沼川",
     "record_count": 1008,
     "window_hours": 168,
-    "dataset_start": "2026-07-06T12:00",
-    "dataset_end": "2026-07-13T12:00",
+    "dataset_start": "2026-07-06T12:10",
+    "dataset_end": "2026-07-13T12:10",
     "index_url": "https://www1.river.go.jp/cgi-bin/DspWaterData.exe?KIND=9&ID=303021283322110",
-    "source_url": "https://www1.river.go.jp/dat/dload/download/29303021283322110202607063845255.dat",
-    "last_fetch_utc": "2026-07-13T03:13:03Z",
+    "source_url": "https://www1.river.go.jp/dat/dload/download/29303021283322110202607064193568.dat",
+    "last_fetch_utc": "2026-07-13T03:23:02Z",
     "probe_errors": [],
     "notes": [
       "水文水質データベースのリアルタイム10分水位一覧表からDLした dat ファイルで作成。",
@@ -19,12 +19,6 @@
     ]
   },
   "records": [
-    {
-      "timestamp": "2026-07-06T12:00",
-      "value": 0.64,
-      "flag": "",
-      "resolution": "10min"
-    },
     {
       "timestamp": "2026-07-06T12:10",
       "value": 0.62,
@@ -6064,6 +6058,12 @@
     {
       "timestamp": "2026-07-13T12:00",
       "value": 0.49,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-07-13T12:10",
+      "value": 0.51,
       "flag": "",
       "resolution": "10min"
     }
