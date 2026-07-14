@@ -5,13 +5,13 @@
     "station_name": "湊大橋",
     "river_system": "那珂川",
     "river_name": "那珂川",
-    "record_count": 1008,
+    "record_count": 984,
     "window_hours": 168,
-    "dataset_start": "2026-07-07T09:00",
-    "dataset_end": "2026-07-14T09:00",
+    "dataset_start": "2026-07-07T13:10",
+    "dataset_end": "2026-07-14T13:10",
     "index_url": "https://www1.river.go.jp/cgi-bin/DspWaterData.exe?KIND=9&ID=303021283322010",
-    "source_url": "https://www1.river.go.jp/dat/dload/download/2930302128332201020260707197139.dat",
-    "last_fetch_utc": "2026-07-14T00:12:48Z",
+    "source_url": "https://www1.river.go.jp/dat/dload/download/2930302128332201020260707343179.dat",
+    "last_fetch_utc": "2026-07-14T04:23:04Z",
     "probe_errors": [],
     "notes": [
       "水文水質データベースのリアルタイム10分水位一覧表からDLした dat ファイルで作成。",
@@ -19,156 +19,6 @@
     ]
   },
   "records": [
-    {
-      "timestamp": "2026-07-07T09:00",
-      "value": 0.82,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-07-07T09:10",
-      "value": 0.82,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-07-07T09:20",
-      "value": 0.84,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-07-07T09:30",
-      "value": 0.83,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-07-07T09:40",
-      "value": 0.81,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-07-07T09:50",
-      "value": 0.77,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-07-07T10:00",
-      "value": 0.75,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-07-07T10:10",
-      "value": 0.73,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-07-07T10:20",
-      "value": 0.72,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-07-07T10:30",
-      "value": 0.71,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-07-07T10:40",
-      "value": 0.7,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-07-07T10:50",
-      "value": 0.66,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-07-07T11:00",
-      "value": 0.66,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-07-07T11:10",
-      "value": 0.65,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-07-07T11:20",
-      "value": 0.65,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-07-07T11:30",
-      "value": 0.63,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-07-07T11:40",
-      "value": 0.6,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-07-07T11:50",
-      "value": 0.57,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-07-07T12:00",
-      "value": 0.55,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-07-07T12:10",
-      "value": 0.54,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-07-07T12:20",
-      "value": 0.51,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-07-07T12:30",
-      "value": 0.53,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-07-07T12:40",
-      "value": 0.52,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-07-07T12:50",
-      "value": 0.49,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-07-07T13:00",
-      "value": 0.46,
-      "flag": "",
-      "resolution": "10min"
-    },
     {
       "timestamp": "2026-07-07T13:10",
       "value": 0.45,
@@ -6064,6 +5914,12 @@
     {
       "timestamp": "2026-07-14T09:00",
       "value": -0.06,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-07-14T13:10",
+      "value": 0.38,
       "flag": "",
       "resolution": "10min"
     }
