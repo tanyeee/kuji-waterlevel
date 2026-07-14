@@ -7,11 +7,11 @@
     "river_name": "久慈川",
     "record_count": 1005,
     "window_hours": 168,
-    "dataset_start": "2026-07-07T08:40",
-    "dataset_end": "2026-07-14T08:40",
+    "dataset_start": "2026-07-07T08:50",
+    "dataset_end": "2026-07-14T08:50",
     "index_url": "https://www1.river.go.jp/cgi-bin/DspWaterData.exe?KIND=9&ID=303011283322060",
-    "source_url": "https://www1.river.go.jp/dat/dload/download/2930301128332206020260707188742.dat",
-    "last_fetch_utc": "2026-07-13T23:53:00Z",
+    "source_url": "https://www1.river.go.jp/dat/dload/download/2930301128332206020260707302770.dat",
+    "last_fetch_utc": "2026-07-14T00:03:01Z",
     "probe_errors": [],
     "notes": [
       "水文水質データベースのリアルタイム10分水位一覧表からDLした dat ファイルで作成。",
@@ -19,12 +19,6 @@
     ]
   },
   "records": [
-    {
-      "timestamp": "2026-07-07T08:40",
-      "value": 1.41,
-      "flag": "",
-      "resolution": "10min"
-    },
     {
       "timestamp": "2026-07-07T08:50",
       "value": 1.4,
@@ -6046,6 +6040,12 @@
     {
       "timestamp": "2026-07-14T08:40",
       "value": 0.56,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-07-14T08:50",
+      "value": 0.54,
       "flag": "",
       "resolution": "10min"
     }
