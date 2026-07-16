@@ -3,20 +3,15 @@
     "source": "monthly_page_dat",
     "station_id": "303011283322060",
     "station_name": "久慈大橋",
-    "record_count": 698,
+    "record_count": 697,
     "window_days": 45,
-    "last_fetch_utc": "2026-07-16T21:14:46Z",
+    "last_fetch_utc": "2026-07-16T22:16:19Z",
     "months_fetched": [
       "2026-06",
       "2026-07"
     ]
   },
   "records": [
-    {
-      "timestamp": "2026-07-02T22:00",
-      "value": 1.32,
-      "flag": "*"
-    },
     {
       "timestamp": "2026-07-02T23:00",
       "value": 1.29,
@@ -1734,8 +1729,8 @@
     },
     {
       "timestamp": "2026-07-17T06:00",
-      "value": null,
-      "flag": "-"
+      "value": 1.62,
+      "flag": "*"
     },
     {
       "timestamp": "2026-07-17T07:00",
