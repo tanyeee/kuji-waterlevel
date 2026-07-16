@@ -3,30 +3,15 @@
     "source": "monthly_page_dat",
     "station_id": "303011283322020",
     "station_name": "富岡橋",
-    "record_count": 713,
+    "record_count": 710,
     "window_days": 45,
-    "last_fetch_utc": "2026-07-16T06:30:10Z",
+    "last_fetch_utc": "2026-07-16T09:26:09Z",
     "months_fetched": [
       "2026-06",
       "2026-07"
     ]
   },
   "records": [
-    {
-      "timestamp": "2026-07-02T07:00",
-      "value": -1.74,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-07-02T08:00",
-      "value": -1.73,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-07-02T09:00",
-      "value": -1.72,
-      "flag": "*"
-    },
     {
       "timestamp": "2026-07-02T10:00",
       "value": -1.71,
@@ -1734,18 +1719,18 @@
     },
     {
       "timestamp": "2026-07-16T15:00",
-      "value": null,
-      "flag": "-"
+      "value": -1.8,
+      "flag": "*"
     },
     {
       "timestamp": "2026-07-16T16:00",
-      "value": null,
-      "flag": "-"
+      "value": -1.8,
+      "flag": "*"
     },
     {
       "timestamp": "2026-07-16T17:00",
-      "value": null,
-      "flag": "-"
+      "value": -1.8,
+      "flag": "*"
     },
     {
       "timestamp": "2026-07-16T18:00",
