@@ -7,11 +7,11 @@
     "river_name": "那珂川",
     "record_count": 985,
     "window_hours": 168,
-    "dataset_start": "2026-07-12T16:40",
-    "dataset_end": "2026-07-19T16:40",
+    "dataset_start": "2026-07-12T16:50",
+    "dataset_end": "2026-07-19T16:50",
     "index_url": "https://www1.river.go.jp/cgi-bin/DspWaterData.exe?KIND=9&ID=303021283322010",
-    "source_url": "https://www1.river.go.jp/dat/dload/download/29303021283322010202607123523240.dat",
-    "last_fetch_utc": "2026-07-19T07:52:46Z",
+    "source_url": "https://www1.river.go.jp/dat/dload/download/29303021283322010202607122458932.dat",
+    "last_fetch_utc": "2026-07-19T08:02:46Z",
     "probe_errors": [],
     "notes": [
       "水文水質データベースのリアルタイム10分水位一覧表からDLした dat ファイルで作成。",
@@ -19,12 +19,6 @@
     ]
   },
   "records": [
-    {
-      "timestamp": "2026-07-12T16:40",
-      "value": 1.04,
-      "flag": "",
-      "resolution": "10min"
-    },
     {
       "timestamp": "2026-07-12T16:50",
       "value": 1.05,
@@ -5926,6 +5920,12 @@
     {
       "timestamp": "2026-07-19T16:40",
       "value": 0.76,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-07-19T16:50",
+      "value": 0.81,
       "flag": "",
       "resolution": "10min"
     }
