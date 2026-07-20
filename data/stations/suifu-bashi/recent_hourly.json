@@ -3,30 +3,15 @@
     "source": "monthly_page_dat",
     "station_id": "303021283322020",
     "station_name": "水府橋",
-    "record_count": 619,
+    "record_count": 616,
     "window_days": 45,
-    "last_fetch_utc": "2026-07-20T04:03:23Z",
+    "last_fetch_utc": "2026-07-20T07:27:26Z",
     "months_fetched": [
       "2026-06",
       "2026-07"
     ]
   },
   "records": [
-    {
-      "timestamp": "2026-07-06T05:00",
-      "value": 1.47,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-07-06T06:00",
-      "value": 1.55,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-07-06T07:00",
-      "value": 1.53,
-      "flag": "*"
-    },
     {
       "timestamp": "2026-07-06T08:00",
       "value": 1.42,
@@ -1729,23 +1714,23 @@
     },
     {
       "timestamp": "2026-07-20T12:00",
-      "value": null,
-      "flag": "-"
+      "value": 0.98,
+      "flag": "*"
     },
     {
       "timestamp": "2026-07-20T13:00",
-      "value": null,
-      "flag": "-"
+      "value": 0.94,
+      "flag": "*"
     },
     {
       "timestamp": "2026-07-20T14:00",
-      "value": null,
-      "flag": "-"
+      "value": 0.95,
+      "flag": "*"
     },
     {
       "timestamp": "2026-07-20T15:00",
-      "value": null,
-      "flag": "-"
+      "value": 1.12,
+      "flag": "*"
     },
     {
       "timestamp": "2026-07-20T16:00",
