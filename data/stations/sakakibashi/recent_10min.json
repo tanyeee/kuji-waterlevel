@@ -5,13 +5,13 @@
     "station_name": "榊橋",
     "river_system": "久慈川",
     "river_name": "久慈川",
-    "record_count": 998,
+    "record_count": 999,
     "window_hours": 168,
     "dataset_start": "2026-07-15T11:50",
-    "dataset_end": "2026-07-22T10:00",
+    "dataset_end": "2026-07-22T10:10",
     "index_url": "https://www1.river.go.jp/cgi-bin/DspWaterData.exe?KIND=9&ID=303011283322050",
-    "source_url": "https://www1.river.go.jp/dat/dload/download/29303011283322050202607153952585.dat",
-    "last_fetch_utc": "2026-07-22T01:12:24Z",
+    "source_url": "https://www1.river.go.jp/dat/dload/download/29303011283322050202607153954803.dat",
+    "last_fetch_utc": "2026-07-22T01:22:21Z",
     "probe_errors": [],
     "notes": [
       "水文水質データベースのリアルタイム10分水位一覧表からDLした dat ファイルで作成。",
@@ -6003,6 +6003,12 @@
     },
     {
       "timestamp": "2026-07-22T10:00",
+      "value": 0.18,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-07-22T10:10",
       "value": 0.18,
       "flag": "",
       "resolution": "10min"
