@@ -3,20 +3,15 @@
     "source": "monthly_page_dat",
     "station_id": "303021283322110",
     "station_name": "涸沼橋",
-    "record_count": 461,
+    "record_count": 460,
     "window_days": 45,
-    "last_fetch_utc": "2026-07-26T18:12:35Z",
+    "last_fetch_utc": "2026-07-26T19:34:39Z",
     "months_fetched": [
       "2026-06",
       "2026-07"
     ]
   },
   "records": [
-    {
-      "timestamp": "2026-07-12T19:00",
-      "value": 0.92,
-      "flag": "*"
-    },
     {
       "timestamp": "2026-07-12T20:00",
       "value": 0.98,
@@ -1734,8 +1729,8 @@
     },
     {
       "timestamp": "2026-07-27T03:00",
-      "value": null,
-      "flag": "-"
+      "value": 0.99,
+      "flag": "*"
     },
     {
       "timestamp": "2026-07-27T04:00",
