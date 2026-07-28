@@ -4,10 +4,10 @@
     "station_id": "303021283322020",
     "station_name": "水府橋",
     "observation_name": "水府橋",
-    "record_count": 92349,
+    "record_count": 92351,
     "valid_record_count": 92059,
     "dataset_start": "2016-01-01T00:00",
-    "dataset_end": "2026-07-14T20:00",
+    "dataset_end": "2026-07-14T22:00",
     "valid_dataset_start": "2016-01-01T00:00",
     "valid_dataset_end": "2026-07-10T10:00",
     "start_year": 2016,
@@ -461763,6 +461763,16 @@
     {
       "timestamp": "2026-07-14T20:00",
       "value": 1.46,
+      "flag": "*"
+    },
+    {
+      "timestamp": "2026-07-14T21:00",
+      "value": 1.43,
+      "flag": "*"
+    },
+    {
+      "timestamp": "2026-07-14T22:00",
+      "value": 1.44,
       "flag": "*"
     }
   ]
