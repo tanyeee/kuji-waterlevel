@@ -4,10 +4,10 @@
     "station_id": "303011283322050",
     "station_name": "榊橋",
     "observation_name": "榊橋",
-    "record_count": 92375,
+    "record_count": 92376,
     "valid_record_count": 92140,
     "dataset_start": "2016-01-01T00:00",
-    "dataset_end": "2026-07-15T22:00",
+    "dataset_end": "2026-07-15T23:00",
     "valid_dataset_start": "2016-01-01T00:00",
     "valid_dataset_end": "2026-07-10T10:00",
     "start_year": 2016,
@@ -461893,6 +461893,11 @@
     {
       "timestamp": "2026-07-15T22:00",
       "value": 0.1,
+      "flag": "*"
+    },
+    {
+      "timestamp": "2026-07-15T23:00",
+      "value": 0.17,
       "flag": "*"
     }
   ]
