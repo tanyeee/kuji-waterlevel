@@ -4,10 +4,10 @@
     "station_id": "303021283322110",
     "station_name": "涸沼橋",
     "observation_name": "涸沼橋",
-    "record_count": 92436,
+    "record_count": 92438,
     "valid_record_count": 91686,
     "dataset_start": "2016-01-01T00:00",
-    "dataset_end": "2026-07-18T11:00",
+    "dataset_end": "2026-07-18T13:00",
     "valid_dataset_start": "2016-01-01T00:00",
     "valid_dataset_end": "2026-07-10T10:00",
     "start_year": 2016,
@@ -462198,6 +462198,16 @@
     {
       "timestamp": "2026-07-18T11:00",
       "value": 0.56,
+      "flag": "*"
+    },
+    {
+      "timestamp": "2026-07-18T12:00",
+      "value": 0.51,
+      "flag": "*"
+    },
+    {
+      "timestamp": "2026-07-18T13:00",
+      "value": 0.51,
       "flag": "*"
     }
   ]
