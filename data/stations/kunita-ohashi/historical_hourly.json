@@ -4,10 +4,10 @@
     "station_id": "303021283322030",
     "station_name": "国田大橋",
     "observation_name": "下国井",
-    "record_count": 92438,
+    "record_count": 92440,
     "valid_record_count": 82927,
     "dataset_start": "2016-01-01T00:00",
-    "dataset_end": "2026-07-18T13:00",
+    "dataset_end": "2026-07-18T15:00",
     "valid_dataset_start": "2016-01-01T00:00",
     "valid_dataset_end": "2026-07-10T10:00",
     "start_year": 2016,
@@ -462208,6 +462208,16 @@
     {
       "timestamp": "2026-07-18T13:00",
       "value": -0.27,
+      "flag": "*"
+    },
+    {
+      "timestamp": "2026-07-18T14:00",
+      "value": -0.16,
+      "flag": "*"
+    },
+    {
+      "timestamp": "2026-07-18T15:00",
+      "value": 0.11,
       "flag": "*"
     }
   ]
