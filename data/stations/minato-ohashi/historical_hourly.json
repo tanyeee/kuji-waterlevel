@@ -4,10 +4,10 @@
     "station_id": "303021283322010",
     "station_name": "湊大橋",
     "observation_name": "湊大橋",
-    "record_count": 92449,
+    "record_count": 92452,
     "valid_record_count": 92071,
     "dataset_start": "2016-01-01T00:00",
-    "dataset_end": "2026-07-19T00:00",
+    "dataset_end": "2026-07-19T03:00",
     "valid_dataset_start": "2016-01-01T00:00",
     "valid_dataset_end": "2026-07-10T10:00",
     "start_year": 2016,
@@ -462263,6 +462263,21 @@
     {
       "timestamp": "2026-07-19T00:00",
       "value": 0.58,
+      "flag": "*"
+    },
+    {
+      "timestamp": "2026-07-19T01:00",
+      "value": 0.62,
+      "flag": "*"
+    },
+    {
+      "timestamp": "2026-07-19T02:00",
+      "value": 0.72,
+      "flag": "*"
+    },
+    {
+      "timestamp": "2026-07-19T03:00",
+      "value": 0.85,
       "flag": "*"
     }
   ]
