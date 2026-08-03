@@ -4,10 +4,10 @@
     "station_id": "303021283322040",
     "station_name": "那珂川大橋",
     "observation_name": "野口",
-    "record_count": 92473,
+    "record_count": 92476,
     "valid_record_count": 91899,
     "dataset_start": "2016-01-01T00:00",
-    "dataset_end": "2026-07-20T00:00",
+    "dataset_end": "2026-07-20T03:00",
     "valid_dataset_start": "2016-01-01T00:00",
     "valid_dataset_end": "2026-07-10T10:00",
     "start_year": 2016,
@@ -462383,6 +462383,21 @@
     {
       "timestamp": "2026-07-20T00:00",
       "value": -1.38,
+      "flag": "*"
+    },
+    {
+      "timestamp": "2026-07-20T01:00",
+      "value": -1.39,
+      "flag": "*"
+    },
+    {
+      "timestamp": "2026-07-20T02:00",
+      "value": -1.39,
+      "flag": "*"
+    },
+    {
+      "timestamp": "2026-07-20T03:00",
+      "value": -1.4,
       "flag": "*"
     }
   ]
