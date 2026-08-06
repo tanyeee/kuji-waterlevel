@@ -3,30 +3,15 @@
     "source": "monthly_page_dat",
     "station_id": "303021283322010",
     "station_name": "湊大橋",
-    "record_count": 947,
+    "record_count": 944,
     "window_days": 45,
-    "last_fetch_utc": "2026-08-06T12:17:26Z",
+    "last_fetch_utc": "2026-08-06T15:26:40Z",
     "months_fetched": [
       "2026-07",
       "2026-08"
     ]
   },
   "records": [
-    {
-      "timestamp": "2026-07-23T13:00",
-      "value": 0.84,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-07-23T14:00",
-      "value": 0.86,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-07-23T15:00",
-      "value": 0.87,
-      "flag": "*"
-    },
     {
       "timestamp": "2026-07-23T16:00",
       "value": 0.89,
@@ -1734,18 +1719,18 @@
     },
     {
       "timestamp": "2026-08-06T21:00",
-      "value": null,
-      "flag": "-"
+      "value": 1.14,
+      "flag": "*"
     },
     {
       "timestamp": "2026-08-06T22:00",
-      "value": null,
-      "flag": "-"
+      "value": 1.04,
+      "flag": "*"
     },
     {
       "timestamp": "2026-08-06T23:00",
-      "value": null,
-      "flag": "-"
+      "value": 0.87,
+      "flag": "*"
     },
     {
       "timestamp": "2026-08-07T00:00",
