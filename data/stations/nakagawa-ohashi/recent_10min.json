@@ -7,11 +7,11 @@
     "river_name": "那珂川",
     "record_count": 1009,
     "window_hours": 168,
-    "dataset_start": "2026-07-31T04:40",
-    "dataset_end": "2026-08-07T04:40",
+    "dataset_start": "2026-07-31T05:50",
+    "dataset_end": "2026-08-07T05:50",
     "index_url": "https://www1.river.go.jp/cgi-bin/DspWaterData.exe?KIND=9&ID=303021283322040",
-    "source_url": "https://www1.river.go.jp/dat/dload/download/29303021283322040202607313860569.dat",
-    "last_fetch_utc": "2026-08-06T19:50:35Z",
+    "source_url": "https://www1.river.go.jp/dat/dload/download/29303021283322040202607313893450.dat",
+    "last_fetch_utc": "2026-08-06T21:00:50Z",
     "probe_errors": [],
     "notes": [
       "水文水質データベースのリアルタイム10分水位一覧表からDLした dat ファイルで作成。",
@@ -19,48 +19,6 @@
     ]
   },
   "records": [
-    {
-      "timestamp": "2026-07-31T04:40",
-      "value": -1.52,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-07-31T04:50",
-      "value": -1.52,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-07-31T05:00",
-      "value": -1.52,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-07-31T05:10",
-      "value": -1.52,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-07-31T05:20",
-      "value": -1.52,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-07-31T05:30",
-      "value": -1.52,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-07-31T05:40",
-      "value": -1.52,
-      "flag": "",
-      "resolution": "10min"
-    },
     {
       "timestamp": "2026-07-31T05:50",
       "value": -1.52,
@@ -6069,6 +6027,48 @@
     },
     {
       "timestamp": "2026-08-07T04:40",
+      "value": -1.61,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-07T04:50",
+      "value": -1.61,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-07T05:00",
+      "value": -1.61,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-07T05:10",
+      "value": -1.61,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-07T05:20",
+      "value": -1.61,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-07T05:30",
+      "value": -1.61,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-07T05:40",
+      "value": -1.61,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-07T05:50",
       "value": -1.61,
       "flag": "",
       "resolution": "10min"
