@@ -5,7 +5,7 @@
     "station_name": "富岡橋",
     "record_count": 873,
     "window_days": 45,
-    "last_fetch_utc": "2026-08-09T13:59:30Z",
+    "last_fetch_utc": "2026-08-09T14:51:02Z",
     "months_fetched": [
       "2026-07",
       "2026-08"
@@ -1729,8 +1729,8 @@
     },
     {
       "timestamp": "2026-08-09T22:00",
-      "value": null,
-      "flag": "-"
+      "value": -1.66,
+      "flag": "*"
     },
     {
       "timestamp": "2026-08-09T23:00",
