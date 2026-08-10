@@ -5,7 +5,7 @@
     "station_name": "湊大橋",
     "record_count": 842,
     "window_days": 45,
-    "last_fetch_utc": "2026-08-10T21:00:59Z",
+    "last_fetch_utc": "2026-08-10T21:56:52Z",
     "months_fetched": [
       "2026-07",
       "2026-08"
@@ -1729,8 +1729,8 @@
     },
     {
       "timestamp": "2026-08-11T05:00",
-      "value": null,
-      "flag": "-"
+      "value": 0.76,
+      "flag": "*"
     },
     {
       "timestamp": "2026-08-11T06:00",
