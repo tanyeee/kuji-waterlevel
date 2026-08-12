@@ -5,7 +5,7 @@
     "station_name": "幸久橋",
     "record_count": 793,
     "window_days": 45,
-    "last_fetch_utc": "2026-08-12T22:01:11Z",
+    "last_fetch_utc": "2026-08-12T22:59:16Z",
     "months_fetched": [
       "2026-07",
       "2026-08"
@@ -1729,8 +1729,8 @@
     },
     {
       "timestamp": "2026-08-13T06:00",
-      "value": null,
-      "flag": "-"
+      "value": -0.52,
+      "flag": "*"
     },
     {
       "timestamp": "2026-08-13T07:00",
