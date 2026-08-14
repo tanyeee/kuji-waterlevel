@@ -5,7 +5,7 @@
     "station_name": "涸沼橋",
     "record_count": 756,
     "window_days": 45,
-    "last_fetch_utc": "2026-08-14T11:09:55Z",
+    "last_fetch_utc": "2026-08-14T11:55:51Z",
     "months_fetched": [
       "2026-07",
       "2026-08"
@@ -1729,8 +1729,8 @@
     },
     {
       "timestamp": "2026-08-14T19:00",
-      "value": null,
-      "flag": "-"
+      "value": 1.15,
+      "flag": "*"
     },
     {
       "timestamp": "2026-08-14T20:00",
