@@ -7,11 +7,11 @@
     "river_name": "久慈川",
     "record_count": 1009,
     "window_hours": 168,
-    "dataset_start": "2026-08-07T14:40",
-    "dataset_end": "2026-08-14T14:40",
+    "dataset_start": "2026-08-07T15:50",
+    "dataset_end": "2026-08-14T15:50",
     "index_url": "https://www1.river.go.jp/cgi-bin/DspWaterData.exe?KIND=9&ID=303011283322050",
-    "source_url": "https://www1.river.go.jp/dat/dload/download/2930301128332205020260807288673.dat",
-    "last_fetch_utc": "2026-08-14T05:52:24Z",
+    "source_url": "https://www1.river.go.jp/dat/dload/download/29303011283322050202608072267395.dat",
+    "last_fetch_utc": "2026-08-14T07:00:45Z",
     "probe_errors": [],
     "notes": [
       "水文水質データベースのリアルタイム10分水位一覧表からDLした dat ファイルで作成。",
@@ -19,48 +19,6 @@
     ]
   },
   "records": [
-    {
-      "timestamp": "2026-08-07T14:40",
-      "value": 0.23,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-07T14:50",
-      "value": 0.22,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-07T15:00",
-      "value": 0.21,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-07T15:10",
-      "value": 0.2,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-07T15:20",
-      "value": 0.22,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-07T15:30",
-      "value": 0.23,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-07T15:40",
-      "value": 0.25,
-      "flag": "",
-      "resolution": "10min"
-    },
     {
       "timestamp": "2026-08-07T15:50",
       "value": 0.28,
@@ -6070,6 +6028,48 @@
     {
       "timestamp": "2026-08-14T14:40",
       "value": 0.38,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-14T14:50",
+      "value": 0.4,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-14T15:00",
+      "value": 0.42,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-14T15:10",
+      "value": 0.44,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-14T15:20",
+      "value": 0.45,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-14T15:30",
+      "value": 0.48,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-14T15:40",
+      "value": 0.52,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-14T15:50",
+      "value": 0.55,
       "flag": "",
       "resolution": "10min"
     }
