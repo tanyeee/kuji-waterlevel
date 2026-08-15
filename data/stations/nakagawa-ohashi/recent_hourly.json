@@ -3,20 +3,15 @@
     "source": "monthly_page_dat",
     "station_id": "303021283322040",
     "station_name": "那珂川大橋",
-    "record_count": 740,
+    "record_count": 739,
     "window_days": 45,
-    "last_fetch_utc": "2026-08-15T03:52:51Z",
+    "last_fetch_utc": "2026-08-15T04:45:52Z",
     "months_fetched": [
       "2026-07",
       "2026-08"
     ]
   },
   "records": [
-    {
-      "timestamp": "2026-08-01T04:00",
-      "value": -1.5,
-      "flag": "*"
-    },
     {
       "timestamp": "2026-08-01T05:00",
       "value": -1.5,
@@ -1734,8 +1729,8 @@
     },
     {
       "timestamp": "2026-08-15T12:00",
-      "value": null,
-      "flag": "-"
+      "value": -0.82,
+      "flag": "*"
     },
     {
       "timestamp": "2026-08-15T13:00",
