@@ -5,7 +5,7 @@
     "station_name": "水府橋",
     "record_count": 538,
     "window_days": 45,
-    "last_fetch_utc": "2026-08-23T13:00:46Z",
+    "last_fetch_utc": "2026-08-23T13:45:01Z",
     "months_fetched": [
       "2026-07",
       "2026-08"
@@ -1729,8 +1729,8 @@
     },
     {
       "timestamp": "2026-08-23T21:00",
-      "value": null,
-      "flag": "-"
+      "value": 1.6,
+      "flag": "*"
     },
     {
       "timestamp": "2026-08-23T22:00",
