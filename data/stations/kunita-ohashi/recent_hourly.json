@@ -5,7 +5,7 @@
     "station_name": "国田大橋",
     "record_count": 547,
     "window_days": 45,
-    "last_fetch_utc": "2026-08-23T04:03:06Z",
+    "last_fetch_utc": "2026-08-23T04:51:07Z",
     "months_fetched": [
       "2026-07",
       "2026-08"
@@ -1729,8 +1729,8 @@
     },
     {
       "timestamp": "2026-08-23T12:00",
-      "value": null,
-      "flag": "-"
+      "value": 0.52,
+      "flag": "*"
     },
     {
       "timestamp": "2026-08-23T13:00",

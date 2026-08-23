@@ -5,7 +5,7 @@
     "station_name": "那珂川大橋",
     "record_count": 547,
     "window_days": 45,
-    "last_fetch_utc": "2026-08-23T04:03:10Z",
+    "last_fetch_utc": "2026-08-23T04:51:11Z",
     "months_fetched": [
       "2026-07",
       "2026-08"
@@ -1729,8 +1729,8 @@
     },
     {
       "timestamp": "2026-08-23T12:00",
-      "value": null,
-      "flag": "-"
+      "value": -1.25,
+      "flag": "*"
     },
     {
       "timestamp": "2026-08-23T13:00",
