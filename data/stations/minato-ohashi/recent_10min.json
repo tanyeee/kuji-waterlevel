@@ -7,11 +7,11 @@
     "river_name": "那珂川",
     "record_count": 1009,
     "window_hours": 168,
-    "dataset_start": "2026-08-19T23:40",
-    "dataset_end": "2026-08-26T23:40",
+    "dataset_start": "2026-08-20T00:40",
+    "dataset_end": "2026-08-27T00:40",
     "index_url": "https://www1.river.go.jp/cgi-bin/DspWaterData.exe?KIND=9&ID=303021283322010",
-    "source_url": "https://www1.river.go.jp/dat/dload/download/293030212833220102026081967111.dat",
-    "last_fetch_utc": "2026-08-26T14:53:25Z",
+    "source_url": "https://www1.river.go.jp/dat/dload/download/29303021283322010202608203858.dat",
+    "last_fetch_utc": "2026-08-26T15:59:23Z",
     "probe_errors": [],
     "notes": [
       "水文水質データベースのリアルタイム10分水位一覧表からDLした dat ファイルで作成。",
@@ -19,42 +19,6 @@
     ]
   },
   "records": [
-    {
-      "timestamp": "2026-08-19T23:40",
-      "value": 0.74,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-19T23:50",
-      "value": 0.7,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-20T00:00",
-      "value": 0.69,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-20T00:10",
-      "value": 0.67,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-20T00:20",
-      "value": 0.64,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-20T00:30",
-      "value": 0.62,
-      "flag": "",
-      "resolution": "10min"
-    },
     {
       "timestamp": "2026-08-20T00:40",
       "value": 0.58,
@@ -6070,6 +6034,42 @@
     {
       "timestamp": "2026-08-26T23:40",
       "value": 0.98,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-26T23:50",
+      "value": 1.02,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-27T00:00",
+      "value": 1.04,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-27T00:10",
+      "value": 1.08,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-27T00:20",
+      "value": 1.1,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-27T00:30",
+      "value": 1.13,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-27T00:40",
+      "value": 1.12,
       "flag": "",
       "resolution": "10min"
     }
