@@ -5,13 +5,13 @@
     "station_name": "久慈大橋",
     "river_system": "久慈川",
     "river_name": "久慈川",
-    "record_count": 1000,
+    "record_count": 1001,
     "window_hours": 168,
     "dataset_start": "2026-08-19T19:40",
-    "dataset_end": "2026-08-26T19:30",
+    "dataset_end": "2026-08-26T19:40",
     "index_url": "https://www1.river.go.jp/cgi-bin/DspWaterData.exe?KIND=9&ID=303011283322060",
-    "source_url": "https://www1.river.go.jp/dat/dload/download/293030112833220602026081921607.dat",
-    "last_fetch_utc": "2026-08-26T10:43:19Z",
+    "source_url": "https://www1.river.go.jp/dat/dload/download/29303011283322060202608194064478.dat",
+    "last_fetch_utc": "2026-08-26T10:53:20Z",
     "probe_errors": [],
     "notes": [
       "水文水質データベースのリアルタイム10分水位一覧表からDLした dat ファイルで作成。",
@@ -6016,6 +6016,12 @@
     {
       "timestamp": "2026-08-26T19:30",
       "value": 1.48,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-26T19:40",
+      "value": 1.47,
       "flag": "",
       "resolution": "10min"
     }
