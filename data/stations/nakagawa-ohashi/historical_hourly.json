@@ -4,10 +4,10 @@
     "station_id": "303021283322040",
     "station_name": "那珂川大橋",
     "observation_name": "野口",
-    "record_count": 93078,
+    "record_count": 93091,
     "valid_record_count": 91899,
     "dataset_start": "2016-01-01T00:00",
-    "dataset_end": "2026-08-14T05:00",
+    "dataset_end": "2026-08-14T18:00",
     "valid_dataset_start": "2016-01-01T00:00",
     "valid_dataset_end": "2026-07-10T10:00",
     "start_year": 2016,
@@ -465408,6 +465408,71 @@
     {
       "timestamp": "2026-08-14T05:00",
       "value": -0.79,
+      "flag": "*"
+    },
+    {
+      "timestamp": "2026-08-14T06:00",
+      "value": -0.73,
+      "flag": "*"
+    },
+    {
+      "timestamp": "2026-08-14T07:00",
+      "value": -0.64,
+      "flag": "*"
+    },
+    {
+      "timestamp": "2026-08-14T08:00",
+      "value": -0.6,
+      "flag": "*"
+    },
+    {
+      "timestamp": "2026-08-14T09:00",
+      "value": -0.58,
+      "flag": "*"
+    },
+    {
+      "timestamp": "2026-08-14T10:00",
+      "value": -0.56,
+      "flag": "*"
+    },
+    {
+      "timestamp": "2026-08-14T11:00",
+      "value": -0.55,
+      "flag": "*"
+    },
+    {
+      "timestamp": "2026-08-14T12:00",
+      "value": -0.53,
+      "flag": "*"
+    },
+    {
+      "timestamp": "2026-08-14T13:00",
+      "value": -0.5,
+      "flag": "*"
+    },
+    {
+      "timestamp": "2026-08-14T14:00",
+      "value": -0.52,
+      "flag": "*"
+    },
+    {
+      "timestamp": "2026-08-14T15:00",
+      "value": -0.57,
+      "flag": "*"
+    },
+    {
+      "timestamp": "2026-08-14T16:00",
+      "value": -0.61,
+      "flag": "*"
+    },
+    {
+      "timestamp": "2026-08-14T17:00",
+      "value": -0.65,
+      "flag": "*"
+    },
+    {
+      "timestamp": "2026-08-14T18:00",
+      "value": -0.69,
       "flag": "*"
     }
   ]
