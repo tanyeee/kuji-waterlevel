@@ -3,50 +3,15 @@
     "source": "monthly_page_dat",
     "station_id": "303011283322030",
     "station_name": "幸久橋",
-    "record_count": 405,
+    "record_count": 398,
     "window_days": 45,
-    "last_fetch_utc": "2026-08-29T02:10:06Z",
+    "last_fetch_utc": "2026-08-29T09:00:47Z",
     "months_fetched": [
       "2026-07",
       "2026-08"
     ]
   },
   "records": [
-    {
-      "timestamp": "2026-08-15T03:00",
-      "value": 0.09,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-08-15T04:00",
-      "value": 0.06,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-08-15T05:00",
-      "value": 0.03,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-08-15T06:00",
-      "value": -0.02,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-08-15T07:00",
-      "value": -0.05,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-08-15T08:00",
-      "value": -0.1,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-08-15T09:00",
-      "value": -0.13,
-      "flag": "*"
-    },
     {
       "timestamp": "2026-08-15T10:00",
       "value": -0.16,
@@ -1729,38 +1694,38 @@
     },
     {
       "timestamp": "2026-08-29T10:00",
-      "value": null,
-      "flag": "-"
+      "value": -0.72,
+      "flag": "*"
     },
     {
       "timestamp": "2026-08-29T11:00",
-      "value": null,
-      "flag": "-"
+      "value": -0.73,
+      "flag": "*"
     },
     {
       "timestamp": "2026-08-29T12:00",
-      "value": null,
-      "flag": "-"
+      "value": -0.73,
+      "flag": "*"
     },
     {
       "timestamp": "2026-08-29T13:00",
-      "value": null,
-      "flag": "-"
+      "value": -0.68,
+      "flag": "*"
     },
     {
       "timestamp": "2026-08-29T14:00",
-      "value": null,
-      "flag": "-"
+      "value": -0.63,
+      "flag": "*"
     },
     {
       "timestamp": "2026-08-29T15:00",
-      "value": null,
-      "flag": "-"
+      "value": -0.59,
+      "flag": "*"
     },
     {
       "timestamp": "2026-08-29T16:00",
-      "value": null,
-      "flag": "-"
+      "value": -0.56,
+      "flag": "*"
     },
     {
       "timestamp": "2026-08-29T17:00",
