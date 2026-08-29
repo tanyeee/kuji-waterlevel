@@ -7,11 +7,11 @@
     "river_name": "那珂川",
     "record_count": 1008,
     "window_hours": 168,
-    "dataset_start": "2026-08-22T02:40",
-    "dataset_end": "2026-08-29T02:40",
+    "dataset_start": "2026-08-22T09:20",
+    "dataset_end": "2026-08-29T09:20",
     "index_url": "https://www1.river.go.jp/cgi-bin/DspWaterData.exe?KIND=9&ID=303021283322030",
-    "source_url": "https://www1.river.go.jp/dat/dload/download/29303021283322030202608221436512.dat",
-    "last_fetch_utc": "2026-08-28T17:53:24Z",
+    "source_url": "https://www1.river.go.jp/dat/dload/download/29303021283322030202608221608682.dat",
+    "last_fetch_utc": "2026-08-29T00:33:27Z",
     "probe_errors": [],
     "notes": [
       "水文水質データベースのリアルタイム10分水位一覧表からDLした dat ファイルで作成。",
@@ -19,246 +19,6 @@
     ]
   },
   "records": [
-    {
-      "timestamp": "2026-08-22T02:40",
-      "value": 0.36,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-22T02:50",
-      "value": 0.36,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-22T03:00",
-      "value": 0.34,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-22T03:10",
-      "value": 0.33,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-22T03:20",
-      "value": 0.31,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-22T03:30",
-      "value": 0.3,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-22T03:40",
-      "value": 0.28,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-22T03:50",
-      "value": 0.27,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-22T04:00",
-      "value": 0.26,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-22T04:10",
-      "value": 0.25,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-22T04:20",
-      "value": 0.25,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-22T04:30",
-      "value": 0.23,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-22T04:40",
-      "value": 0.23,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-22T04:50",
-      "value": 0.22,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-22T05:00",
-      "value": 0.2,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-22T05:10",
-      "value": 0.19,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-22T05:20",
-      "value": 0.19,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-22T05:30",
-      "value": 0.18,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-22T05:40",
-      "value": 0.17,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-22T05:50",
-      "value": 0.18,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-22T06:00",
-      "value": 0.17,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-22T06:10",
-      "value": 0.18,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-22T06:20",
-      "value": 0.18,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-22T06:30",
-      "value": 0.18,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-22T06:40",
-      "value": 0.18,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-22T06:50",
-      "value": 0.18,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-22T07:00",
-      "value": 0.18,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-22T07:10",
-      "value": 0.19,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-22T07:20",
-      "value": 0.19,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-22T07:30",
-      "value": 0.18,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-22T07:40",
-      "value": 0.17,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-22T07:50",
-      "value": 0.18,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-22T08:00",
-      "value": 0.2,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-22T08:10",
-      "value": 0.21,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-22T08:20",
-      "value": 0.22,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-22T08:30",
-      "value": 0.24,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-22T08:40",
-      "value": 0.24,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-22T08:50",
-      "value": 0.24,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-22T09:00",
-      "value": 0.25,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-22T09:10",
-      "value": 0.26,
-      "flag": "",
-      "resolution": "10min"
-    },
     {
       "timestamp": "2026-08-22T09:20",
       "value": 0.26,
@@ -6064,6 +5824,246 @@
     {
       "timestamp": "2026-08-29T02:40",
       "value": 0.73,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-29T02:50",
+      "value": 0.76,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-29T03:00",
+      "value": 0.77,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-29T03:10",
+      "value": 0.78,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-29T03:20",
+      "value": 0.8,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-29T03:30",
+      "value": 0.81,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-29T03:40",
+      "value": 0.86,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-29T03:50",
+      "value": 0.91,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-29T04:00",
+      "value": 0.92,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-29T04:10",
+      "value": 0.92,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-29T04:20",
+      "value": 0.93,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-29T04:30",
+      "value": 0.94,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-29T04:40",
+      "value": 0.94,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-29T04:50",
+      "value": 0.92,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-29T05:00",
+      "value": 0.93,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-29T05:10",
+      "value": 0.91,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-29T05:20",
+      "value": 0.93,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-29T05:30",
+      "value": 0.9,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-29T05:40",
+      "value": 0.87,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-29T05:50",
+      "value": 0.85,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-29T06:00",
+      "value": 0.82,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-29T06:10",
+      "value": 0.78,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-29T06:20",
+      "value": 0.75,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-29T06:30",
+      "value": 0.73,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-29T06:40",
+      "value": 0.7,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-29T06:50",
+      "value": 0.69,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-29T07:00",
+      "value": 0.66,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-29T07:10",
+      "value": 0.62,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-29T07:20",
+      "value": 0.59,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-29T07:30",
+      "value": 0.55,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-29T07:40",
+      "value": 0.52,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-29T07:50",
+      "value": 0.5,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-29T08:00",
+      "value": 0.47,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-29T08:10",
+      "value": 0.44,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-29T08:20",
+      "value": 0.41,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-29T08:30",
+      "value": 0.37,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-29T08:40",
+      "value": 0.34,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-29T08:50",
+      "value": 0.3,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-29T09:00",
+      "value": 0.28,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-29T09:10",
+      "value": 0.25,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-08-29T09:20",
+      "value": 0.23,
       "flag": "",
       "resolution": "10min"
     }
