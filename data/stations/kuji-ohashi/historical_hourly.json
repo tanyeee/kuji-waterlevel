@@ -4,10 +4,10 @@
     "station_id": "303011283322060",
     "station_name": "久慈大橋",
     "observation_name": "久慈大橋",
-    "record_count": 93158,
+    "record_count": 93165,
     "valid_record_count": 87105,
     "dataset_start": "2016-01-01T00:00",
-    "dataset_end": "2026-08-17T13:00",
+    "dataset_end": "2026-08-17T20:00",
     "valid_dataset_start": "2016-01-01T00:00",
     "valid_dataset_end": "2026-07-10T10:00",
     "start_year": 2016,
@@ -465808,6 +465808,41 @@
     {
       "timestamp": "2026-08-17T13:00",
       "value": 1.06,
+      "flag": "*"
+    },
+    {
+      "timestamp": "2026-08-17T14:00",
+      "value": 1.25,
+      "flag": "*"
+    },
+    {
+      "timestamp": "2026-08-17T15:00",
+      "value": 1.46,
+      "flag": "*"
+    },
+    {
+      "timestamp": "2026-08-17T16:00",
+      "value": 1.66,
+      "flag": "*"
+    },
+    {
+      "timestamp": "2026-08-17T17:00",
+      "value": 1.76,
+      "flag": "*"
+    },
+    {
+      "timestamp": "2026-08-17T18:00",
+      "value": 1.75,
+      "flag": "*"
+    },
+    {
+      "timestamp": "2026-08-17T19:00",
+      "value": 1.68,
+      "flag": "*"
+    },
+    {
+      "timestamp": "2026-08-17T20:00",
+      "value": 1.53,
       "flag": "*"
     }
   ]

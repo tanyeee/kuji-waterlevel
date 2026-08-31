@@ -3,50 +3,15 @@
     "source": "monthly_page_dat",
     "station_id": "303021283322030",
     "station_name": "国田大橋",
-    "record_count": 346,
+    "record_count": 339,
     "window_days": 45,
-    "last_fetch_utc": "2026-08-31T13:45:52Z",
+    "last_fetch_utc": "2026-08-31T20:03:01Z",
     "months_fetched": [
       "2026-07",
       "2026-08"
     ]
   },
   "records": [
-    {
-      "timestamp": "2026-08-17T14:00",
-      "value": 0.28,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-08-17T15:00",
-      "value": 0.51,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-08-17T16:00",
-      "value": 0.69,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-08-17T17:00",
-      "value": 0.8,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-08-17T18:00",
-      "value": 0.87,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-08-17T19:00",
-      "value": 0.82,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-08-17T20:00",
-      "value": 0.71,
-      "flag": "*"
-    },
     {
       "timestamp": "2026-08-17T21:00",
       "value": 0.56,
@@ -1734,13 +1699,13 @@
     },
     {
       "timestamp": "2026-08-31T22:00",
-      "value": null,
-      "flag": "-"
+      "value": 0.33,
+      "flag": "*"
     },
     {
       "timestamp": "2026-08-31T23:00",
-      "value": null,
-      "flag": "-"
+      "value": 0.2,
+      "flag": "*"
     }
   ]
 }
