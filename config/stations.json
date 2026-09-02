@@ -5,7 +5,7 @@
     {
       "id": "kuji",
       "name": "久慈川水系",
-      "station_ids": ["tomioka-bashi", "nukada", "sakakibashi", "kuji-ohashi"]
+      "station_ids": ["tomioka-bashi", "nukada", "sakakibashi", "kuji-ohashi", "kihatsu", "tsuneibashi"]
     },
     {
       "id": "hinuma-nakagawa",
@@ -91,6 +91,36 @@
         "lat": 36.4808333,
         "lon": 140.62178851015625
       }
+    },
+    {
+      "id": "kihatsu",
+      "name": "里川 機初",
+      "observation_name": "機初",
+      "river_id": "kuji",
+      "river_name": "久慈川水系",
+      "data_dir": "data/stations/kihatsu",
+      "hourly": {
+        "station_id": "303011283322080"
+      },
+      "ten_min": {
+        "station_id": "303011283322080"
+      },
+      "location": {}
+    },
+    {
+      "id": "tsuneibashi",
+      "name": "山田川 常井橋",
+      "observation_name": "常井橋",
+      "river_id": "kuji",
+      "river_name": "久慈川水系",
+      "data_dir": "data/stations/tsuneibashi",
+      "hourly": {
+        "station_id": "303011283322070"
+      },
+      "ten_min": {
+        "station_id": "303011283322070"
+      },
+      "location": {}
     },
     {
       "id": "hinuma-bashi",
