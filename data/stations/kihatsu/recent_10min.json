@@ -7,11 +7,11 @@
     "river_name": "里川",
     "record_count": 836,
     "window_hours": 168,
-    "dataset_start": "2026-08-27T12:10",
-    "dataset_end": "2026-09-03T12:10",
+    "dataset_start": "2026-08-27T12:20",
+    "dataset_end": "2026-09-03T12:20",
     "index_url": "https://www1.river.go.jp/cgi-bin/DspWaterData.exe?KIND=9&ID=303011283322080",
-    "source_url": "https://www1.river.go.jp/dat/dload/download/29303011283322080202608273575140.dat",
-    "last_fetch_utc": "2026-09-03T03:22:42Z",
+    "source_url": "https://www1.river.go.jp/dat/dload/download/29303011283322080202608271012161.dat",
+    "last_fetch_utc": "2026-09-03T03:32:45Z",
     "probe_errors": [],
     "notes": [
       "水文水質データベースのリアルタイム10分水位一覧表からDLした dat ファイルで作成。",
@@ -19,12 +19,6 @@
     ]
   },
   "records": [
-    {
-      "timestamp": "2026-08-27T12:10",
-      "value": -0.86,
-      "flag": "",
-      "resolution": "10min"
-    },
     {
       "timestamp": "2026-08-27T12:20",
       "value": -0.84,
@@ -5031,6 +5025,12 @@
     },
     {
       "timestamp": "2026-09-03T12:10",
+      "value": -0.97,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-03T12:20",
       "value": -0.97,
       "flag": "",
       "resolution": "10min"
