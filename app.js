@@ -42,8 +42,36 @@ function percentile(sortedValues, q) {
 }
 
 function getBaselineRecords(records) {
-  const hourlyRecords = records.filter(r => !isTenMinuteRecord(r) && isRenderableRecord(r));
+  const hourlyRecords = records
+    .map(r => isTenMinuteRecord(r) ? r.fallback_record : r)
+    .filter(r => r && !isTenMinuteRecord(r) && isRenderableRecord(r));
   return hourlyRecords.length >= 24 ? hourlyRecords : records.filter(r => isRenderableRecord(r));
+}
+
+function computeReferenceStats(records) {
+  const hourly = records
+    .map(r => isTenMinuteRecord(r) ? r.fallback_record : r)
+    .filter(r => r && !isTenMinuteRecord(r) && isRenderableRecord(r))
+    .sort((a, b) => a.timestamp.localeCompare(b.timestamp));
+  const end = hourly[hourly.length - 1]?.timestamp;
+  if (!end) return { start: null, end: null, count: 0, mean: null, p90: null, p95: null };
+
+  // Work in calendar dates without making the window depend on the browser timezone.
+  const startDate = new Date(`${end.slice(0, 19)}${end.length === 16 ? ':00' : ''}Z`);
+  const month = startDate.getUTCMonth();
+  startDate.setUTCFullYear(startDate.getUTCFullYear() - 3);
+  if (startDate.getUTCMonth() !== month) startDate.setUTCDate(0);
+  const start = startDate.toISOString().slice(0, end.length);
+  const values = hourly.filter(r => r.timestamp >= start && r.timestamp <= end)
+    .map(r => r.value).sort((a, b) => a - b);
+  return {
+    start,
+    end,
+    count: values.length,
+    mean: values.reduce((sum, value) => sum + value, 0) / values.length,
+    p90: percentile(values, 0.9),
+    p95: percentile(values, 0.95)
+  };
 }
 
 function computeRolling7DayDiffs(records) {
@@ -113,6 +141,7 @@ function mergeDatasets(historical, recent, recent10min) {
         p90: percentile(values, 0.9),
         p95: percentile(values, 0.95)
       },
+      reference_stats: computeReferenceStats(records),
       rise_mode_b_thresholds: {
         moderate: percentile(diffs, 0.9) ?? meta.rise_mode_b_thresholds?.moderate ?? 0.12,
         high: percentile(diffs, 0.95) ?? meta.rise_mode_b_thresholds?.high ?? 0.26
@@ -166,6 +195,7 @@ const els = {
   annualMax: document.getElementById('annualMax'),
   annualP90: document.getElementById('annualP90'),
   annualP95: document.getElementById('annualP95'),
+  referenceMean: document.getElementById('referenceMean'),
   bThreshold: document.getElementById('bThreshold'),
   rangeLabel: document.getElementById('rangeLabel'),
   statusBadge: document.getElementById('statusBadge'),
@@ -716,32 +746,35 @@ function evaluateStatus(latestRecord) {
 
   const currentValue = latestRecord.value;
   if (currentMode === 'A') {
-    const { mean, p90, p95 } = meta.annual_stats;
+    const { mean, p90, p95, count } = meta.reference_stats;
+    if (!count) {
+      return { label: '判定不可', cssClass: 'neutral', description: '直近3年の基準に必要な1時間観測値がありません。' };
+    }
     if (currentValue >= p95) {
       return {
         label: 'かなり高い',
         cssClass: 'top',
-        description: `年間95パーセンタイル（${formatLevel(p95)}）以上です。かなり高い水位帯です。`
+        description: `直近3年の95％点（${formatLevel(p95)}）以上です。統計上、かなり高い水位帯です。`
       };
     }
     if (currentValue >= p90) {
       return {
         label: '増水気味',
         cssClass: 'high',
-        description: `年間90パーセンタイル（${formatLevel(p90)}）以上です。年間分布の中で高水位側にあります。`
+        description: `大幅増水基準（${formatLevel(p90)}）以上です。直近3年の観測値の上位約10％にあたります。`
       };
     }
     if (currentValue >= mean) {
       return {
         label: 'やや高め',
         cssClass: 'warn',
-        description: `年間平均（${formatLevel(mean)}）以上です。平常よりやや高めです。`
+        description: `増水基準（${formatLevel(mean)}）以上です。直近3年の平均より高めです。`
       };
     }
     return {
       label: '平常',
       cssClass: 'ok',
-      description: `年間平均（${formatLevel(mean)}）未満です。分布上は平常側です。`
+      description: `増水基準（${formatLevel(mean)}）未満です。直近3年の平均より低めです。`
     };
   }
 
@@ -790,8 +823,10 @@ function populateAnnualStats() {
   els.annualMin.textContent = formatLevel(s.min);
   els.annualMean.textContent = formatLevel(s.mean);
   els.annualMax.textContent = formatLevel(s.max);
-  els.annualP90.textContent = formatLevel(s.p90);
-  els.annualP95.textContent = formatLevel(s.p95);
+  const reference = rawData.meta.reference_stats;
+  els.referenceMean.textContent = reference.count ? formatLevel(reference.mean) : '-';
+  els.annualP90.textContent = reference.count ? formatLevel(reference.p90) : '-';
+  els.annualP95.textContent = reference.count ? formatLevel(reference.p95) : '-';
   els.bThreshold.textContent = `+${fmt3.format(rawData.meta.rise_mode_b_thresholds.moderate)} m`;
 }
 
@@ -835,11 +870,10 @@ function render() {
   els.statusDescription.textContent = status.description;
   els.statusTimestamp.textContent = latest ? formatDateTime(latest.timestamp) : '-';
   els.statusCurrentLevel.textContent = latest ? formatLevel(latest.value) : '-';
-  els.statusMode.textContent = currentMode === 'A' ? 'A 全期間分布基準' : 'B 直近7日平均との差';
+  els.statusMode.textContent = currentMode === 'A' ? 'A 直近3年基準' : 'B 直近7日平均との差';
 
   const dataSeries = records.map(r => ({ x: r.timestamp, y: isRenderableRecord(r) ? r.value : null }));
-  const annualMean = rawData.meta.annual_stats.mean;
-  const annualP90 = rawData.meta.annual_stats.p90;
+  const reference = rawData.meta.reference_stats;
 
   const yPadding = Math.max((maxValue - minValue) * 0.08, 0.05);
   const yMin = Math.floor((minValue - yPadding) * 100) / 100;
@@ -887,19 +921,19 @@ function render() {
     );
   }
 
-  if (els.toggleAnnualLines.checked) {
+  if (els.toggleAnnualLines.checked && reference.count) {
     datasets.push(
       {
-        label: '全期間平均',
-        data: buildLineSeries(records, annualMean),
+        label: '増水基準',
+        data: buildLineSeries(records, reference.mean),
         borderColor: 'rgba(190,220,255,.72)',
         borderDash: [3, 6],
         borderWidth: 1.1,
         pointRadius: 0
       },
       {
-        label: '全期間90%',
-        data: buildLineSeries(records, annualP90),
+        label: '大幅増水基準',
+        data: buildLineSeries(records, reference.p90),
         borderColor: 'rgba(255,94,120,.8)',
         borderDash: [3, 6],
         borderWidth: 1.1,
@@ -941,8 +975,10 @@ function render() {
         legend: {
           labels: {
             color: '#dcecff',
-            boxWidth: 18,
-            usePointStyle: false
+            boxWidth: 24,
+            usePointStyle: true,
+            pointStyle: 'line',
+            pointStyleWidth: 24
           }
         },
         tooltip: {
