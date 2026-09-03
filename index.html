@@ -8,7 +8,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32-v20260710.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon-v20260710.png" />
   <link rel="manifest" href="site.webmanifest?v=20260710" />
-  <link rel="stylesheet" href="style.css?v=20260903-compact-stats" />
+  <link rel="stylesheet" href="style.css?v=20260903-mode-presets" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3"></script>
 </head>
@@ -52,6 +52,7 @@
           <span>観測地点</span>
           <select id="stationSelect"></select>
         </label>
+        <div class="date-fields">
         <label class="field">
           <span>開始日</span>
           <input type="date" id="startDate" />
@@ -60,25 +61,23 @@
           <span>終了日</span>
           <input type="date" id="endDate" />
         </label>
-        <div class="field field-wide">
-          <span>増水判定モード</span>
-          <div class="segmented">
-            <button type="button" class="mode-btn active" data-mode="A">A 直近3年基準</button>
-            <button type="button" class="mode-btn" data-mode="B">B 直近7日平均との差</button>
-          </div>
+        <div class="field refresh-field">
+          <span>グラフ更新</span>
+          <button type="button" id="applyButton" class="primary refresh-button" aria-label="グラフ更新" title="グラフ更新">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
+              <path d="M21 3v5h-5" />
+              <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
+              <path d="M8 16H3v5" />
+            </svg>
+          </button>
         </div>
-        <div class="field field-wide">
-          <span>表示操作</span>
-          <div class="action-row">
-            <button type="button" id="applyButton" class="primary">グラフ更新</button>
-          </div>
         </div>
       </div>
 
       <div class="preset-row">
         <span class="preset-label">期間プリセット</span>
         <button type="button" class="preset-btn" data-days="24h">24時間</button>
-        <button type="button" class="preset-btn" data-days="3">3日</button>
         <button type="button" class="preset-btn" data-days="7">1週間</button>
         <button type="button" class="preset-btn" data-days="30">1か月</button>
         <button type="button" class="preset-btn" data-days="90">90日</button>
@@ -86,7 +85,6 @@
         <button type="button" class="preset-btn" data-days="183">半年</button>
         <button type="button" class="preset-btn" data-days="365">1年</button>
         <button type="button" class="preset-btn" data-days="730">2年</button>
-        <button type="button" class="preset-btn" data-days="1461">4年</button>
         <button type="button" class="preset-btn" data-days="all">全期間</button>
       </div>
 
@@ -110,6 +108,13 @@
         <p id="statusDescription" class="status-description"></p>
         <details class="status-details">
           <summary class="disclosure-summary"><span>判定の詳細</span><span class="disclosure-icon" aria-hidden="true"></span></summary>
+          <div class="field status-mode-control">
+            <span>増水判定モード</span>
+            <div class="segmented">
+              <button type="button" class="mode-btn active" data-mode="A">A 直近3年基準</button>
+              <button type="button" class="mode-btn" data-mode="B">B 直近7日平均との差</button>
+            </div>
+          </div>
           <dl class="status-meta">
           <div><dt>判定時点</dt><dd id="statusTimestamp">-</dd></div>
           <div><dt>現在水位</dt><dd id="statusCurrentLevel">-</dd></div>
@@ -180,6 +185,6 @@
     </section>
   </div>
 
-  <script src="app.js?v=20260903-compact-stats"></script>
+  <script src="app.js?v=20260903-mode-presets"></script>
 </body>
 </html>

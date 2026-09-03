@@ -139,6 +139,19 @@ test('A mode, chart lines, legend, toggles and summary use the same reference', 
   assert.equal(a.run('evaluateStatus({value: 2}).cssClass'), 'neutral');
 });
 
+test('saved B mode restarts as A without discarding the saved station or range', () => {
+  const a = app();
+  a.context.localStorage = {getItem: () => JSON.stringify({mode: 'B', stationId: 'kihatsu', preset: '30'})};
+  const saved = a.run('loadViewState()');
+  assert.equal(saved.mode, 'A');
+  assert.equal(saved.stationId, 'kihatsu');
+  assert.equal(saved.preset, '30');
+  a.run("applySavedMode(loadViewState());");
+  assert.equal(a.run('currentMode'), 'A');
+  a.run("currentMode = 'B'; applySavedMode(currentRangeState());");
+  assert.equal(a.run('currentMode'), 'B');
+});
+
 test('graph station label follows selection without changing the page title', () => {
   const a = app();
   a.run(`stationConfig = {rivers: [{id: 'kuji', name: '久慈川水系'}]};
