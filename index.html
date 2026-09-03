@@ -8,7 +8,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32-v20260710.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon-v20260710.png" />
   <link rel="manifest" href="site.webmanifest?v=20260710" />
-  <link rel="stylesheet" href="style.css?v=20260903-water-band" />
+  <link rel="stylesheet" href="style.css?v=20260903-compact-stats" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3"></script>
 </head>
@@ -18,21 +18,11 @@
       <div>
         <p class="eyebrow">Kujigawa Water Level</p>
         <h1 id="pageTitle">茨城県河川水位ビューア</h1>
-        <p id="stationSummary" class="subtext">観測地点を選んで、水位データと増水基準を閲覧できます。</p>
-        <p class="subtext">24時間モードだけ10分ごとの詳細な観測値を表示します。</p>
       </div>
     </header>
 
     <section class="panel chart-panel">
-      <div class="chart-header">
-        <div>
-          <div class="panel-title">水位グラフ</div>
-          <p id="rangeLabel" class="chart-subtext"></p>
-        </div>
-        <div class="legend-note">
-          実線: 水位 / 破線・点線はグラフ下の表示設定でオンオフできます
-        </div>
-      </div>
+      <div class="panel-title chart-title">水位グラフ<span aria-hidden="true">｜</span><span id="chartStationName">観測地点</span></div>
       <div class="chart-wrap">
         <canvas id="waterLevelChart"></canvas>
       </div>
@@ -41,10 +31,15 @@
         <label class="toggle-chip"><input type="checkbox" id="toggleRangeLines" /> 選択期間の破線</label>
         <label class="toggle-chip"><input type="checkbox" id="toggleAnnualLines" checked /> 直近3年の基準線</label>
       </div>
-      <div class="reference-note">
-        <p>増水基準：直近3年の平均水位。大幅増水基準（赤線）：上位10％超えライン。</p>
-        <p>おすすめ増水水位帯：増水時に良くなるタイプのポイントで、魚の活性が上がりそうな水位の目安です。</p>
-      </div>
+      <details class="chart-details">
+        <summary class="disclosure-summary"><span>詳細説明</span><span class="disclosure-icon" aria-hidden="true"></span></summary>
+        <div class="chart-explanation">
+          <p id="rangeLabel"></p>
+          <p>実線: 水位 / 破線・点線はグラフ下の表示設定でオンオフできます</p>
+          <p>増水基準：直近3年の平均水位。大幅増水基準（赤線）：上位10％超えライン。</p>
+          <p>おすすめ増水水位帯：増水時に良くなるタイプのポイントで、魚の活性が上がりそうな水位の目安です。</p>
+        </div>
+      </details>
     </section>
 
     <section class="controls panel">
@@ -65,14 +60,14 @@
           <span>終了日</span>
           <input type="date" id="endDate" />
         </label>
-        <div class="field">
+        <div class="field field-wide">
           <span>増水判定モード</span>
           <div class="segmented">
             <button type="button" class="mode-btn active" data-mode="A">A 直近3年基準</button>
             <button type="button" class="mode-btn" data-mode="B">B 直近7日平均との差</button>
           </div>
         </div>
-        <div class="field">
+        <div class="field field-wide">
           <span>表示操作</span>
           <div class="action-row">
             <button type="button" id="applyButton" class="primary">グラフ更新</button>
@@ -81,7 +76,7 @@
       </div>
 
       <div class="preset-row">
-        <span class="preset-label">プリセット</span>
+        <span class="preset-label">期間プリセット</span>
         <button type="button" class="preset-btn" data-days="24h">24時間</button>
         <button type="button" class="preset-btn" data-days="3">3日</button>
         <button type="button" class="preset-btn" data-days="7">1週間</button>
@@ -113,15 +108,20 @@
         <div class="panel-title">現在の判定</div>
         <div id="statusBadge" class="status-badge">読み込み中</div>
         <p id="statusDescription" class="status-description"></p>
-        <dl class="status-meta">
+        <details class="status-details">
+          <summary class="disclosure-summary"><span>判定の詳細</span><span class="disclosure-icon" aria-hidden="true"></span></summary>
+          <dl class="status-meta">
           <div><dt>判定時点</dt><dd id="statusTimestamp">-</dd></div>
           <div><dt>現在水位</dt><dd id="statusCurrentLevel">-</dd></div>
           <div><dt>判定方式</dt><dd id="statusMode">-</dd></div>
-        </dl>
+          </dl>
+        </details>
       </article>
 
-      <article class="panel">
-        <div class="panel-title">選択期間の統計</div>
+      <details class="panel statistics-panel">
+        <summary class="disclosure-summary panel-title"><span>統計情報</span><span class="disclosure-icon" aria-hidden="true"></span></summary>
+        <section class="statistics-section">
+        <h3 class="panel-title">選択期間の統計</h3>
         <div class="stats-grid">
           <div class="stat-card">
             <span>最低</span><strong id="rangeMin">-</strong>
@@ -133,10 +133,9 @@
             <span>最高</span><strong id="rangeMax">-</strong>
           </div>
         </div>
-      </article>
-
-      <article class="panel">
-        <div class="panel-title">全期間の統計</div>
+        </section>
+        <section class="statistics-section">
+        <h3 class="panel-title">全期間の統計</h3>
         <div class="stats-grid">
           <div class="stat-card">
             <span>全期間最低</span><strong id="annualMin">-</strong>
@@ -148,10 +147,9 @@
             <span>全期間最高</span><strong id="annualMax">-</strong>
           </div>
         </div>
-      </article>
-
-      <article class="panel">
-        <div class="panel-title">直近3年の基準</div>
+        </section>
+        <section class="statistics-section">
+        <h3 class="panel-title">直近3年の基準</h3>
         <div class="stats-grid">
           <div class="stat-card">
             <span>増水基準</span><strong id="referenceMean">-</strong>
@@ -166,7 +164,8 @@
             <span>Bモード 増水目安</span><strong id="bThreshold">-</strong>
           </div>
         </div>
-      </article>
+        </section>
+      </details>
     </section>
 
     <section class="panel footnote">
@@ -181,6 +180,6 @@
     </section>
   </div>
 
-  <script src="app.js?v=20260903-water-band"></script>
+  <script src="app.js?v=20260903-compact-stats"></script>
 </body>
 </html>
