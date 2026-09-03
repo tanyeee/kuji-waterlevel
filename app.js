@@ -458,6 +458,9 @@ function bindEvents() {
     saveViewState();
   });
   els.startDate.addEventListener('change', () => {
+    if (els.startDate.value && els.startDate.validity.valid) {
+      els.endDate.value = els.startDate.value;
+    }
     clearActivePreset();
     saveViewState();
   });
@@ -834,6 +837,18 @@ function buildLineSeries(records, yValue) {
   return records.map(r => ({ x: r.timestamp, y: yValue }));
 }
 
+function generateLineLegendLabels(chart) {
+  // Point-style legends otherwise inherit point styles, which omit line dashes.
+  return Chart.defaults.plugins.legend.labels.generateLabels(chart).map(item => {
+    const dataset = chart.data.datasets[item.datasetIndex];
+    return {
+      ...item,
+      lineDash: dataset.borderDash || [],
+      lineWidth: dataset.borderWidth ?? item.lineWidth
+    };
+  });
+}
+
 function render() {
   if (!rawData || !rawData.records || !rawData.records.length) {
     return;
@@ -978,7 +993,8 @@ function render() {
             boxWidth: 24,
             usePointStyle: true,
             pointStyle: 'line',
-            pointStyleWidth: 24
+            pointStyleWidth: 24,
+            generateLabels: generateLineLegendLabels
           }
         },
         tooltip: {
