@@ -251,8 +251,9 @@ details[open] > .disclosure-summary .disclosure-icon::before{content:"-"}
   .control-grid input[type="date"]::-webkit-date-and-time-value{text-align:left; min-width:0}
   .panel{padding:16px}
   .chart-wrap{
-    height:48vh;
-    min-height:300px;
+    height:auto;
+    min-height:0;
+    aspect-ratio:6 / 5;
   }
   button, input[type="date"], select{
     width:100%;

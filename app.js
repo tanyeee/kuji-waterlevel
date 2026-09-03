@@ -837,6 +837,15 @@ function buildLineSeries(records, yValue) {
   return records.map(r => ({ x: r.timestamp, y: yValue }));
 }
 
+function resizeChartLegend(chart) {
+  const compact = window.innerWidth <= 720;
+  const labels = chart.options.plugins.legend.labels;
+  labels.boxWidth = compact ? 8 : 24;
+  labels.pointStyleWidth = compact ? 8 : 24;
+  labels.padding = compact ? 1 : 10;
+  labels.font = { size: compact ? 10 : 12 };
+}
+
 function generateLineLegendLabels(chart) {
   // Point-style legends otherwise inherit point styles, which omit line dashes.
   const labels = Chart.defaults.plugins.legend.labels.generateLabels(chart).map(item => {
@@ -1012,6 +1021,7 @@ function render() {
     options: {
       responsive: true,
       maintainAspectRatio: false,
+      onResize: resizeChartLegend,
       interaction: {
         mode: 'nearest',
         intersect: false

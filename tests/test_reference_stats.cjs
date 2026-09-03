@@ -139,6 +139,16 @@ test('A mode, chart lines, legend, toggles and summary use the same reference', 
   assert.equal(a.run('evaluateStatus({value: 2}).cssClass'), 'neutral');
 });
 
+test('legend uses compact mobile spacing and restores desktop sizing', () => {
+  const a = app();
+  a.run('chart = {options: {plugins: {legend: {labels: {}}}}}; window.innerWidth = 390; resizeChartLegend(chart);');
+  assert.equal(a.run('chart.options.plugins.legend.labels.pointStyleWidth'), 8);
+  assert.equal(a.run('chart.options.plugins.legend.labels.font.size'), 10);
+  a.run('window.innerWidth = 1280; resizeChartLegend(chart);');
+  assert.equal(a.run('chart.options.plugins.legend.labels.pointStyleWidth'), 24);
+  assert.equal(a.run('chart.options.plugins.legend.labels.font.size'), 12);
+});
+
 test('saved B mode restarts as A without discarding the saved station or range', () => {
   const a = app();
   a.context.localStorage = {getItem: () => JSON.stringify({mode: 'B', stationId: 'kihatsu', preset: '30'})};
