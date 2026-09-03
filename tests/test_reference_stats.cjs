@@ -14,13 +14,23 @@ function app() {
     console,
     document: {
       getElementById(id) {
-        if (!elements.has(id)) elements.set(id, { textContent: '', value: '', checked: false, getContext: () => ({}) });
+        if (!elements.has(id)) elements.set(id, {
+          textContent: '', value: '', checked: false, validity: { valid: true },
+          listeners: {},
+          addEventListener(name, handler) { this.listeners[name] = handler; },
+          getContext: () => ({})
+        });
         return elements.get(id);
       },
       querySelectorAll: () => []
     },
     window: { addEventListener() {} },
     Chart: class {
+      static defaults = { plugins: { legend: { labels: {
+        generateLabels: chart => chart.data.datasets.map((dataset, datasetIndex) => ({
+          text: dataset.label, datasetIndex, hidden: datasetIndex === 2, lineWidth: 1
+        }))
+      } } } };
       constructor(ctx, config) { Object.assign(this, config); }
       update() {}
     }
@@ -92,6 +102,12 @@ test('A mode, chart lines, legend, toggles and summary use the same reference', 
   assert.equal(a.run('chart.data.datasets[2].data[0].y'), 2.8);
   assert.equal(a.run('chart.options.plugins.legend.labels.pointStyle'), 'line');
   assert.equal(a.run('chart.options.plugins.legend.labels.usePointStyle'), true);
+  const labels = a.run('chart.options.plugins.legend.labels.generateLabels(chart)');
+  assert.deepEqual(Array.from(labels[0].lineDash), []);
+  assert.deepEqual(Array.from(labels[1].lineDash), [3, 6]);
+  assert.deepEqual(Array.from(labels[2].lineDash), [3, 6]);
+  assert.equal(labels[0].lineWidth, 2);
+  assert.equal(labels[2].hidden, true);
   assert.equal(a.run('evaluateStatus({value: 2.85}).cssClass'), 'high');
   assert.equal(a.elements.get('referenceMean').textContent, '2.00 m');
   assert.equal(a.elements.has('referencePeriod'), false);
@@ -102,4 +118,26 @@ test('A mode, chart lines, legend, toggles and summary use the same reference', 
   a.run('rawData.meta.reference_stats.count = 0; render();');
   assert.equal(a.run('chart.data.datasets.length'), 1);
   assert.equal(a.run('evaluateStatus({value: 2}).cssClass'), 'neutral');
+});
+
+test('changing the start date anchors the end picker without affecting end edits', () => {
+  const a = app();
+  a.run('saveViewState = () => {}; bindEvents();');
+  const start = a.elements.get('startDate');
+  const end = a.elements.get('endDate');
+  start.value = '2018-04-12';
+  end.value = '2026-09-03';
+  start.listeners.change();
+  assert.equal(end.value, '2018-04-12');
+  end.value = '2018-04-20';
+  end.listeners.change();
+  assert.equal(start.value, '2018-04-12');
+  assert.equal(end.value, '2018-04-20');
+  start.value = '';
+  start.listeners.change();
+  assert.equal(end.value, '2018-04-20');
+  start.value = '2010-01-01';
+  start.validity.valid = false;
+  start.listeners.change();
+  assert.equal(end.value, '2018-04-20');
 });
