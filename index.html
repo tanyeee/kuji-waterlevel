@@ -8,7 +8,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32-v20260710.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon-v20260710.png" />
   <link rel="manifest" href="site.webmanifest?v=20260710" />
-  <link rel="stylesheet" href="style.css?v=20260903-mode-presets" />
+  <link rel="stylesheet" href="style.css?v=20260903-mobile-chart" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3"></script>
 </head>
@@ -26,13 +26,13 @@
       <div class="chart-wrap">
         <canvas id="waterLevelChart"></canvas>
       </div>
-      <div class="toggle-row chart-toggle-row">
-        <span class="preset-label">表示設定</span>
-        <label class="toggle-chip"><input type="checkbox" id="toggleRangeLines" /> 選択期間の破線</label>
-        <label class="toggle-chip"><input type="checkbox" id="toggleAnnualLines" checked /> 直近3年の基準線</label>
-      </div>
       <details class="chart-details">
-        <summary class="disclosure-summary"><span>詳細説明</span><span class="disclosure-icon" aria-hidden="true"></span></summary>
+        <summary class="disclosure-summary"><span>詳細</span><span class="disclosure-icon" aria-hidden="true"></span></summary>
+        <div class="toggle-row chart-toggle-row">
+          <span class="preset-label">表示設定</span>
+          <label class="toggle-chip"><input type="checkbox" id="toggleRangeLines" /> 選択期間の破線</label>
+          <label class="toggle-chip"><input type="checkbox" id="toggleAnnualLines" checked /> 直近3年の基準線</label>
+        </div>
         <div class="chart-explanation">
           <p id="rangeLabel"></p>
           <p>実線: 水位 / 破線・点線はグラフ下の表示設定でオンオフできます</p>
@@ -185,6 +185,6 @@
     </section>
   </div>
 
-  <script src="app.js?v=20260903-mode-presets"></script>
+  <script src="app.js?v=20260903-mobile-chart"></script>
 </body>
 </html>
