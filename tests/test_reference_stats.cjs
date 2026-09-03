@@ -139,6 +139,20 @@ test('A mode, chart lines, legend, toggles and summary use the same reference', 
   assert.equal(a.run('evaluateStatus({value: 2}).cssClass'), 'neutral');
 });
 
+test('graph station label follows selection without changing the page title', () => {
+  const a = app();
+  a.run(`stationConfig = {rivers: [{id: 'kuji', name: '久慈川水系'}]};
+    currentStation = {river_id: 'kuji', name: '里川 機初', observation_name: '機初'};
+    updateStationCopy();`);
+  assert.equal(a.elements.get('chartStationName').textContent, '久慈川水系 里川 機初');
+  assert.equal(a.run("observationNote({name: '山田川 常井橋', observation_name: '常井橋'})"), '');
+  assert.equal(a.run("observationNote({name: '幸久橋', observation_name: '額田'})"), '（観測所名: 額田）');
+  a.run(`currentStation = {river_id: 'kuji', name: '榊橋', observation_name: '榊橋'}; updateStationCopy();`);
+  assert.equal(a.elements.get('chartStationName').textContent, '久慈川水系 榊橋');
+  assert.equal(a.elements.get('pageTitle').textContent, '茨城県河川水位ビューア');
+  assert.equal(a.elements.has('stationSummary'), false);
+});
+
 test('changing the start date anchors the end picker without affecting end edits', () => {
   const a = app();
   a.run('saveViewState = () => {}; bindEvents();');

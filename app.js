@@ -177,7 +177,7 @@ const fmt3 = new Intl.NumberFormat('ja-JP', { minimumFractionDigits: 3, maximumF
 
 const els = {
   pageTitle: document.getElementById('pageTitle'),
-  stationSummary: document.getElementById('stationSummary'),
+  chartStationName: document.getElementById('chartStationName'),
   riverSelect: document.getElementById('riverSelect'),
   stationSelect: document.getElementById('stationSelect'),
   startDate: document.getElementById('startDate'),
@@ -252,10 +252,7 @@ function populateStationSelect(riverId, selectedStationId = null) {
   for (const station of riverStations) {
     const option = document.createElement('option');
     option.value = station.id;
-    option.textContent = station.name;
-    if (station.observation_name && station.observation_name !== station.name) {
-      option.textContent += `（観測所名: ${station.observation_name}）`;
-    }
+    option.textContent = `${station.name}${observationNote(station)}`;
     els.stationSelect.appendChild(option);
   }
   if (selectedStationId && riverStations.some(station => station.id === selectedStationId)) {
@@ -283,6 +280,7 @@ function stationDisplayName(station) {
 
 function observationNote(station) {
   if (!station?.observation_name || station.observation_name === station.name) return '';
+  if (station.name?.trim().split(/\s+/).at(-1) === station.observation_name) return '';
   return `（観測所名: ${station.observation_name}）`;
 }
 
@@ -301,7 +299,7 @@ function updateStationCopy() {
   const note = currentStation ? observationNote(currentStation) : '';
   els.pageTitle.textContent = '茨城県河川水位ビューア';
   document.title = '茨城県河川水位ビューア';
-  els.stationSummary.textContent = `${stationName}${note}の水位データと増水基準を閲覧できます。`;
+  els.chartStationName.textContent = `${stationName}${note}`;
   els.dataSourceNote.textContent = `更新対応版: ${stationName}${note}の水位データと増水基準を閲覧できます。24時間モードでは10分観測値を優先します。`;
 }
 
