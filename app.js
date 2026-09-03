@@ -166,6 +166,7 @@ let stationConfig = null;
 let currentStation = null;
 let rawData = null;
 let chart = null;
+let waterBandVisible = true;
 let currentMode = 'A';
 let eventsBound = false;
 let activePresetValue = null;
@@ -839,7 +840,7 @@ function buildLineSeries(records, yValue) {
 
 function generateLineLegendLabels(chart) {
   // Point-style legends otherwise inherit point styles, which omit line dashes.
-  return Chart.defaults.plugins.legend.labels.generateLabels(chart).map(item => {
+  const labels = Chart.defaults.plugins.legend.labels.generateLabels(chart).map(item => {
     const dataset = chart.data.datasets[item.datasetIndex];
     return {
       ...item,
@@ -847,6 +848,29 @@ function generateLineLegendLabels(chart) {
       lineWidth: dataset.borderWidth ?? item.lineWidth
     };
   });
+  const bandIndex = chart.data.datasets.findIndex(dataset => dataset.waterBand);
+  if (bandIndex !== -1) {
+    labels.push({
+      text: 'おすすめ増水水位帯',
+      fillStyle: 'rgba(180,100,240,0.2)',
+      strokeStyle: 'rgba(180,100,240,.5)',
+      lineWidth: 1,
+      lineDash: [],
+      pointStyle: 'rect',
+      hidden: !waterBandVisible || labels[bandIndex].hidden || labels[bandIndex + 1].hidden,
+      waterBand: true
+    });
+  }
+  return labels;
+}
+
+function handleLegendClick(event, item, legend) {
+  if (item.waterBand) {
+    waterBandVisible = !waterBandVisible;
+    render();
+    return;
+  }
+  Chart.defaults.plugins.legend.onClick.call(legend, event, item, legend);
 }
 
 function render() {
@@ -937,6 +961,7 @@ function render() {
   }
 
   if (els.toggleAnnualLines.checked && reference.count) {
+    const upperReferenceIndex = datasets.length + 1;
     datasets.push(
       {
         label: '増水基準',
@@ -944,7 +969,13 @@ function render() {
         borderColor: 'rgba(190,220,255,.72)',
         borderDash: [3, 6],
         borderWidth: 1.1,
-        pointRadius: 0
+        pointRadius: 0,
+        waterBand: reference.mean < reference.p90,
+        fill: waterBandVisible && reference.mean < reference.p90 ? {
+          target: upperReferenceIndex,
+          above: 'rgba(180,100,240,0.2)',
+          below: 'rgba(180,100,240,0.2)'
+        } : false
       },
       {
         label: '大幅増水基準',
@@ -987,7 +1018,12 @@ function render() {
         intersect: false
       },
       plugins: {
+        filler: {
+          propagate: false,
+          drawTime: 'beforeDatasetsDraw'
+        },
         legend: {
+          onClick: handleLegendClick,
           labels: {
             color: '#dcecff',
             boxWidth: 24,
