@@ -39,7 +39,10 @@
       <div class="toggle-row chart-toggle-row">
         <span class="preset-label">表示設定</span>
         <label class="toggle-chip"><input type="checkbox" id="toggleRangeLines" /> 選択期間の破線</label>
-        <label class="toggle-chip"><input type="checkbox" id="toggleAnnualLines" checked /> 全期間基準線</label>
+        <label class="toggle-chip"><input type="checkbox" id="toggleAnnualLines" checked /> 直近3年の基準線</label>
+      </div>
+      <div class="reference-note">
+        <p>増水基準：直近3年の平均水位。大幅増水基準（赤線）：上位10％超えライン。</p>
       </div>
     </section>
 
@@ -64,7 +67,7 @@
         <div class="field">
           <span>増水判定モード</span>
           <div class="segmented">
-            <button type="button" class="mode-btn active" data-mode="A">A 全期間分布基準</button>
+            <button type="button" class="mode-btn active" data-mode="A">A 直近3年基準</button>
             <button type="button" class="mode-btn" data-mode="B">B 直近7日平均との差</button>
           </div>
         </div>
@@ -147,13 +150,16 @@
       </article>
 
       <article class="panel">
-        <div class="panel-title">基準線</div>
+        <div class="panel-title">直近3年の基準</div>
         <div class="stats-grid">
           <div class="stat-card">
-            <span>全期間90%</span><strong id="annualP90">-</strong>
+            <span>増水基準</span><strong id="referenceMean">-</strong>
           </div>
           <div class="stat-card">
-            <span>全期間95%</span><strong id="annualP95">-</strong>
+            <span>大幅増水基準</span><strong id="annualP90">-</strong>
+          </div>
+          <div class="stat-card">
+            <span>直近3年95％点</span><strong id="annualP95">-</strong>
           </div>
           <div class="stat-card">
             <span>Bモード 増水目安</span><strong id="bThreshold">-</strong>

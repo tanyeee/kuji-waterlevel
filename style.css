@@ -189,6 +189,8 @@ button.primary{
 }
 .chart-panel{padding-bottom:18px}
 .chart-toggle-row{margin-top:14px; padding-top:8px; border-top:1px solid rgba(130,177,222,.12);}
+.reference-note{margin-top:10px; color:var(--muted); font-size:12px; line-height:1.7; overflow-wrap:anywhere;}
+.reference-note p{margin:4px 0;}
 .chart-header{
   display:flex;
   justify-content:space-between;
