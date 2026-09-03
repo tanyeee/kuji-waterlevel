@@ -305,7 +305,8 @@ function updateStationCopy() {
 
 function loadViewState() {
   try {
-    return JSON.parse(localStorage.getItem(VIEW_STATE_KEY) || 'null');
+    const state = JSON.parse(localStorage.getItem(VIEW_STATE_KEY) || 'null');
+    return state && typeof state === 'object' ? { ...state, mode: 'A' } : null;
   } catch (err) {
     return null;
   }

@@ -55,10 +55,15 @@ h1{
 .controls{padding:18px; margin:16px 0}
 .control-grid{
   display:grid;
-  grid-template-columns:repeat(4, minmax(0,1fr));
+  grid-template-columns:repeat(2, minmax(0,1fr));
   gap:14px;
 }
 .field{display:flex; flex-direction:column; gap:8px; min-width:0}
+.date-fields{grid-column:1 / -1; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr) 72px; gap:14px; align-items:end}
+.refresh-field{align-items:center}
+.field.refresh-field > span{white-space:nowrap; font-size:12px}
+.refresh-button{display:flex; align-items:center; justify-content:center; width:48px; height:46px; padding:0; border-radius:8px}
+.refresh-button svg{flex:none}
 .field span{
   color:var(--muted);
   font-size:.88rem;
@@ -124,7 +129,7 @@ button.primary{
 }
 .summary-grid{
   display:grid;
-  grid-template-columns:repeat(2, minmax(0,1fr));
+  grid-template-columns:minmax(0,1fr);
   align-items:start;
   gap:16px;
   margin-bottom:16px;
@@ -202,6 +207,7 @@ button.primary{
 details[open] > .disclosure-summary .disclosure-icon::before{content:"-"}
 .statistics-panel > .disclosure-summary{margin-bottom:0}
 .status-details{border-top:1px solid rgba(130,177,222,.16)}
+.status-mode-control{margin:8px 0 16px}
 .status-meta{margin:8px 0 0}
 .statistics-section{border-top:1px solid rgba(130,177,222,.16); margin-top:14px; padding-top:14px; min-width:0}
 .statistics-section h3{margin-top:0}
@@ -223,7 +229,7 @@ details[open] > .disclosure-summary .disclosure-icon::before{content:"-"}
   line-height:1.8;
 }
 @media (max-width: 1024px){
-  .control-grid, .summary-grid{
+  .control-grid{
     grid-template-columns:repeat(2, minmax(0,1fr));
   }
 }
@@ -240,7 +246,7 @@ details[open] > .disclosure-summary .disclosure-icon::before{content:"-"}
     grid-template-columns:1fr;
   }
   .control-grid{grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px 10px}
-  .control-grid .field-wide{grid-column:1 / -1}
+  .date-fields{grid-template-columns:minmax(0,1fr) minmax(0,1fr) 60px; gap:6px}
   .control-grid input[type="date"], .control-grid select{min-width:0; max-width:100%; padding:12px 8px; font-size:16px}
   .control-grid input[type="date"]::-webkit-date-and-time-value{text-align:left; min-width:0}
   .panel{padding:16px}
@@ -251,8 +257,13 @@ details[open] > .disclosure-summary .disclosure-icon::before{content:"-"}
   button, input[type="date"], select{
     width:100%;
   }
+  .refresh-button{width:46px}
+  .date-fields input[type="date"]{padding:12px 4px; height:46px}
+  .date-fields input[type="date"]::-webkit-calendar-picker-indicator{width:12px; margin:0; padding:0}
+  .date-fields input[type="date"]::-webkit-datetime-edit{font-size:14px}
   .preset-row,.shift-row{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px 6px}
   .preset-row > .preset-label,.shift-row > .preset-label{grid-column:1 / -1}
+  .preset-row{grid-template-columns:repeat(5,minmax(0,1fr)); column-gap:4px}
   .preset-row .preset-btn,.shift-row .shift-btn{
     min-width:0;
     min-height:44px;
@@ -261,6 +272,7 @@ details[open] > .disclosure-summary .disclosure-icon::before{content:"-"}
     border-radius:8px;
     white-space:nowrap;
   }
+  .preset-row .preset-btn{padding-left:2px; padding-right:2px; font-size:12px}
   .segmented .mode-btn{
     width:auto;
     flex:1 1 calc(50% - 8px);
