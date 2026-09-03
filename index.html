@@ -36,7 +36,7 @@
         <div class="chart-explanation">
           <p id="rangeLabel"></p>
           <p>実線: 水位 / 破線・点線はグラフ下の表示設定でオンオフできます</p>
-          <p>増水基準：直近3年の平均水位。大幅増水基準（赤線）：上位10％超えライン。</p>
+          <p>増水基準：直近3年の平均水位。大幅増水基準（赤線）：上位5％（95パーセンタイル）ライン。</p>
           <p>おすすめ増水水位帯：増水時に良くなるタイプのポイントで、魚の活性が上がりそうな水位の目安です。</p>
         </div>
       </details>
@@ -160,10 +160,10 @@
             <span>増水基準</span><strong id="referenceMean">-</strong>
           </div>
           <div class="stat-card">
-            <span>大幅増水基準</span><strong id="annualP90">-</strong>
+            <span>直近3年90％点</span><strong id="annualP90">-</strong>
           </div>
           <div class="stat-card">
-            <span>直近3年95％点</span><strong id="annualP95">-</strong>
+            <span>大幅増水基準（95％点）</span><strong id="annualP95">-</strong>
           </div>
           <div class="stat-card">
             <span>Bモード 増水目安</span><strong id="bThreshold">-</strong>
@@ -185,6 +185,6 @@
     </section>
   </div>
 
-  <script src="app.js?v=20260903-mobile-chart"></script>
+  <script src="app.js?v=20260903-single-row-legend"></script>
 </body>
 </html>

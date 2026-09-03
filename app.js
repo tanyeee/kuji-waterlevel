@@ -757,14 +757,14 @@ function evaluateStatus(latestRecord) {
       return {
         label: 'かなり高い',
         cssClass: 'top',
-        description: `直近3年の95％点（${formatLevel(p95)}）以上です。統計上、かなり高い水位帯です。`
+        description: `大幅増水基準（${formatLevel(p95)}）以上です。直近3年の観測値の上位約5％にあたります。`
       };
     }
     if (currentValue >= p90) {
       return {
         label: '増水気味',
         cssClass: 'high',
-        description: `大幅増水基準（${formatLevel(p90)}）以上です。直近3年の観測値の上位約10％にあたります。`
+        description: `直近3年の90％点（${formatLevel(p90)}）以上です。統計上、増水気味の水位帯です。`
       };
     }
     if (currentValue >= mean) {
@@ -839,11 +839,13 @@ function buildLineSeries(records, yValue) {
 
 function resizeChartLegend(chart) {
   const compact = window.innerWidth <= 720;
+  const narrow = window.innerWidth <= 360;
   const labels = chart.options.plugins.legend.labels;
-  labels.boxWidth = compact ? 8 : 24;
-  labels.pointStyleWidth = compact ? 8 : 24;
-  labels.padding = compact ? 1 : 10;
-  labels.font = { size: compact ? 10 : 12 };
+  // Balance visible dash segments and item spacing within a single mobile row.
+  labels.boxWidth = compact ? (narrow ? 16 : 18) : 24;
+  labels.pointStyleWidth = labels.boxWidth;
+  labels.padding = compact ? (narrow ? 4 : 6) : 10;
+  labels.font = { size: compact ? (narrow ? 8 : window.innerWidth <= 380 ? 9 : 10) : 12 };
 }
 
 function generateLineLegendLabels(chart) {
@@ -978,8 +980,8 @@ function render() {
         borderDash: [3, 6],
         borderWidth: 1.1,
         pointRadius: 0,
-        waterBand: reference.mean < reference.p90,
-        fill: waterBandVisible && reference.mean < reference.p90 ? {
+        waterBand: reference.mean < reference.p95,
+        fill: waterBandVisible && reference.mean < reference.p95 ? {
           target: upperReferenceIndex,
           above: 'rgba(180,100,240,0.2)',
           below: 'rgba(180,100,240,0.2)'
@@ -987,7 +989,7 @@ function render() {
       },
       {
         label: '大幅増水基準',
-        data: buildLineSeries(records, reference.p90),
+        data: buildLineSeries(records, reference.p95),
         borderColor: 'rgba(255,94,120,.8)',
         borderDash: [3, 6],
         borderWidth: 1.1,

@@ -99,7 +99,7 @@ test('A mode, chart lines, legend, toggles and summary use the same reference', 
   assert.equal(a.run('chart.data.datasets[1].label'), '増水基準');
   assert.equal(a.run('chart.data.datasets[2].label'), '大幅増水基準');
   assert.equal(a.run('chart.data.datasets[1].data[0].y'), 2);
-  assert.equal(a.run('chart.data.datasets[2].data[0].y'), 2.8);
+  assert.equal(a.run('chart.data.datasets[2].data[0].y'), 2.9);
   assert.equal(a.run('chart.data.datasets[1].fill.target'), 2);
   assert.equal(a.run('chart.data.datasets[1].fill.below'), 'rgba(180,100,240,0.2)');
   assert.equal(a.run('chart.options.plugins.filler.propagate'), false);
@@ -122,6 +122,10 @@ test('A mode, chart lines, legend, toggles and summary use the same reference', 
   a.run('handleLegendClick(null, {waterBand: true}, null);');
   assert.equal(a.run('chart.data.datasets[1].fill.target'), 2);
   assert.equal(a.run('evaluateStatus({value: 2.85}).cssClass'), 'high');
+  assert.ok(!a.run('evaluateStatus({value: 2.85}).description').includes('大幅増水基準'));
+  assert.equal(a.run('evaluateStatus({value: 2.9}).cssClass'), 'top');
+  assert.match(a.run('evaluateStatus({value: 2.9}).description'), /大幅増水基準.*上位約5％/);
+  assert.equal(a.elements.get('annualP95').textContent, '2.90 m');
   assert.equal(a.elements.get('referenceMean').textContent, '2.00 m');
   assert.equal(a.elements.has('referencePeriod'), false);
   a.run('els.toggleAnnualLines.checked = false; render();');
@@ -139,13 +143,15 @@ test('A mode, chart lines, legend, toggles and summary use the same reference', 
   assert.equal(a.run('evaluateStatus({value: 2}).cssClass'), 'neutral');
 });
 
-test('legend uses compact mobile spacing and restores desktop sizing', () => {
+test('mobile legend keeps dashes visible with clear item spacing and restores desktop sizing', () => {
   const a = app();
   a.run('chart = {options: {plugins: {legend: {labels: {}}}}}; window.innerWidth = 390; resizeChartLegend(chart);');
-  assert.equal(a.run('chart.options.plugins.legend.labels.pointStyleWidth'), 8);
+  assert.equal(a.run('chart.options.plugins.legend.labels.pointStyleWidth'), 18);
+  assert.equal(a.run('chart.options.plugins.legend.labels.padding'), 6);
   assert.equal(a.run('chart.options.plugins.legend.labels.font.size'), 10);
   a.run('window.innerWidth = 1280; resizeChartLegend(chart);');
   assert.equal(a.run('chart.options.plugins.legend.labels.pointStyleWidth'), 24);
+  assert.equal(a.run('chart.options.plugins.legend.labels.padding'), 10);
   assert.equal(a.run('chart.options.plugins.legend.labels.font.size'), 12);
 });
 
