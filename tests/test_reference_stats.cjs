@@ -10,18 +10,21 @@ const row = (timestamp, value, extra = {}) => ({ timestamp, value, ...extra });
 
 function app() {
   const elements = new Map();
+  const makeElement = () => ({
+    textContent: '', value: '', checked: false, validity: { valid: true },
+    listeners: {}, children: [],
+    addEventListener(name, handler) { this.listeners[name] = handler; },
+    appendChild(child) { this.children.push(child); },
+    getContext: () => ({})
+  });
   const context = vm.createContext({
     console,
     document: {
       getElementById(id) {
-        if (!elements.has(id)) elements.set(id, {
-          textContent: '', value: '', checked: false, validity: { valid: true },
-          listeners: {},
-          addEventListener(name, handler) { this.listeners[name] = handler; },
-          getContext: () => ({})
-        });
+        if (!elements.has(id)) elements.set(id, makeElement());
         return elements.get(id);
       },
+      createElement: makeElement,
       querySelectorAll: () => []
     },
     window: { addEventListener() {} },
@@ -180,6 +183,21 @@ test('graph station label follows selection without changing the page title', ()
   assert.equal(a.elements.get('chartStationName').textContent, '久慈川水系 榊橋');
   assert.equal(a.elements.get('pageTitle').textContent, '茨城県河川水位ビューア');
   assert.equal(a.elements.has('stationSummary'), false);
+});
+
+test('station selector groups only non-tidal display stations', () => {
+  const a = app();
+  a.context.config = JSON.parse(readFileSync(resolve(root, 'config/stations.json'), 'utf8'));
+  a.run('stationConfig = config; populateStationSelect("nukada");');
+  const groups = a.elements.get('stationSelect').children;
+  assert.deepEqual(groups.map(group => group.label), ['久慈川', '里川', '山田川', '那珂川']);
+  assert.deepEqual(groups.map(group => group.children.map(option => option.textContent)), [
+    ['富岡橋', '幸久橋（額田）'], ['機初'], ['常井橋'], ['那珂川大橋']
+  ]);
+  assert.equal(a.run('displayStations().length'), 5);
+  assert.equal(a.run('isDisplayStation("sakakibashi")'), false);
+  assert.equal(a.run('isDisplayStation("nukada")'), true);
+  assert.equal(a.elements.get('stationSelect').value, 'nukada');
 });
 
 test('changing the start date anchors the end picker without affecting end edits', () => {
