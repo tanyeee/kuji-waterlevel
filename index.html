@@ -8,7 +8,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32-v20260710.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon-v20260710.png" />
   <link rel="manifest" href="site.webmanifest?v=20260710" />
-  <link rel="stylesheet" href="style.css?v=20260904-station-groups" />
+  <link rel="stylesheet" href="style.css?v=20260903-mobile-chart" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3"></script>
 </head>
@@ -44,7 +44,11 @@
 
     <section class="controls panel">
       <div class="control-grid">
-        <label class="field station-field">
+        <label class="field">
+          <span>水系</span>
+          <select id="riverSelect"></select>
+        </label>
+        <label class="field">
           <span>観測地点</span>
           <select id="stationSelect"></select>
         </label>
@@ -181,6 +185,6 @@
     </section>
   </div>
 
-  <script src="app.js?v=20260904-station-groups"></script>
+  <script src="app.js?v=20260903-single-row-legend"></script>
 </body>
 </html>

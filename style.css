@@ -222,7 +222,6 @@ details[open] > .disclosure-summary .disclosure-icon::before{content:"-"}
   height:56vh;
   min-height:340px;
 }
-.station-field{grid-column:1 / -1}
 .footnote ul{
   margin:0;
   padding-left:18px;

@@ -1,24 +1,6 @@
 {
   "default_station": "nukada",
   "default_river": "kuji",
-  "display_groups": [
-    {
-      "label": "久慈川",
-      "station_ids": ["tomioka-bashi", "nukada"]
-    },
-    {
-      "label": "里川",
-      "station_ids": ["kihatsu"]
-    },
-    {
-      "label": "山田川",
-      "station_ids": ["tsuneibashi"]
-    },
-    {
-      "label": "那珂川",
-      "station_ids": ["nakagawa-ohashi"]
-    }
-  ],
   "rivers": [
     {
       "id": "kuji",
@@ -50,7 +32,6 @@
     {
       "id": "nukada",
       "name": "幸久橋",
-      "selector_name": "幸久橋（額田）",
       "observation_name": "額田",
       "river_id": "kuji",
       "river_name": "久慈川水系",
