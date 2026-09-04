@@ -178,7 +178,6 @@ const fmt3 = new Intl.NumberFormat('ja-JP', { minimumFractionDigits: 3, maximumF
 const els = {
   pageTitle: document.getElementById('pageTitle'),
   chartStationName: document.getElementById('chartStationName'),
-  riverSelect: document.getElementById('riverSelect'),
   stationSelect: document.getElementById('stationSelect'),
   startDate: document.getElementById('startDate'),
   endDate: document.getElementById('endDate'),
@@ -212,53 +211,53 @@ async function init() {
   stationConfig = await fetchJson('./config/stations.json');
   pendingInitialState = loadViewState();
   const savedStation = stationById(pendingInitialState?.stationId);
-  const initialRiverId = savedStation?.river_id || pendingInitialState?.riverId || stationConfig.default_river || stationConfig.rivers?.[0]?.id;
-  populateRiverSelect(initialRiverId);
-  populateStationSelect(initialRiverId);
+  const initialStationId = isDisplayStation(savedStation?.id) ? savedStation.id : stationConfig.default_station;
+  populateStationSelect(initialStationId);
   bindEvents();
   applySavedMode(pendingInitialState);
-  const defaultStationId = savedStation?.id || stationConfig.default_station || stationConfig.stations?.[0]?.id;
+  const defaultStationId = initialStationId || displayStations()[0]?.id;
   await loadStation(defaultStationId, { rangeState: pendingInitialState });
   pendingInitialState = null;
 }
 
-function populateRiverSelect(selectedRiverId) {
-  const rivers = stationConfig.rivers || [];
-  els.riverSelect.innerHTML = '';
-  for (const river of rivers) {
-    const option = document.createElement('option');
-    option.value = river.id;
-    option.textContent = river.name;
-    els.riverSelect.appendChild(option);
-  }
-  if (selectedRiverId && rivers.some(river => river.id === selectedRiverId)) {
-    els.riverSelect.value = selectedRiverId;
-  } else if (rivers.length) {
-    els.riverSelect.value = rivers[0].id;
-  }
+function displayStations() {
+  const byId = new Map((stationConfig.stations || []).map(station => [station.id, station]));
+  return (stationConfig.display_groups || [])
+    .flatMap(group => group.station_ids || [])
+    .map(id => byId.get(id))
+    .filter(Boolean);
 }
 
-function stationsForRiver(riverId) {
-  const stations = stationConfig.stations || [];
-  const river = (stationConfig.rivers || []).find(item => item.id === riverId);
-  if (!river) return stations.filter(station => (station.river_id || 'default') === riverId);
-  const byId = new Map(stations.map(station => [station.id, station]));
-  return (river.station_ids || []).map(id => byId.get(id)).filter(Boolean);
+function isDisplayStation(stationId) {
+  return Boolean(stationId && displayStations().some(station => station.id === stationId));
 }
 
-function populateStationSelect(riverId, selectedStationId = null) {
-  const riverStations = stationsForRiver(riverId);
+function stationSelectLabel(station) {
+  if (station?.selector_name) return station.selector_name;
+  return station?.name?.trim().split(/\s+/).at(-1) || '';
+}
+
+function populateStationSelect(selectedStationId = null) {
+  const byId = new Map((stationConfig.stations || []).map(station => [station.id, station]));
   els.stationSelect.innerHTML = '';
-  for (const station of riverStations) {
-    const option = document.createElement('option');
-    option.value = station.id;
-    option.textContent = `${station.name}${observationNote(station)}`;
-    els.stationSelect.appendChild(option);
+  for (const group of stationConfig.display_groups || []) {
+    const optgroup = document.createElement('optgroup');
+    optgroup.label = group.label;
+    for (const stationId of group.station_ids || []) {
+      const station = byId.get(stationId);
+      if (!station) continue;
+      const option = document.createElement('option');
+      option.value = station.id;
+      option.textContent = stationSelectLabel(station);
+      optgroup.appendChild(option);
+    }
+    if (optgroup.children.length) els.stationSelect.appendChild(optgroup);
   }
-  if (selectedStationId && riverStations.some(station => station.id === selectedStationId)) {
+  const visibleStations = displayStations();
+  if (selectedStationId && visibleStations.some(station => station.id === selectedStationId)) {
     els.stationSelect.value = selectedStationId;
-  } else if (riverStations.length) {
-    els.stationSelect.value = riverStations[0].id;
+  } else if (visibleStations.length) {
+    els.stationSelect.value = visibleStations[0].id;
   }
 }
 
@@ -271,6 +270,8 @@ function riverById(id) {
 }
 
 function riverLabelForStation(station) {
+  const displayGroup = (stationConfig.display_groups || []).find(group => group.station_ids?.includes(station?.id));
+  if (displayGroup) return displayGroup.label;
   return riverById(station?.river_id)?.name || station?.river_name || '';
 }
 
@@ -316,7 +317,6 @@ function saveViewState() {
   if (!currentStation) return;
   const state = {
     stationId: currentStation.id,
-    riverId: currentStation.river_id || null,
     preset: activePresetValue,
     startDate: els.startDate.value || null,
     endDate: els.endDate.value || null,
@@ -364,18 +364,15 @@ function applyRangeState(state) {
 }
 
 async function loadStation(stationId, options = {}) {
-  const station = stationById(stationId) || stationById(stationConfig.default_station) || stationConfig.stations?.[0];
+  const station = isDisplayStation(stationId)
+    ? stationById(stationId)
+    : stationById(stationConfig.default_station) || displayStations()[0];
   if (!station) throw new Error('station config is empty');
 
   const hasRangeState = Object.prototype.hasOwnProperty.call(options, 'rangeState');
   const rangeState = hasRangeState ? options.rangeState : currentRangeState();
   currentStation = station;
-  if (station.river_id && els.riverSelect.value !== station.river_id) {
-    els.riverSelect.value = station.river_id;
-    populateStationSelect(station.river_id, station.id);
-  } else {
-    populateStationSelect(station.river_id || els.riverSelect.value, station.id);
-  }
+  populateStationSelect(station.id);
   els.stationSelect.value = station.id;
   resetForLoading(station);
 
@@ -427,18 +424,6 @@ async function loadStation(stationId, options = {}) {
 function bindEvents() {
   if (eventsBound) return;
   eventsBound = true;
-  els.riverSelect.addEventListener('change', () => {
-    const rangeState = currentRangeState();
-    populateStationSelect(els.riverSelect.value);
-    const nextStationId = els.stationSelect.value;
-    if (!nextStationId) return;
-    loadStation(nextStationId, { rangeState }).catch(err => {
-      console.error(err);
-      els.statusBadge.textContent = '読み込み失敗';
-      els.statusBadge.className = 'status-badge neutral';
-      els.statusDescription.textContent = '選択した水系のデータまたはスクリプトの読み込みに失敗しました。';
-    });
-  });
   els.stationSelect.addEventListener('change', () => {
     const rangeState = currentRangeState();
     loadStation(els.stationSelect.value, { rangeState }).catch(err => {
