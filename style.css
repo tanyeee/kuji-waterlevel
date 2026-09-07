@@ -128,6 +128,7 @@ button.primary{
 .toggle-chip input{
   accent-color: var(--accent);
 }
+.toggle-chip:has(input:disabled){opacity:.45; cursor:not-allowed}
 .summary-grid{
   display:grid;
   grid-template-columns:minmax(0,1fr);
@@ -213,9 +214,13 @@ details[open] > .disclosure-summary .disclosure-icon::before{content:"-"}
 .statistics-section{border-top:1px solid rgba(130,177,222,.16); margin-top:14px; padding-top:14px; min-width:0}
 .statistics-section h3{margin-top:0}
 .statistics-section .stat-card{background:none; border:0; border-radius:0; padding:6px 0; overflow-wrap:anywhere}
+.flood-level-summary{display:flex; flex-wrap:wrap; gap:8px 18px; color:var(--text); font-size:.9rem}
+.flood-level-summary span{white-space:nowrap}
+.flood-level-note{margin:8px 0 0; color:var(--muted); font-size:.78rem; line-height:1.65}
 .chart-details{margin-top:10px; border-top:1px solid rgba(130,177,222,.16)}
 .chart-explanation{color:var(--muted); font-size:13px; line-height:1.7; overflow-wrap:anywhere}
 .chart-explanation p{margin:8px 0}
+.chart-explanation a{color:#b8dcff}
 .chart-panel{padding-bottom:18px}
 .chart-toggle-row{margin-top:14px; padding-top:8px; border-top:1px solid rgba(130,177,222,.12);}
 .chart-wrap{

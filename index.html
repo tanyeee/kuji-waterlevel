@@ -32,12 +32,15 @@
           <span class="preset-label">表示設定</span>
           <label class="toggle-chip"><input type="checkbox" id="toggleRangeLines" /> 選択期間の破線</label>
           <label class="toggle-chip"><input type="checkbox" id="toggleAnnualLines" checked /> 直近3年の基準線</label>
+          <label class="toggle-chip"><input type="checkbox" id="toggleFloodLines" /> 防災基準線</label>
         </div>
         <div class="chart-explanation">
           <p id="rangeLabel"></p>
           <p>実線: 水位 / 破線・点線はグラフ下の表示設定でオンオフできます</p>
           <p>増水基準：直近3年の平均水位。大幅増水基準（赤線）：上位5％（95パーセンタイル）ライン。</p>
           <p>おすすめ増水水位帯：増水時に良くなるタイプのポイントで、魚の活性が上がりそうな水位の目安です。</p>
+          <p>防災基準線：国土交通省が公表する氾濫注意・避難判断・氾濫危険・氾濫発生水位です。表示すると基準線を含む高さまでグラフが広がります。</p>
+          <p>出典：<a href="https://www.ktr.mlit.go.jp/hitachi/hitachi00094.html" target="_blank" rel="noopener noreferrer">従来3区分</a>／<a href="https://www.mlit.go.jp/river/bousai/main/saigai/tisiki/syozaiti/pdf/suibou_kunikannrikouzuiyohou_0529.pdf" target="_blank" rel="noopener noreferrer">氾濫発生水位（富岡・野口）</a>／<a href="https://www.mlit.go.jp/river/bousai/main/saigai/tisiki/syozaiti/pdf/suibou_kunikannrisuiisyuuchi_0529.pdf" target="_blank" rel="noopener noreferrer">氾濫発生水位（機初・常井橋）</a></p>
         </div>
       </details>
     </section>
@@ -151,6 +154,11 @@
         </div>
         </section>
         <section class="statistics-section">
+        <h3 class="panel-title">防災基準水位</h3>
+        <div id="floodLevelSummary" class="flood-level-summary"></div>
+        <p class="flood-level-note">警戒水位は現在の「氾濫注意水位」に相当します。実際の避難情報は自治体・気象庁・国土交通省の最新情報を確認してください。</p>
+        </section>
+        <section class="statistics-section">
         <h3 class="panel-title">直近3年の基準</h3>
         <div class="stats-grid">
           <div class="stat-card">
@@ -182,6 +190,6 @@
     </section>
   </div>
 
-  <script src="app.js?v=20260904-station-groups"></script>
+  <script src="app.js?v=20260907-flood-levels"></script>
 </body>
 </html>

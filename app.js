@@ -174,6 +174,12 @@ let pendingInitialState = null;
 
 const fmt = new Intl.NumberFormat('ja-JP', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const fmt3 = new Intl.NumberFormat('ja-JP', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
+const FLOOD_LEVEL_DEFINITIONS = [
+  { key: 'flood_caution', label: '氾濫注意', color: '#f5d76e', dash: [10, 5] },
+  { key: 'evacuation_judgment', label: '避難判断', color: '#ff6b6b', dash: [7, 4] },
+  { key: 'flood_danger', label: '氾濫危険', color: '#b995ff', dash: [4, 3] },
+  { key: 'flood_occurrence', label: '氾濫発生', color: '#ffffff', dash: [2, 3] }
+];
 
 const els = {
   pageTitle: document.getElementById('pageTitle'),
@@ -184,6 +190,7 @@ const els = {
   applyButton: document.getElementById('applyButton'),
   toggleRangeLines: document.getElementById('toggleRangeLines'),
   toggleAnnualLines: document.getElementById('toggleAnnualLines'),
+  toggleFloodLines: document.getElementById('toggleFloodLines'),
   modeButtons: document.querySelectorAll('.mode-btn'),
   presetButtons: document.querySelectorAll('.preset-btn'),
   shiftButtons: document.querySelectorAll('.shift-btn'),
@@ -197,6 +204,7 @@ const els = {
   annualP95: document.getElementById('annualP95'),
   referenceMean: document.getElementById('referenceMean'),
   bThreshold: document.getElementById('bThreshold'),
+  floodLevelSummary: document.getElementById('floodLevelSummary'),
   rangeLabel: document.getElementById('rangeLabel'),
   statusBadge: document.getElementById('statusBadge'),
   statusDescription: document.getElementById('statusDescription'),
@@ -320,7 +328,8 @@ function saveViewState() {
     preset: activePresetValue,
     startDate: els.startDate.value || null,
     endDate: els.endDate.value || null,
-    mode: currentMode
+    mode: currentMode,
+    showFloodLines: els.toggleFloodLines.checked
   };
   try {
     localStorage.setItem(VIEW_STATE_KEY, JSON.stringify(state));
@@ -332,6 +341,7 @@ function saveViewState() {
 function applySavedMode(state) {
   if (!state?.mode) return;
   currentMode = state.mode === 'B' ? 'B' : 'A';
+  els.toggleFloodLines.checked = Boolean(state.showFloodLines && !els.toggleFloodLines.disabled);
   els.modeButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.mode === currentMode));
 }
 
@@ -372,6 +382,9 @@ async function loadStation(stationId, options = {}) {
   const hasRangeState = Object.prototype.hasOwnProperty.call(options, 'rangeState');
   const rangeState = hasRangeState ? options.rangeState : currentRangeState();
   currentStation = station;
+  const hasFloodLevels = FLOOD_LEVEL_DEFINITIONS.some(({ key }) => Number.isFinite(station.flood_levels?.[key]));
+  els.toggleFloodLines.disabled = !hasFloodLevels;
+  if (!hasFloodLevels) els.toggleFloodLines.checked = false;
   populateStationSelect(station.id);
   els.stationSelect.value = station.id;
   resetForLoading(station);
@@ -439,6 +452,10 @@ function bindEvents() {
     saveViewState();
   });
   els.toggleAnnualLines.addEventListener('change', () => {
+    render();
+    saveViewState();
+  });
+  els.toggleFloodLines.addEventListener('change', () => {
     render();
     saveViewState();
   });
@@ -816,6 +833,13 @@ function populateAnnualStats() {
   els.annualP90.textContent = reference.count ? formatLevel(reference.p90) : '-';
   els.annualP95.textContent = reference.count ? formatLevel(reference.p95) : '-';
   els.bThreshold.textContent = `+${fmt3.format(rawData.meta.rise_mode_b_thresholds.moderate)} m`;
+  const floodLevels = currentStation?.flood_levels || {};
+  const levelItems = FLOOD_LEVEL_DEFINITIONS
+    .filter(({ key }) => Number.isFinite(floodLevels[key]))
+    .map(({ key, label }) => `<span>${label}水位 <strong>${formatLevel(floodLevels[key])}</strong></span>`);
+  els.floodLevelSummary.innerHTML = levelItems.length
+    ? levelItems.join('')
+    : '<span>この観測所には防災基準水位の設定がありません。</span>';
 }
 
 function buildLineSeries(records, yValue) {
@@ -909,9 +933,15 @@ function render() {
   const dataSeries = records.map(r => ({ x: r.timestamp, y: isRenderableRecord(r) ? r.value : null }));
   const reference = rawData.meta.reference_stats;
 
-  const yPadding = Math.max((maxValue - minValue) * 0.08, 0.05);
-  const yMin = Math.floor((minValue - yPadding) * 100) / 100;
-  const yMax = Math.ceil((maxValue + yPadding) * 100) / 100;
+  const floodLevels = currentStation?.flood_levels || {};
+  const visibleFloodLevels = els.toggleFloodLines.checked
+    ? FLOOD_LEVEL_DEFINITIONS.map(({ key }) => floodLevels[key]).filter(Number.isFinite)
+    : [];
+  const scaleMin = Math.min(minValue, ...visibleFloodLevels);
+  const scaleMax = Math.max(maxValue, ...visibleFloodLevels);
+  const yPadding = Math.max((scaleMax - scaleMin) * 0.08, 0.05);
+  const yMin = Math.floor((scaleMin - yPadding) * 100) / 100;
+  const yMax = Math.ceil((scaleMax + yPadding) * 100) / 100;
 
   const datasets = [
     {
@@ -981,6 +1011,21 @@ function render() {
         pointRadius: 0
       }
     );
+  }
+
+  if (els.toggleFloodLines.checked) {
+    for (const { key, label, color, dash } of FLOOD_LEVEL_DEFINITIONS) {
+      const level = floodLevels[key];
+      if (!Number.isFinite(level)) continue;
+      datasets.push({
+        label: `${label} ${formatLevel(level)}`,
+        data: buildLineSeries(records, level),
+        borderColor: color,
+        borderDash: dash,
+        borderWidth: 1.6,
+        pointRadius: 0
+      });
+    }
   }
 
   const latestRenderable = valid[valid.length - 1];

@@ -18,6 +18,12 @@ DISPLAY_GROUPS = {
     "山田川": ["tsuneibashi"],
     "那珂川": ["nakagawa-ohashi"],
 }
+FLOOD_LEVELS = {
+    "tomioka-bashi": (2.5, 2.9, 3.5, 4.6),
+    "kihatsu": (3.0, 3.0, 3.1, 3.8),
+    "tsuneibashi": (3.0, 3.5, 3.8, 4.3),
+    "nakagawa-ohashi": (3.5, 4.1, 4.5, 5.8),
+}
 
 
 class StationConfigTests(unittest.TestCase):
@@ -61,6 +67,18 @@ class StationConfigTests(unittest.TestCase):
         ten_min_targets = {station.id for station in ten_min.load_config_targets(CONFIG)}
         self.assertTrue(hidden <= hourly_targets)
         self.assertTrue(hidden <= ten_min_targets)
+
+    def test_official_flood_levels_are_attached_to_reference_stations(self):
+        for station_id, expected in FLOOD_LEVELS.items():
+            levels = self.stations[station_id]["flood_levels"]
+            actual = (
+                levels["flood_caution"],
+                levels["evacuation_judgment"],
+                levels["flood_danger"],
+                levels["flood_occurrence"],
+            )
+            self.assertEqual(actual, expected)
+        self.assertNotIn("flood_levels", self.stations["nukada"])
 
     def test_tributary_datasets_match_the_station_and_include_2016(self):
         for station_id, (code, name, river) in TRIBUTARIES.items():

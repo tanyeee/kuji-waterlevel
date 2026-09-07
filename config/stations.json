@@ -45,6 +45,12 @@
       "ten_min": {
         "station_id": "303011283322020"
       },
+      "flood_levels": {
+        "flood_caution": 2.5,
+        "evacuation_judgment": 2.9,
+        "flood_danger": 3.5,
+        "flood_occurrence": 4.6
+      },
       "location": {}
     },
     {
@@ -124,6 +130,12 @@
       "ten_min": {
         "station_id": "303011283322080"
       },
+      "flood_levels": {
+        "flood_caution": 3.0,
+        "evacuation_judgment": 3.0,
+        "flood_danger": 3.1,
+        "flood_occurrence": 3.8
+      },
       "location": {}
     },
     {
@@ -138,6 +150,12 @@
       },
       "ten_min": {
         "station_id": "303011283322070"
+      },
+      "flood_levels": {
+        "flood_caution": 3.0,
+        "evacuation_judgment": 3.5,
+        "flood_danger": 3.8,
+        "flood_occurrence": 4.3
       },
       "location": {}
     },
@@ -213,6 +231,12 @@
       },
       "ten_min": {
         "station_id": "303021283322040"
+      },
+      "flood_levels": {
+        "flood_caution": 3.5,
+        "evacuation_judgment": 4.1,
+        "flood_danger": 4.5,
+        "flood_occurrence": 5.8
       },
       "location": {}
     }

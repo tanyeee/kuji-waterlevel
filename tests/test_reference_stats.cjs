@@ -146,6 +146,29 @@ test('A mode, chart lines, legend, toggles and summary use the same reference', 
   assert.equal(a.run('evaluateStatus({value: 2}).cssClass'), 'neutral');
 });
 
+test('official flood levels render on demand and expand the y scale', () => {
+  const a = app();
+  a.context.h = { records: [row('2025-01-01T00:00', 1), row('2026-01-01T00:00', 2)] };
+  a.run(`rawData = mergeDatasets(h, {records: []}, {records: []});
+    currentStation = {flood_levels: {flood_caution: 2.5, evacuation_judgment: 2.9, flood_danger: 3.5, flood_occurrence: 4.6}};
+    getRangeRecords = () => rawData.records;
+    getDisplayRecords = records => records;
+    isTwentyFourHourMode = () => false;
+    saveViewState = () => {};
+    els.toggleAnnualLines.checked = false;
+    els.toggleFloodLines.checked = true;
+    render(); populateAnnualStats();`);
+  assert.deepEqual(
+    Array.from(a.run('chart.data.datasets.map(dataset => dataset.label)')),
+    ['水位', '氾濫注意 2.50 m', '避難判断 2.90 m', '氾濫危険 3.50 m', '氾濫発生 4.60 m']
+  );
+  assert.ok(a.run('chart.options.scales.y.max') > 4.6);
+  assert.match(a.elements.get('floodLevelSummary').innerHTML, /氾濫注意水位.*2.50 m.*氾濫発生水位.*4.60 m/);
+  a.run('els.toggleFloodLines.checked = false; render();');
+  assert.equal(a.run('chart.data.datasets.length'), 1);
+  assert.ok(a.run('chart.options.scales.y.max') < 4.6);
+});
+
 test('mobile legend keeps dashes visible with clear item spacing and restores desktop sizing', () => {
   const a = app();
   a.run('chart = {options: {plugins: {legend: {labels: {}}}}}; window.innerWidth = 390; resizeChartLegend(chart);');
