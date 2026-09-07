@@ -7,11 +7,11 @@
     "river_name": "久慈川",
     "record_count": 836,
     "window_hours": 168,
-    "dataset_start": "2026-08-31T17:10",
-    "dataset_end": "2026-09-07T17:10",
+    "dataset_start": "2026-08-31T20:40",
+    "dataset_end": "2026-09-07T20:40",
     "index_url": "https://www1.river.go.jp/cgi-bin/DspWaterData.exe?KIND=9&ID=303011283322030",
-    "source_url": "https://www1.river.go.jp/dat/dload/download/29303011283322030202608313110864.dat",
-    "last_fetch_utc": "2026-09-07T08:23:17Z",
+    "source_url": "https://www1.river.go.jp/dat/dload/download/29303011283322030202608311279990.dat",
+    "last_fetch_utc": "2026-09-07T11:53:20Z",
     "probe_errors": [],
     "notes": [
       "水文水質データベースのリアルタイム10分水位一覧表からDLした dat ファイルで作成。",
@@ -19,132 +19,6 @@
     ]
   },
   "records": [
-    {
-      "timestamp": "2026-08-31T17:10",
-      "value": -0.56,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-31T17:20",
-      "value": -0.56,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-31T17:30",
-      "value": -0.56,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-31T17:40",
-      "value": -0.56,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-31T17:50",
-      "value": -0.56,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-31T18:00",
-      "value": -0.56,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-31T18:10",
-      "value": -0.56,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-31T18:20",
-      "value": -0.56,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-31T18:30",
-      "value": -0.56,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-31T18:40",
-      "value": -0.56,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-31T18:50",
-      "value": -0.56,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-31T19:00",
-      "value": -0.56,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-31T19:10",
-      "value": -0.56,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-31T19:20",
-      "value": -0.56,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-31T19:30",
-      "value": -0.56,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-31T19:40",
-      "value": -0.56,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-31T19:50",
-      "value": -0.56,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-31T20:00",
-      "value": -0.56,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-31T20:10",
-      "value": -0.55,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-31T20:20",
-      "value": -0.55,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-08-31T20:30",
-      "value": -0.55,
-      "flag": "",
-      "resolution": "10min"
-    },
     {
       "timestamp": "2026-08-31T20:40",
       "value": -0.54,
@@ -5032,6 +4906,132 @@
     {
       "timestamp": "2026-09-07T17:10",
       "value": 1.96,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-07T17:20",
+      "value": 1.99,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-07T17:30",
+      "value": 2.02,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-07T17:40",
+      "value": 2.04,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-07T17:50",
+      "value": 2.08,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-07T18:00",
+      "value": 2.11,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-07T18:10",
+      "value": 2.15,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-07T18:20",
+      "value": 2.19,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-07T18:30",
+      "value": 2.22,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-07T18:40",
+      "value": 2.25,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-07T18:50",
+      "value": 2.29,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-07T19:00",
+      "value": 2.32,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-07T19:10",
+      "value": 2.35,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-07T19:20",
+      "value": 2.38,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-07T19:30",
+      "value": 2.4,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-07T19:40",
+      "value": 2.43,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-07T19:50",
+      "value": 2.46,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-07T20:00",
+      "value": 2.47,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-07T20:10",
+      "value": 2.48,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-07T20:20",
+      "value": 2.5,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-07T20:30",
+      "value": 2.51,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-07T20:40",
+      "value": 2.5,
       "flag": "",
       "resolution": "10min"
     }
