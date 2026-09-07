@@ -205,6 +205,7 @@ const els = {
   referenceMean: document.getElementById('referenceMean'),
   bThreshold: document.getElementById('bThreshold'),
   floodLevelSummary: document.getElementById('floodLevelSummary'),
+  floodLevelBasisNote: document.getElementById('floodLevelBasisNote'),
   rangeLabel: document.getElementById('rangeLabel'),
   statusBadge: document.getElementById('statusBadge'),
   statusDescription: document.getElementById('statusDescription'),
@@ -834,12 +835,17 @@ function populateAnnualStats() {
   els.annualP95.textContent = reference.count ? formatLevel(reference.p95) : '-';
   els.bThreshold.textContent = `+${fmt3.format(rawData.meta.rise_mode_b_thresholds.moderate)} m`;
   const floodLevels = currentStation?.flood_levels || {};
+  const estimated = currentStation?.flood_levels_basis?.type === 'estimated';
+  const qualifier = estimated ? '（参考換算）' : '';
   const levelItems = FLOOD_LEVEL_DEFINITIONS
     .filter(({ key }) => Number.isFinite(floodLevels[key]))
-    .map(({ key, label }) => `<span>${label}水位 <strong>${formatLevel(floodLevels[key])}</strong></span>`);
+    .map(({ key, label }) => `<span>${label}水位${qualifier} <strong>${formatLevel(floodLevels[key])}</strong></span>`);
   els.floodLevelSummary.innerHTML = levelItems.length
     ? levelItems.join('')
     : '<span>この観測所には防災基準水位の設定がありません。</span>';
+  els.floodLevelBasisNote.textContent = estimated
+    ? `額田の公式基準水位ではありません。2016年以降の増水18事例における富岡橋とのピーク水位関係から求めた目安です（主な到達差${currentStation.flood_levels_basis.peak_lag_hours}、推定のばらつき約${currentStation.flood_levels_basis.rmse_m.toFixed(2)} m〈RMSE〉）。実際の避難情報は自治体・気象庁・国土交通省の最新情報を確認してください。`
+    : '警戒水位は現在の「氾濫注意水位」に相当します。実際の避難情報は自治体・気象庁・国土交通省の最新情報を確認してください。';
 }
 
 function buildLineSeries(records, yValue) {
@@ -1014,11 +1020,12 @@ function render() {
   }
 
   if (els.toggleFloodLines.checked) {
+    const floodLevelQualifier = currentStation?.flood_levels_basis?.type === 'estimated' ? '（参考換算）' : '';
     for (const { key, label, color, dash } of FLOOD_LEVEL_DEFINITIONS) {
       const level = floodLevels[key];
       if (!Number.isFinite(level)) continue;
       datasets.push({
-        label: `${label} ${formatLevel(level)}`,
+        label: `${label}${floodLevelQualifier} ${formatLevel(level)}`,
         data: buildLineSeries(records, level),
         borderColor: color,
         borderDash: dash,

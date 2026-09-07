@@ -78,7 +78,18 @@ class StationConfigTests(unittest.TestCase):
                 levels["flood_occurrence"],
             )
             self.assertEqual(actual, expected)
-        self.assertNotIn("flood_levels", self.stations["nukada"])
+        nukada = self.stations["nukada"]
+        self.assertEqual(
+            (
+                nukada["flood_levels"]["flood_caution"],
+                nukada["flood_levels"]["evacuation_judgment"],
+                nukada["flood_levels"]["flood_danger"],
+                nukada["flood_levels"]["flood_occurrence"],
+            ),
+            (4.8, 5.3, 5.9, 7.1),
+        )
+        self.assertEqual(nukada["flood_levels_basis"]["type"], "estimated")
+        self.assertEqual(nukada["flood_levels_basis"]["source_station_id"], "tomioka-bashi")
 
     def test_tributary_datasets_match_the_station_and_include_2016(self):
         for station_id, (code, name, river) in TRIBUTARIES.items():

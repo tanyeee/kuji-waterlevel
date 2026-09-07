@@ -70,6 +70,24 @@
         "itmknd_cd": "4",
         "obs_cd": "7"
       },
+      "flood_levels": {
+        "flood_caution": 4.8,
+        "evacuation_judgment": 5.3,
+        "flood_danger": 5.9,
+        "flood_occurrence": 7.1
+      },
+      "flood_levels_basis": {
+        "type": "estimated",
+        "label": "富岡橋換算目安",
+        "source_station_id": "tomioka-bashi",
+        "event_count": 18,
+        "period_start": "2016-01-01",
+        "period_end": "2026-09-07",
+        "peak_lag_hours": "2〜4時間程度",
+        "regression": "額田ピーク水位 = 1.107 × 富岡橋ピーク水位 + 2.049 m",
+        "correlation": 0.984,
+        "rmse_m": 0.24
+      },
       "location": {
         "lat": 36.5038889,
         "lon": 140.5466325203125

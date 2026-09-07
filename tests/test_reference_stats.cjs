@@ -169,6 +169,26 @@ test('official flood levels render on demand and expand the y scale', () => {
   assert.ok(a.run('chart.options.scales.y.max') < 4.6);
 });
 
+test('estimated Nukada levels are clearly labelled as reference conversions', () => {
+  const a = app();
+  a.context.h = { records: [row('2025-01-01T00:00', 1), row('2026-01-01T00:00', 2)] };
+  a.run(`rawData = mergeDatasets(h, {records: []}, {records: []});
+    currentStation = {
+      flood_levels: {flood_caution: 4.8, evacuation_judgment: 5.3, flood_danger: 5.9, flood_occurrence: 7.1},
+      flood_levels_basis: {type: 'estimated', peak_lag_hours: '2〜4時間程度', rmse_m: 0.24}
+    };
+    getRangeRecords = () => rawData.records;
+    getDisplayRecords = records => records;
+    isTwentyFourHourMode = () => false;
+    saveViewState = () => {};
+    els.toggleAnnualLines.checked = false;
+    els.toggleFloodLines.checked = true;
+    render(); populateAnnualStats();`);
+  assert.equal(a.run('chart.data.datasets[1].label'), '氾濫注意（参考換算） 4.80 m');
+  assert.match(a.elements.get('floodLevelSummary').innerHTML, /氾濫注意水位（参考換算）.*4.80 m/);
+  assert.match(a.elements.get('floodLevelBasisNote').textContent, /公式基準水位ではありません.*増水18事例.*0.24 m〈RMSE〉/);
+});
+
 test('mobile legend keeps dashes visible with clear item spacing and restores desktop sizing', () => {
   const a = app();
   a.run('chart = {options: {plugins: {legend: {labels: {}}}}}; window.innerWidth = 390; resizeChartLegend(chart);');
