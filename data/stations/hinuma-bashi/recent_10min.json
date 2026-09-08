@@ -5,13 +5,13 @@
     "station_name": "涸沼橋",
     "river_system": "那珂川",
     "river_name": "涸沼川",
-    "record_count": 832,
+    "record_count": 833,
     "window_hours": 168,
     "dataset_start": "2026-09-02T17:50",
-    "dataset_end": "2026-09-08T15:00",
+    "dataset_end": "2026-09-08T15:10",
     "index_url": "https://www1.river.go.jp/cgi-bin/DspWaterData.exe?KIND=9&ID=303021283322110",
-    "source_url": "https://www1.river.go.jp/dat/dload/download/29303021283322110202609013960092.dat",
-    "last_fetch_utc": "2026-09-08T06:13:30Z",
+    "source_url": "https://www1.river.go.jp/dat/dload/download/29303021283322110202609012092939.dat",
+    "last_fetch_utc": "2026-09-08T06:23:30Z",
     "probe_errors": [],
     "notes": [
       "水文水質データベースのリアルタイム10分水位一覧表からDLした dat ファイルで作成。",
@@ -5007,6 +5007,12 @@
     },
     {
       "timestamp": "2026-09-08T15:00",
+      "value": 1.31,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-08T15:10",
       "value": 1.31,
       "flag": "",
       "resolution": "10min"
