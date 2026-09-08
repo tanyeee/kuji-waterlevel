@@ -3,40 +3,15 @@
     "source": "monthly_page_dat",
     "station_id": "303011283322080",
     "station_name": "里川 機初",
-    "record_count": 876,
+    "record_count": 871,
     "window_days": 45,
-    "last_fetch_utc": "2026-09-08T11:16:08Z",
+    "last_fetch_utc": "2026-09-08T16:36:57Z",
     "months_fetched": [
       "2026-08",
       "2026-09"
     ]
   },
   "records": [
-    {
-      "timestamp": "2026-08-25T12:00",
-      "value": -1.06,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-08-25T13:00",
-      "value": -1.06,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-08-25T14:00",
-      "value": -1.06,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-08-25T15:00",
-      "value": -1.06,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-08-25T16:00",
-      "value": -1.06,
-      "flag": "*"
-    },
     {
       "timestamp": "2026-08-25T17:00",
       "value": -1.06,
@@ -1734,28 +1709,28 @@
     },
     {
       "timestamp": "2026-09-08T20:00",
-      "value": null,
-      "flag": "-"
+      "value": -0.27,
+      "flag": "*"
     },
     {
       "timestamp": "2026-09-08T21:00",
-      "value": null,
-      "flag": "-"
+      "value": -0.27,
+      "flag": "*"
     },
     {
       "timestamp": "2026-09-08T22:00",
-      "value": null,
-      "flag": "-"
+      "value": -0.14,
+      "flag": "*"
     },
     {
       "timestamp": "2026-09-08T23:00",
-      "value": null,
-      "flag": "-"
+      "value": 0.26,
+      "flag": "*"
     },
     {
       "timestamp": "2026-09-09T00:00",
-      "value": null,
-      "flag": "-"
+      "value": 1.01,
+      "flag": "*"
     },
     {
       "timestamp": "2026-09-09T01:00",
