@@ -5,13 +5,13 @@
     "station_name": "額田",
     "river_system": "久慈川",
     "river_name": "久慈川",
-    "record_count": 948,
+    "record_count": 949,
     "window_hours": 168,
     "dataset_start": "2026-09-02T17:50",
-    "dataset_end": "2026-09-09T07:40",
+    "dataset_end": "2026-09-09T07:50",
     "index_url": "https://www1.river.go.jp/cgi-bin/DspWaterData.exe?KIND=9&ID=303011283322030",
-    "source_url": "https://www1.river.go.jp/dat/dload/download/2930301128332203020260902578462.dat",
-    "last_fetch_utc": "2026-09-08T22:53:21Z",
+    "source_url": "https://www1.river.go.jp/dat/dload/download/2930301128332203020260902590432.dat",
+    "last_fetch_utc": "2026-09-08T23:03:15Z",
     "probe_errors": [],
     "notes": [
       "水文水質データベースのリアルタイム10分水位一覧表からDLした dat ファイルで作成。",
@@ -5704,6 +5704,12 @@
     {
       "timestamp": "2026-09-09T07:40",
       "value": 3.35,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-09T07:50",
+      "value": 3.36,
       "flag": "",
       "resolution": "10min"
     }
