@@ -5,13 +5,13 @@
     "station_name": "下国井",
     "river_system": "那珂川",
     "river_name": "那珂川",
-    "record_count": 836,
+    "record_count": 828,
     "window_hours": 168,
-    "dataset_start": "2026-09-01T11:30",
-    "dataset_end": "2026-09-08T11:30",
+    "dataset_start": "2026-09-02T17:50",
+    "dataset_end": "2026-09-08T16:00",
     "index_url": "https://www1.river.go.jp/cgi-bin/DspWaterData.exe?KIND=9&ID=303021283322030",
-    "source_url": "https://www1.river.go.jp/dat/dload/download/29303021283322030202609013822486.dat",
-    "last_fetch_utc": "2026-09-08T02:43:38Z",
+    "source_url": "https://www1.river.go.jp/dat/dload/download/29303021283322030202609012143283.dat",
+    "last_fetch_utc": "2026-09-08T07:13:37Z",
     "probe_errors": [],
     "notes": [
       "水文水質データベースのリアルタイム10分水位一覧表からDLした dat ファイルで作成。",
@@ -19,60 +19,6 @@
     ]
   },
   "records": [
-    {
-      "timestamp": "2026-09-01T11:30",
-      "value": 0.3,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-09-01T11:40",
-      "value": 0.28,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-09-01T11:50",
-      "value": 0.27,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-09-01T12:00",
-      "value": 0.26,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-09-01T12:10",
-      "value": 0.24,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-09-01T12:20",
-      "value": 0.23,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-09-01T12:30",
-      "value": 0.22,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-09-01T12:40",
-      "value": 0.22,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-09-01T12:50",
-      "value": 0.2,
-      "flag": "",
-      "resolution": "10min"
-    },
     {
       "timestamp": "2026-09-02T17:50",
       "value": 0.84,
@@ -5032,6 +4978,12 @@
     {
       "timestamp": "2026-09-08T11:30",
       "value": 1.62,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-08T16:00",
+      "value": 1.58,
       "flag": "",
       "resolution": "10min"
     }
