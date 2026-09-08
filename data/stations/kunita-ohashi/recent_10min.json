@@ -5,13 +5,13 @@
     "station_name": "下国井",
     "river_system": "那珂川",
     "river_name": "那珂川",
-    "record_count": 909,
+    "record_count": 910,
     "window_hours": 168,
     "dataset_start": "2026-09-02T17:50",
-    "dataset_end": "2026-09-09T05:30",
+    "dataset_end": "2026-09-09T05:40",
     "index_url": "https://www1.river.go.jp/cgi-bin/DspWaterData.exe?KIND=9&ID=303021283322030",
-    "source_url": "https://www1.river.go.jp/dat/dload/download/29303021283322030202609022925166.dat",
-    "last_fetch_utc": "2026-09-08T20:43:42Z",
+    "source_url": "https://www1.river.go.jp/dat/dload/download/29303021283322030202609022934709.dat",
+    "last_fetch_utc": "2026-09-08T20:53:37Z",
     "probe_errors": [],
     "notes": [
       "水文水質データベースのリアルタイム10分水位一覧表からDLした dat ファイルで作成。",
@@ -5470,6 +5470,12 @@
     {
       "timestamp": "2026-09-09T05:30",
       "value": 3.57,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-09T05:40",
+      "value": 3.58,
       "flag": "",
       "resolution": "10min"
     }
