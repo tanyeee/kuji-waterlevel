@@ -5,13 +5,13 @@
     "station_name": "機初",
     "river_system": "久慈川",
     "river_name": "里川",
-    "record_count": 1003,
+    "record_count": 1004,
     "window_hours": 168,
     "dataset_start": "2026-09-02T17:50",
-    "dataset_end": "2026-09-09T17:10",
+    "dataset_end": "2026-09-09T17:20",
     "index_url": "https://www1.river.go.jp/cgi-bin/DspWaterData.exe?KIND=9&ID=303011283322080",
-    "source_url": "https://www1.river.go.jp/dat/dload/download/29303011283322080202609021049167.dat",
-    "last_fetch_utc": "2026-09-09T08:23:33Z",
+    "source_url": "https://www1.river.go.jp/dat/dload/download/29303011283322080202609021056366.dat",
+    "last_fetch_utc": "2026-09-09T08:33:27Z",
     "probe_errors": [],
     "notes": [
       "水文水質データベースのリアルタイム10分水位一覧表からDLした dat ファイルで作成。",
@@ -6033,6 +6033,12 @@
     },
     {
       "timestamp": "2026-09-09T17:10",
+      "value": 0.77,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-09T17:20",
       "value": 0.77,
       "flag": "",
       "resolution": "10min"
