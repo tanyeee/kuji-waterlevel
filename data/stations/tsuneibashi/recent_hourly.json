@@ -3,35 +3,15 @@
     "source": "monthly_page_dat",
     "station_id": "303011283322070",
     "station_name": "山田川 常井橋",
-    "record_count": 838,
+    "record_count": 834,
     "window_days": 45,
-    "last_fetch_utc": "2026-09-10T01:03:02Z",
+    "last_fetch_utc": "2026-09-10T05:57:21Z",
     "months_fetched": [
       "2026-08",
       "2026-09"
     ]
   },
   "records": [
-    {
-      "timestamp": "2026-08-27T02:00",
-      "value": -0.22,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-08-27T03:00",
-      "value": -0.19,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-08-27T04:00",
-      "value": -0.13,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-08-27T05:00",
-      "value": -0.09,
-      "flag": "*"
-    },
     {
       "timestamp": "2026-08-27T06:00",
       "value": -0.06,
@@ -1729,28 +1709,28 @@
     },
     {
       "timestamp": "2026-09-10T09:00",
-      "value": null,
-      "flag": "-"
+      "value": 0.92,
+      "flag": "*"
     },
     {
       "timestamp": "2026-09-10T10:00",
-      "value": null,
-      "flag": "-"
+      "value": 0.9,
+      "flag": "*"
     },
     {
       "timestamp": "2026-09-10T11:00",
-      "value": null,
-      "flag": "-"
+      "value": 0.86,
+      "flag": "*"
     },
     {
       "timestamp": "2026-09-10T12:00",
-      "value": null,
-      "flag": "-"
+      "value": 0.81,
+      "flag": "*"
     },
     {
       "timestamp": "2026-09-10T13:00",
-      "value": null,
-      "flag": "-"
+      "value": 0.78,
+      "flag": "*"
     },
     {
       "timestamp": "2026-09-10T14:00",
