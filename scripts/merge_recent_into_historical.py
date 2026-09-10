@@ -36,10 +36,23 @@ def merge_pair(historical_path: Path, recent_path: Path) -> None:
             keep_recent.append(rec)
 
     historical["records"] = sorted(hist_map.values(), key=lambda r: r["timestamp"])
-    historical.setdefault("meta", {})["dataset_end"] = historical["records"][-1]["timestamp"]
-    historical["meta"]["record_count"] = len(historical["records"])
+    historical_meta = historical.setdefault("meta", {})
+    historical_meta["record_count"] = len(historical["records"])
+    if historical["records"]:
+        historical_meta["dataset_start"] = historical["records"][0]["timestamp"]
+        historical_meta["dataset_end"] = historical["records"][-1]["timestamp"]
+    else:
+        historical_meta.pop("dataset_start", None)
+        historical_meta.pop("dataset_end", None)
     recent["records"] = keep_recent
-    recent.setdefault("meta", {})["record_count"] = len(keep_recent)
+    recent_meta = recent.setdefault("meta", {})
+    recent_meta["record_count"] = len(keep_recent)
+    if keep_recent:
+        recent_meta["dataset_start"] = keep_recent[0]["timestamp"]
+        recent_meta["dataset_end"] = keep_recent[-1]["timestamp"]
+    else:
+        recent_meta.pop("dataset_start", None)
+        recent_meta.pop("dataset_end", None)
 
     save(historical_path, historical)
     save(recent_path, recent)
