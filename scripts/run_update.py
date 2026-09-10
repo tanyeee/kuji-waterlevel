@@ -7,6 +7,7 @@ steps = [
     [sys.executable, 'scripts/update_recent_from_monthly_page.py'],
     [sys.executable, 'scripts/merge_recent_into_historical.py'],
     [sys.executable, 'scripts/update_recent_10min_from_kawabou.py'],
+    [sys.executable, 'scripts/update_recent_from_kawabou_files.py'],
 ]
 
 for step in steps:

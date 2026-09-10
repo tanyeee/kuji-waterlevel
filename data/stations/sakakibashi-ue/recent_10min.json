@@ -1,0 +1,323 @@
+{
+  "meta": {
+    "source": "river_go_jp_kawabou_files",
+    "station_code": "2127100400003",
+    "station_name": "榊橋上",
+    "ofc_cd": "21271",
+    "itmknd_cd": "4",
+    "obs_cd": "3",
+    "current_source_url": "https://www.river.go.jp/kawabou/file/files/tmlist/stg/20260910/2120/2127100400003.json",
+    "past_source_url": "https://www.river.go.jp/kawabou/file/files/tmlist/past/stg/20260910/2127100400003.json",
+    "last_fetch_utc": "2026-09-10T12:30:57Z",
+    "notes": [
+      "川の防災情報が画面表示に使用する公開JSONから取得。",
+      "公開側の保持期間が短いため、取得済みデータをこのリポジトリで継続保存。"
+    ],
+    "record_count": 50,
+    "window_hours": 168,
+    "dataset_start": "2026-09-10T13:10",
+    "dataset_end": "2026-09-10T21:20"
+  },
+  "records": [
+    {
+      "timestamp": "2026-09-10T13:10",
+      "value": 2.68,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-10T13:20",
+      "value": 2.67,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-10T13:30",
+      "value": 2.67,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-10T13:40",
+      "value": 2.66,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-10T13:50",
+      "value": 2.65,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-10T14:00",
+      "value": 2.64,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-10T14:10",
+      "value": 2.63,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-10T14:20",
+      "value": 2.62,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-10T14:30",
+      "value": 2.61,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-10T14:40",
+      "value": 2.61,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-10T14:50",
+      "value": 2.59,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-10T15:00",
+      "value": 2.59,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-10T15:10",
+      "value": 2.58,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-10T15:20",
+      "value": 2.57,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-10T15:30",
+      "value": 2.57,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-10T15:40",
+      "value": 2.56,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-10T15:50",
+      "value": 2.55,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-10T16:00",
+      "value": 2.55,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-10T16:10",
+      "value": 2.53,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-10T16:20",
+      "value": 2.53,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-10T16:30",
+      "value": 2.51,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-10T16:40",
+      "value": 2.51,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-10T16:50",
+      "value": 2.51,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-10T17:00",
+      "value": 2.5,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-10T17:10",
+      "value": 2.5,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-10T17:20",
+      "value": 2.49,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-10T17:30",
+      "value": 2.48,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-10T17:40",
+      "value": 2.47,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-10T17:50",
+      "value": 2.46,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-10T18:00",
+      "value": 2.46,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-10T18:10",
+      "value": 2.46,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-10T18:20",
+      "value": 2.45,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-10T18:30",
+      "value": 2.44,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-10T18:40",
+      "value": 2.43,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-10T18:50",
+      "value": 2.42,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-10T19:00",
+      "value": 2.42,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-10T19:10",
+      "value": 2.41,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-10T19:20",
+      "value": 2.41,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-10T19:30",
+      "value": 2.4,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-10T19:40",
+      "value": 2.39,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-10T19:50",
+      "value": 2.38,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-10T20:00",
+      "value": 2.38,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-10T20:10",
+      "value": 2.36,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-10T20:20",
+      "value": 2.36,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-10T20:30",
+      "value": 2.35,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-10T20:40",
+      "value": 2.35,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-10T20:50",
+      "value": 2.34,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-10T21:00",
+      "value": 2.34,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-10T21:10",
+      "value": 2.33,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-10T21:20",
+      "value": 2.32,
+      "flag": "",
+      "resolution": "10min"
+    }
+  ]
+}

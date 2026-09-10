@@ -204,6 +204,7 @@ const els = {
   annualP95: document.getElementById('annualP95'),
   referenceMean: document.getElementById('referenceMean'),
   bThreshold: document.getElementById('bThreshold'),
+  referenceStatsNote: document.getElementById('referenceStatsNote'),
   floodLevelSummary: document.getElementById('floodLevelSummary'),
   floodLevelBasisNote: document.getElementById('floodLevelBasisNote'),
   rangeLabel: document.getElementById('rangeLabel'),
@@ -310,7 +311,10 @@ function updateStationCopy() {
   els.pageTitle.textContent = '茨城県河川水位ビューア';
   document.title = '茨城県河川水位ビューア';
   els.chartStationName.textContent = `${stationName}${note}`;
-  els.dataSourceNote.textContent = `更新対応版: ${stationName}${note}の水位データと増水基準を閲覧できます。24時間モードでは10分観測値を優先します。`;
+  const sourceDescription = currentStation?.kawabou
+    ? '川の防災情報から取得した水位データ'
+    : '水文水質データベースから取得した水位データと増水基準';
+  els.dataSourceNote.textContent = `更新対応版: ${stationName}${note}の${sourceDescription}を閲覧できます。24時間モードでは10分観測値を優先します。`;
 }
 
 function loadViewState() {
@@ -383,6 +387,14 @@ async function loadStation(stationId, options = {}) {
   const hasRangeState = Object.prototype.hasOwnProperty.call(options, 'rangeState');
   const rangeState = hasRangeState ? options.rangeState : currentRangeState();
   currentStation = station;
+  const wasReferenceDisabled = els.toggleAnnualLines.disabled;
+  const referenceStatsEnabled = station.reference_stats_enabled !== false;
+  els.toggleAnnualLines.disabled = !referenceStatsEnabled;
+  if (!referenceStatsEnabled) {
+    els.toggleAnnualLines.checked = false;
+  } else if (wasReferenceDisabled) {
+    els.toggleAnnualLines.checked = true;
+  }
   const hasFloodLevels = FLOOD_LEVEL_DEFINITIONS.some(({ key }) => Number.isFinite(station.flood_levels?.[key]));
   els.toggleFloodLines.disabled = !hasFloodLevels;
   if (!hasFloodLevels) els.toggleFloodLines.checked = false;
@@ -750,6 +762,14 @@ function evaluateStatus(latestRecord) {
     };
   }
 
+  if (currentStation?.reference_stats_enabled === false) {
+    return {
+      label: 'データ蓄積中',
+      cssClass: 'neutral',
+      description: '長期的な増水基準を作るための観測データを蓄積しています。現在は実測水位の推移を確認してください。'
+    };
+  }
+
   const currentValue = latestRecord.value;
   if (currentMode === 'A') {
     const { mean, p90, p95, count } = meta.reference_stats;
@@ -830,10 +850,17 @@ function populateAnnualStats() {
   els.annualMean.textContent = formatLevel(s.mean);
   els.annualMax.textContent = formatLevel(s.max);
   const reference = rawData.meta.reference_stats;
-  els.referenceMean.textContent = reference.count ? formatLevel(reference.mean) : '-';
-  els.annualP90.textContent = reference.count ? formatLevel(reference.p90) : '-';
-  els.annualP95.textContent = reference.count ? formatLevel(reference.p95) : '-';
-  els.bThreshold.textContent = `+${fmt3.format(rawData.meta.rise_mode_b_thresholds.moderate)} m`;
+  const referenceStatsEnabled = currentStation?.reference_stats_enabled !== false;
+  els.referenceMean.textContent = referenceStatsEnabled && reference.count ? formatLevel(reference.mean) : '-';
+  els.annualP90.textContent = referenceStatsEnabled && reference.count ? formatLevel(reference.p90) : '-';
+  els.annualP95.textContent = referenceStatsEnabled && reference.count ? formatLevel(reference.p95) : '-';
+  els.bThreshold.textContent = referenceStatsEnabled
+    ? `+${fmt3.format(rawData.meta.rise_mode_b_thresholds.moderate)} m`
+    : '-';
+  els.referenceStatsNote.textContent = referenceStatsEnabled
+    ? ''
+    : 'この地点は川の防災情報からの保存を開始したばかりのため、直近3年の基準と水位判定はデータ蓄積中です。';
+  els.referenceStatsNote.hidden = referenceStatsEnabled;
   const floodLevels = currentStation?.flood_levels || {};
   const estimated = currentStation?.flood_levels_basis?.type === 'estimated';
   const qualifier = estimated ? '（参考換算）' : '';
@@ -934,7 +961,9 @@ function render() {
   els.statusDescription.textContent = status.description;
   els.statusTimestamp.textContent = latest ? formatDateTime(latest.timestamp) : '-';
   els.statusCurrentLevel.textContent = latest ? formatLevel(latest.value) : '-';
-  els.statusMode.textContent = currentMode === 'A' ? 'A 直近3年基準' : 'B 直近7日平均との差';
+  els.statusMode.textContent = currentStation?.reference_stats_enabled === false
+    ? '統計基準はデータ蓄積中'
+    : currentMode === 'A' ? 'A 直近3年基準' : 'B 直近7日平均との差';
 
   const dataSeries = records.map(r => ({ x: r.timestamp, y: isRenderableRecord(r) ? r.value : null }));
   const reference = rawData.meta.reference_stats;

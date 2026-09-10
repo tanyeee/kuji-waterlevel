@@ -3,6 +3,7 @@ import unittest
 from pathlib import Path
 
 from scripts import update_recent_10min_from_kawabou as ten_min
+from scripts import update_recent_from_kawabou_files as kawabou_files
 from scripts import update_recent_from_monthly_page as hourly
 
 
@@ -13,9 +14,10 @@ TRIBUTARIES = {
     "tsuneibashi": ("303011283322070", "常井橋", "山田川"),
 }
 DISPLAY_GROUPS = {
-    "久慈川": ["tomioka-bashi", "nukada"],
+    "久慈川": ["tomioka-bashi", "nukada", "sakakibashi-ue"],
     "里川": ["kihatsu"],
     "山田川": ["tsuneibashi"],
+    "涸沼川": ["takahashi", "shimoishizaki"],
     "那珂川": ["nakagawa-ohashi"],
 }
 FLOOD_LEVELS = {
@@ -90,6 +92,15 @@ class StationConfigTests(unittest.TestCase):
         )
         self.assertEqual(nukada["flood_levels_basis"]["type"], "estimated")
         self.assertEqual(nukada["flood_levels_basis"]["source_station_id"], "tomioka-bashi")
+
+    def test_kawabou_file_stations_are_displayed_and_accumulating(self):
+        targets = {target.id: target for target in kawabou_files.load_config_targets(CONFIG)}
+        self.assertEqual(set(targets), {"sakakibashi-ue", "takahashi", "shimoishizaki"})
+        self.assertEqual(targets["sakakibashi-ue"].obs_fcd, "2127100400003")
+        self.assertEqual(targets["takahashi"].obs_fcd, "0204900400001")
+        self.assertEqual(targets["shimoishizaki"].obs_fcd, "2127100400023")
+        for station_id in targets:
+            self.assertFalse(self.stations[station_id]["reference_stats_enabled"])
 
     def test_tributary_datasets_match_the_station_and_include_2016(self):
         for station_id, (code, name, river) in TRIBUTARIES.items():

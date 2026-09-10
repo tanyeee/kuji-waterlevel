@@ -4,6 +4,7 @@ import unittest
 from pathlib import Path
 
 from scripts import update_recent_10min_from_kawabou as recent_10min
+from scripts import update_recent_from_kawabou_files as kawabou_files
 
 
 def record(timestamp: str, value: float) -> dict:
@@ -43,6 +44,22 @@ class RecentTenMinuteTests(unittest.TestCase):
             self.assertEqual(recent_10min.load_existing_records(path), [])
             path.write_text(json.dumps({"records": [record("2026-07-10T00:00", 1.0)]}), encoding="utf-8")
             self.assertEqual(len(recent_10min.load_existing_records(path)), 1)
+
+    def test_kawabou_observation_code_is_zero_padded(self):
+        self.assertEqual(kawabou_files.build_obs_fcd(2049, 4, 1), "0204900400001")
+        self.assertEqual(kawabou_files.build_obs_fcd(21271, 4, 23), "2127100400023")
+
+    def test_kawabou_values_are_converted_and_invalid_codes_are_missing(self):
+        values = [
+            {"obsTime": "2026/09/10 20:10", "stg": 2.05, "stgCcd": 0},
+            {"obsTime": "2026/09/10 20:20", "stg": 0, "stgCcd": 140},
+        ]
+        records = kawabou_files.convert_records(values, "10min")
+        self.assertEqual(records[0], {
+            "timestamp": "2026-09-10T20:10", "value": 2.05, "flag": "", "resolution": "10min"
+        })
+        self.assertIsNone(records[1]["value"])
+        self.assertEqual(records[1]["flag"], "ccd:140")
 
 
 if __name__ == "__main__":

@@ -189,6 +189,24 @@ test('estimated Nukada levels are clearly labelled as reference conversions', ()
   assert.match(a.elements.get('floodLevelBasisNote').textContent, /公式基準水位ではありません.*増水18事例.*0.24 m〈RMSE〉/);
 });
 
+test('new Kawabou-only stations remain in data accumulation mode', () => {
+  const a = app();
+  a.context.h = { records: Array.from({ length: 48 }, (_, i) => row(`2026-09-${String(8 + Math.floor(i / 24)).padStart(2, '0')}T${String(i % 24).padStart(2, '0')}:00`, i / 100)) };
+  a.run(`rawData = mergeDatasets({meta: {}, records: []}, h, {records: []});
+    currentStation = {reference_stats_enabled: false, kawabou: {ofc_cd: '21271'}};
+    getRangeRecords = () => rawData.records;
+    getDisplayRecords = records => records;
+    isTwentyFourHourMode = () => false;
+    saveViewState = () => {};
+    populateAnnualStats(); render();`);
+  assert.equal(a.run('evaluateStatus(rawData.records.at(-1)).label'), 'データ蓄積中');
+  assert.equal(a.elements.get('referenceMean').textContent, '-');
+  assert.equal(a.elements.get('annualP95').textContent, '-');
+  assert.equal(a.elements.get('bThreshold').textContent, '-');
+  assert.match(a.elements.get('referenceStatsNote').textContent, /川の防災情報.*データ蓄積中/);
+  assert.equal(a.elements.get('statusMode').textContent, '統計基準はデータ蓄積中');
+});
+
 test('mobile legend keeps dashes visible with clear item spacing and restores desktop sizing', () => {
   const a = app();
   a.run('chart = {options: {plugins: {legend: {labels: {}}}}}; window.innerWidth = 390; resizeChartLegend(chart);');
@@ -233,11 +251,11 @@ test('station selector groups only non-tidal display stations', () => {
   a.context.config = JSON.parse(readFileSync(resolve(root, 'config/stations.json'), 'utf8'));
   a.run('stationConfig = config; populateStationSelect("nukada");');
   const groups = a.elements.get('stationSelect').children;
-  assert.deepEqual(groups.map(group => group.label), ['久慈川', '里川', '山田川', '那珂川']);
+  assert.deepEqual(groups.map(group => group.label), ['久慈川', '里川', '山田川', '涸沼川', '那珂川']);
   assert.deepEqual(groups.map(group => group.children.map(option => option.textContent)), [
-    ['富岡橋', '幸久橋（額田）'], ['機初'], ['常井橋'], ['那珂川大橋']
+    ['富岡橋', '幸久橋（額田）', '榊橋上'], ['機初'], ['常井橋'], ['高橋', '下石崎'], ['那珂川大橋']
   ]);
-  assert.equal(a.run('displayStations().length'), 5);
+  assert.equal(a.run('displayStations().length'), 8);
   assert.equal(a.run('isDisplayStation("sakakibashi")'), false);
   assert.equal(a.run('isDisplayStation("nukada")'), true);
   assert.equal(a.elements.get('stationSelect').value, 'nukada');

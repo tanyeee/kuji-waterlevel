@@ -4,7 +4,7 @@
   "display_groups": [
     {
       "label": "久慈川",
-      "station_ids": ["tomioka-bashi", "nukada"]
+      "station_ids": ["tomioka-bashi", "nukada", "sakakibashi-ue"]
     },
     {
       "label": "里川",
@@ -15,6 +15,10 @@
       "station_ids": ["tsuneibashi"]
     },
     {
+      "label": "涸沼川",
+      "station_ids": ["takahashi", "shimoishizaki"]
+    },
+    {
       "label": "那珂川",
       "station_ids": ["nakagawa-ohashi"]
     }
@@ -23,12 +27,12 @@
     {
       "id": "kuji",
       "name": "久慈川水系",
-      "station_ids": ["tomioka-bashi", "nukada", "sakakibashi", "kuji-ohashi", "kihatsu", "tsuneibashi"]
+      "station_ids": ["tomioka-bashi", "nukada", "sakakibashi-ue", "sakakibashi", "kuji-ohashi", "kihatsu", "tsuneibashi"]
     },
     {
       "id": "hinuma-nakagawa",
       "name": "涸沼・那珂川水系",
-      "station_ids": ["hinuma-bashi", "minato-ohashi", "suifu-bashi", "kunita-ohashi", "nakagawa-ohashi"]
+      "station_ids": ["takahashi", "shimoishizaki", "hinuma-bashi", "minato-ohashi", "suifu-bashi", "kunita-ohashi", "nakagawa-ohashi"]
     }
   ],
   "stations": [
@@ -91,6 +95,24 @@
       "location": {
         "lat": 36.5038889,
         "lon": 140.5466325203125
+      }
+    },
+    {
+      "id": "sakakibashi-ue",
+      "name": "榊橋上",
+      "observation_name": "榊橋上",
+      "river_id": "kuji",
+      "river_name": "久慈川水系",
+      "data_dir": "data/stations/sakakibashi-ue",
+      "reference_stats_enabled": false,
+      "kawabou": {
+        "ofc_cd": "21271",
+        "itmknd_cd": "4",
+        "obs_cd": "3"
+      },
+      "location": {
+        "lat": 36.4963889,
+        "lon": 140.5544444
       }
     },
     {
@@ -176,6 +198,42 @@
         "flood_occurrence": 4.3
       },
       "location": {}
+    },
+    {
+      "id": "takahashi",
+      "name": "高橋",
+      "observation_name": "高橋",
+      "river_id": "hinuma-nakagawa",
+      "river_name": "涸沼・那珂川水系",
+      "data_dir": "data/stations/takahashi",
+      "reference_stats_enabled": false,
+      "kawabou": {
+        "ofc_cd": "2049",
+        "itmknd_cd": "4",
+        "obs_cd": "1"
+      },
+      "location": {
+        "lat": 36.2902778,
+        "lon": 140.4238889
+      }
+    },
+    {
+      "id": "shimoishizaki",
+      "name": "下石崎",
+      "observation_name": "下石崎",
+      "river_id": "hinuma-nakagawa",
+      "river_name": "涸沼・那珂川水系",
+      "data_dir": "data/stations/shimoishizaki",
+      "reference_stats_enabled": false,
+      "kawabou": {
+        "ofc_cd": "21271",
+        "itmknd_cd": "4",
+        "obs_cd": "23"
+      },
+      "location": {
+        "lat": 36.2847222,
+        "lon": 140.5144444
+      }
     },
     {
       "id": "hinuma-bashi",

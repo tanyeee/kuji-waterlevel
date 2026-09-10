@@ -33,6 +33,7 @@ jobs:
       - name: Update recent 10-minute data
         run: |
           python scripts/update_recent_10min_from_kawabou.py --keep-hours 168
+          python scripts/update_recent_from_kawabou_files.py --keep-10min-hours 168 --keep-hourly-days 45
 
       - name: Commit and push if changed
         run: |
