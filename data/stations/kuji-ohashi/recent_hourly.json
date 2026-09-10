@@ -3,45 +3,15 @@
     "source": "monthly_page_dat",
     "station_id": "303011283322060",
     "station_name": "久慈大橋",
-    "record_count": 834,
+    "record_count": 828,
     "window_days": 45,
-    "last_fetch_utc": "2026-09-10T05:57:15Z",
+    "last_fetch_utc": "2026-09-10T11:17:11Z",
     "months_fetched": [
       "2026-08",
       "2026-09"
     ]
   },
   "records": [
-    {
-      "timestamp": "2026-08-27T06:00",
-      "value": 1.22,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-08-27T07:00",
-      "value": 0.98,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-08-27T08:00",
-      "value": 0.81,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-08-27T09:00",
-      "value": 0.77,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-08-27T10:00",
-      "value": 0.79,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-08-27T11:00",
-      "value": 0.97,
-      "flag": "*"
-    },
     {
       "timestamp": "2026-08-27T12:00",
       "value": 1.18,
@@ -1734,33 +1704,33 @@
     },
     {
       "timestamp": "2026-09-10T14:00",
-      "value": null,
-      "flag": "-"
+      "value": 1.76,
+      "flag": "*"
     },
     {
       "timestamp": "2026-09-10T15:00",
-      "value": null,
-      "flag": "-"
+      "value": 1.84,
+      "flag": "*"
     },
     {
       "timestamp": "2026-09-10T16:00",
-      "value": null,
-      "flag": "-"
+      "value": 1.76,
+      "flag": "*"
     },
     {
       "timestamp": "2026-09-10T17:00",
-      "value": null,
-      "flag": "-"
+      "value": 1.66,
+      "flag": "*"
     },
     {
       "timestamp": "2026-09-10T18:00",
-      "value": null,
-      "flag": "-"
+      "value": 1.51,
+      "flag": "*"
     },
     {
       "timestamp": "2026-09-10T19:00",
-      "value": null,
-      "flag": "-"
+      "value": 1.37,
+      "flag": "*"
     },
     {
       "timestamp": "2026-09-10T20:00",
