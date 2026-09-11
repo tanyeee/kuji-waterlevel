@@ -4,10 +4,10 @@
     "station_id": "303011283322030",
     "station_name": "幸久橋",
     "observation_name": "額田",
-    "record_count": 93414,
+    "record_count": 93420,
     "valid_record_count": 92066,
     "dataset_start": "2016-01-01T00:00",
-    "dataset_end": "2026-08-28T05:00",
+    "dataset_end": "2026-08-28T11:00",
     "valid_dataset_start": "2016-01-01T00:00",
     "valid_dataset_end": "2026-07-10T10:00",
     "start_year": 2016,
@@ -467088,6 +467088,36 @@
     {
       "timestamp": "2026-08-28T05:00",
       "value": -0.47,
+      "flag": "*"
+    },
+    {
+      "timestamp": "2026-08-28T06:00",
+      "value": -0.49,
+      "flag": "*"
+    },
+    {
+      "timestamp": "2026-08-28T07:00",
+      "value": -0.5,
+      "flag": "*"
+    },
+    {
+      "timestamp": "2026-08-28T08:00",
+      "value": -0.52,
+      "flag": "*"
+    },
+    {
+      "timestamp": "2026-08-28T09:00",
+      "value": -0.56,
+      "flag": "*"
+    },
+    {
+      "timestamp": "2026-08-28T10:00",
+      "value": -0.59,
+      "flag": "*"
+    },
+    {
+      "timestamp": "2026-08-28T11:00",
+      "value": -0.59,
       "flag": "*"
     }
   ]
