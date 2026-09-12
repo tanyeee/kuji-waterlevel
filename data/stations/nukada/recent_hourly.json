@@ -3,37 +3,17 @@
     "source": "monthly_page_dat",
     "station_id": "303011283322030",
     "station_name": "幸久橋",
-    "record_count": 772,
+    "record_count": 768,
     "window_days": 45,
-    "last_fetch_utc": "2026-09-12T19:19:03Z",
+    "last_fetch_utc": "2026-09-12T23:01:25Z",
     "months_fetched": [
       "2026-08",
       "2026-09"
     ],
-    "dataset_start": "2026-08-29T20:00",
+    "dataset_start": "2026-08-30T00:00",
     "dataset_end": "2026-09-30T23:00"
   },
   "records": [
-    {
-      "timestamp": "2026-08-29T20:00",
-      "value": -0.48,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-08-29T21:00",
-      "value": -0.47,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-08-29T22:00",
-      "value": -0.45,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-08-29T23:00",
-      "value": -0.42,
-      "flag": "*"
-    },
     {
       "timestamp": "2026-08-30T00:00",
       "value": -0.36,
@@ -1736,18 +1716,18 @@
     },
     {
       "timestamp": "2026-09-13T04:00",
-      "value": null,
-      "flag": "-"
+      "value": 0.17,
+      "flag": "*"
     },
     {
       "timestamp": "2026-09-13T05:00",
-      "value": null,
-      "flag": "-"
+      "value": 0.15,
+      "flag": "*"
     },
     {
       "timestamp": "2026-09-13T06:00",
-      "value": null,
-      "flag": "-"
+      "value": 0.13,
+      "flag": "*"
     },
     {
       "timestamp": "2026-09-13T07:00",
