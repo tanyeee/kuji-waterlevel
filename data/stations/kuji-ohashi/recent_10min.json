@@ -7,11 +7,11 @@
     "river_name": "久慈川",
     "record_count": 1006,
     "window_hours": 168,
-    "dataset_start": "2026-09-06T07:00",
-    "dataset_end": "2026-09-13T07:00",
+    "dataset_start": "2026-09-06T07:50",
+    "dataset_end": "2026-09-13T07:50",
     "index_url": "https://www1.river.go.jp/cgi-bin/DspWaterData.exe?KIND=9&ID=303011283322060",
-    "source_url": "https://www1.river.go.jp/dat/dload/download/29303011283322060202609063139334.dat",
-    "last_fetch_utc": "2026-09-12T22:12:48Z",
+    "source_url": "https://www1.river.go.jp/dat/dload/download/29303011283322060202609062979191.dat",
+    "last_fetch_utc": "2026-09-12T23:02:34Z",
     "probe_errors": [],
     "notes": [
       "水文水質データベースのリアルタイム10分水位一覧表からDLした dat ファイルで作成。",
@@ -19,36 +19,6 @@
     ]
   },
   "records": [
-    {
-      "timestamp": "2026-09-06T07:00",
-      "value": 0.93,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-09-06T07:10",
-      "value": 0.95,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-09-06T07:20",
-      "value": 0.96,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-09-06T07:30",
-      "value": 1.0,
-      "flag": "",
-      "resolution": "10min"
-    },
-    {
-      "timestamp": "2026-09-06T07:40",
-      "value": 1.01,
-      "flag": "",
-      "resolution": "10min"
-    },
     {
       "timestamp": "2026-09-06T07:50",
       "value": 1.02,
@@ -6052,6 +6022,36 @@
     {
       "timestamp": "2026-09-13T07:00",
       "value": 1.59,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-13T07:10",
+      "value": 1.56,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-13T07:20",
+      "value": 1.52,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-13T07:30",
+      "value": 1.48,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-13T07:40",
+      "value": 1.44,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-13T07:50",
+      "value": 1.4,
       "flag": "",
       "resolution": "10min"
     }
