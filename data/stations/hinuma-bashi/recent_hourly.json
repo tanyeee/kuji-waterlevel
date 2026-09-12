@@ -3,42 +3,17 @@
     "source": "monthly_page_dat",
     "station_id": "303021283322110",
     "station_name": "涸沼橋",
-    "record_count": 786,
+    "record_count": 781,
     "window_days": 45,
-    "last_fetch_utc": "2026-09-12T05:46:02Z",
+    "last_fetch_utc": "2026-09-12T10:43:53Z",
     "months_fetched": [
       "2026-08",
       "2026-09"
     ],
-    "dataset_start": "2026-08-29T06:00",
+    "dataset_start": "2026-08-29T11:00",
     "dataset_end": "2026-09-30T23:00"
   },
   "records": [
-    {
-      "timestamp": "2026-08-29T06:00",
-      "value": 1.03,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-08-29T07:00",
-      "value": 0.88,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-08-29T08:00",
-      "value": 0.77,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-08-29T09:00",
-      "value": 0.67,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-08-29T10:00",
-      "value": 0.62,
-      "flag": "*"
-    },
     {
       "timestamp": "2026-08-29T11:00",
       "value": 0.62,
@@ -1736,28 +1711,28 @@
     },
     {
       "timestamp": "2026-09-12T14:00",
-      "value": null,
-      "flag": "-"
+      "value": 1.17,
+      "flag": "*"
     },
     {
       "timestamp": "2026-09-12T15:00",
-      "value": null,
-      "flag": "-"
+      "value": 1.26,
+      "flag": "*"
     },
     {
       "timestamp": "2026-09-12T16:00",
-      "value": null,
-      "flag": "-"
+      "value": 1.28,
+      "flag": "*"
     },
     {
       "timestamp": "2026-09-12T17:00",
-      "value": null,
-      "flag": "-"
+      "value": 1.26,
+      "flag": "*"
     },
     {
       "timestamp": "2026-09-12T18:00",
-      "value": null,
-      "flag": "-"
+      "value": 1.17,
+      "flag": "*"
     },
     {
       "timestamp": "2026-09-12T19:00",
