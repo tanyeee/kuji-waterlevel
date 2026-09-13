@@ -3,42 +3,17 @@
     "source": "monthly_page_dat",
     "station_id": "303011283322020",
     "station_name": "富岡橋",
-    "record_count": 761,
+    "record_count": 756,
     "window_days": 45,
-    "last_fetch_utc": "2026-09-13T06:06:51Z",
+    "last_fetch_utc": "2026-09-13T11:48:50Z",
     "months_fetched": [
       "2026-08",
       "2026-09"
     ],
-    "dataset_start": "2026-08-30T07:00",
+    "dataset_start": "2026-08-30T12:00",
     "dataset_end": "2026-09-30T23:00"
   },
   "records": [
-    {
-      "timestamp": "2026-08-30T07:00",
-      "value": -1.06,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-08-30T08:00",
-      "value": -1.12,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-08-30T09:00",
-      "value": -1.14,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-08-30T10:00",
-      "value": -1.16,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-08-30T11:00",
-      "value": -1.19,
-      "flag": "*"
-    },
     {
       "timestamp": "2026-08-30T12:00",
       "value": -1.21,
@@ -1731,33 +1706,33 @@
     },
     {
       "timestamp": "2026-09-13T14:00",
-      "value": null,
-      "flag": "-"
+      "value": -1.0,
+      "flag": "*"
     },
     {
       "timestamp": "2026-09-13T15:00",
-      "value": null,
-      "flag": "-"
+      "value": -1.01,
+      "flag": "*"
     },
     {
       "timestamp": "2026-09-13T16:00",
-      "value": null,
-      "flag": "-"
+      "value": -1.01,
+      "flag": "*"
     },
     {
       "timestamp": "2026-09-13T17:00",
-      "value": null,
-      "flag": "-"
+      "value": -1.01,
+      "flag": "*"
     },
     {
       "timestamp": "2026-09-13T18:00",
-      "value": null,
-      "flag": "-"
+      "value": -1.02,
+      "flag": "*"
     },
     {
       "timestamp": "2026-09-13T19:00",
-      "value": null,
-      "flag": "-"
+      "value": -1.03,
+      "flag": "*"
     },
     {
       "timestamp": "2026-09-13T20:00",
