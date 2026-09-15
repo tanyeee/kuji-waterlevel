@@ -5,13 +5,13 @@
     "station_name": "湊大橋",
     "river_system": "那珂川",
     "river_name": "那珂川",
-    "record_count": 1001,
+    "record_count": 1002,
     "window_hours": 168,
     "dataset_start": "2026-09-08T11:40",
-    "dataset_end": "2026-09-15T10:20",
+    "dataset_end": "2026-09-15T10:30",
     "index_url": "https://www1.river.go.jp/cgi-bin/DspWaterData.exe?KIND=9&ID=303021283322010",
-    "source_url": "https://www1.river.go.jp/dat/dload/download/2930302128332201020260908650706.dat",
-    "last_fetch_utc": "2026-09-15T01:32:48Z",
+    "source_url": "https://www1.river.go.jp/dat/dload/download/2930302128332201020260908657507.dat",
+    "last_fetch_utc": "2026-09-15T01:42:48Z",
     "probe_errors": [],
     "notes": [
       "水文水質データベースのリアルタイム10分水位一覧表からDLした dat ファイルで作成。",
@@ -6021,6 +6021,12 @@
     },
     {
       "timestamp": "2026-09-15T10:20",
+      "value": 0.82,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-15T10:30",
       "value": 0.82,
       "flag": "",
       "resolution": "10min"
