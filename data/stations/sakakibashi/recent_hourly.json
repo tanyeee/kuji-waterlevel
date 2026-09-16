@@ -3,42 +3,17 @@
     "source": "monthly_page_dat",
     "station_id": "303011283322050",
     "station_name": "榊橋",
-    "record_count": 689,
+    "record_count": 684,
     "window_days": 45,
-    "last_fetch_utc": "2026-09-16T05:59:23Z",
+    "last_fetch_utc": "2026-09-16T11:29:10Z",
     "months_fetched": [
       "2026-08",
       "2026-09"
     ],
-    "dataset_start": "2026-09-02T07:00",
+    "dataset_start": "2026-09-02T12:00",
     "dataset_end": "2026-09-30T23:00"
   },
   "records": [
-    {
-      "timestamp": "2026-09-02T07:00",
-      "value": 0.36,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-09-02T08:00",
-      "value": 0.27,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-09-02T09:00",
-      "value": 0.16,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-09-02T10:00",
-      "value": 0.07,
-      "flag": "*"
-    },
-    {
-      "timestamp": "2026-09-02T11:00",
-      "value": 0.0,
-      "flag": "*"
-    },
     {
       "timestamp": "2026-09-02T12:00",
       "value": -0.02,
@@ -1731,33 +1706,33 @@
     },
     {
       "timestamp": "2026-09-16T14:00",
-      "value": null,
-      "flag": "-"
+      "value": 0.49,
+      "flag": "*"
     },
     {
       "timestamp": "2026-09-16T15:00",
-      "value": null,
-      "flag": "-"
+      "value": 0.57,
+      "flag": "*"
     },
     {
       "timestamp": "2026-09-16T16:00",
-      "value": null,
-      "flag": "-"
+      "value": 0.72,
+      "flag": "*"
     },
     {
       "timestamp": "2026-09-16T17:00",
-      "value": null,
-      "flag": "-"
+      "value": 0.82,
+      "flag": "*"
     },
     {
       "timestamp": "2026-09-16T18:00",
-      "value": null,
-      "flag": "-"
+      "value": 0.84,
+      "flag": "*"
     },
     {
       "timestamp": "2026-09-16T19:00",
-      "value": null,
-      "flag": "-"
+      "value": 0.86,
+      "flag": "*"
     },
     {
       "timestamp": "2026-09-16T20:00",
