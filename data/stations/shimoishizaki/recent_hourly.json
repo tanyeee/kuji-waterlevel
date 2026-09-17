@@ -13,42 +13,12 @@
       "川の防災情報が画面表示に使用する公開JSONから取得。",
       "公開側の保持期間が短いため、取得済みデータをこのリポジトリで継続保存。"
     ],
-    "record_count": 351,
+    "record_count": 345,
     "window_days": 45,
-    "dataset_start": "2026-09-03T08:00",
+    "dataset_start": "2026-09-03T14:00",
     "dataset_end": "2026-09-17T22:00"
   },
   "records": [
-    {
-      "timestamp": "2026-09-03T08:00",
-      "value": 1.57,
-      "flag": ""
-    },
-    {
-      "timestamp": "2026-09-03T09:00",
-      "value": 1.61,
-      "flag": ""
-    },
-    {
-      "timestamp": "2026-09-03T10:00",
-      "value": 1.65,
-      "flag": ""
-    },
-    {
-      "timestamp": "2026-09-03T11:00",
-      "value": 1.67,
-      "flag": ""
-    },
-    {
-      "timestamp": "2026-09-03T12:00",
-      "value": 1.67,
-      "flag": ""
-    },
-    {
-      "timestamp": "2026-09-03T13:00",
-      "value": 1.65,
-      "flag": ""
-    },
     {
       "timestamp": "2026-09-03T14:00",
       "value": 1.62,
