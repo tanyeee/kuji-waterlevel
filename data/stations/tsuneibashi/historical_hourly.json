@@ -4,10 +4,10 @@
     "station_id": "303011283322070",
     "station_name": "山田川 常井橋",
     "observation_name": "常井橋",
-    "record_count": 93574,
+    "record_count": 93577,
     "valid_record_count": 93455,
     "dataset_start": "2016-01-01T00:00",
-    "dataset_end": "2026-09-03T21:00",
+    "dataset_end": "2026-09-04T00:00",
     "valid_dataset_start": "2016-01-01T00:00",
     "valid_dataset_end": "2026-09-02T23:00",
     "start_year": 2016,
@@ -467888,6 +467888,21 @@
     {
       "timestamp": "2026-09-03T21:00",
       "value": -0.2,
+      "flag": "*"
+    },
+    {
+      "timestamp": "2026-09-03T22:00",
+      "value": -0.2,
+      "flag": "*"
+    },
+    {
+      "timestamp": "2026-09-03T23:00",
+      "value": -0.19,
+      "flag": "*"
+    },
+    {
+      "timestamp": "2026-09-04T00:00",
+      "value": -0.19,
       "flag": "*"
     }
   ]
