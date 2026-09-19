@@ -6,25 +6,19 @@
     "ofc_cd": "2049",
     "itmknd_cd": "4",
     "obs_cd": "1",
-    "current_source_url": "https://www.river.go.jp/kawabou/file/files/tmlist/stg/20260920/0210/0204900400001.json",
+    "current_source_url": "https://www.river.go.jp/kawabou/file/files/tmlist/stg/20260920/0220/0204900400001.json",
     "past_source_url": "https://www.river.go.jp/kawabou/file/files/tmlist/past/stg/20260920/0204900400001.json",
-    "last_fetch_utc": "2026-09-19T17:12:54Z",
+    "last_fetch_utc": "2026-09-19T17:22:58Z",
     "notes": [
       "川の防災情報が画面表示に使用する公開JSONから取得。",
       "公開側の保持期間が短いため、取得済みデータをこのリポジトリで継続保存。"
     ],
     "record_count": 1009,
     "window_hours": 168,
-    "dataset_start": "2026-09-13T02:10",
-    "dataset_end": "2026-09-20T02:10"
+    "dataset_start": "2026-09-13T02:20",
+    "dataset_end": "2026-09-20T02:20"
   },
   "records": [
-    {
-      "timestamp": "2026-09-13T02:10",
-      "value": 1.37,
-      "flag": "",
-      "resolution": "10min"
-    },
     {
       "timestamp": "2026-09-13T02:20",
       "value": 1.36,
@@ -6069,6 +6063,12 @@
     },
     {
       "timestamp": "2026-09-20T02:10",
+      "value": 0.88,
+      "flag": "",
+      "resolution": "10min"
+    },
+    {
+      "timestamp": "2026-09-20T02:20",
       "value": null,
       "flag": "",
       "resolution": "10min"
