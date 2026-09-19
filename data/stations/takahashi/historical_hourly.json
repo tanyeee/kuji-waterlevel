@@ -1,8 +1,8 @@
 {
   "meta": {
-    "record_count": 54,
+    "record_count": 59,
     "dataset_start": "2026-09-03T00:00",
-    "dataset_end": "2026-09-05T05:00"
+    "dataset_end": "2026-09-05T10:00"
   },
   "records": [
     {
@@ -273,6 +273,31 @@
     {
       "timestamp": "2026-09-05T05:00",
       "value": 0.54,
+      "flag": ""
+    },
+    {
+      "timestamp": "2026-09-05T06:00",
+      "value": 0.55,
+      "flag": ""
+    },
+    {
+      "timestamp": "2026-09-05T07:00",
+      "value": 0.56,
+      "flag": ""
+    },
+    {
+      "timestamp": "2026-09-05T08:00",
+      "value": 0.58,
+      "flag": ""
+    },
+    {
+      "timestamp": "2026-09-05T09:00",
+      "value": 0.59,
+      "flag": ""
+    },
+    {
+      "timestamp": "2026-09-05T10:00",
+      "value": 0.59,
       "flag": ""
     }
   ]
