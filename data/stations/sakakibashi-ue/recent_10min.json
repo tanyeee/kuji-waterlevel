@@ -8,7 +8,7 @@
     "obs_cd": "3",
     "current_source_url": "https://www.river.go.jp/kawabou/file/files/tmlist/stg/20260919/2320/2127100400003.json",
     "past_source_url": "https://www.river.go.jp/kawabou/file/files/tmlist/past/stg/20260919/2127100400003.json",
-    "last_fetch_utc": "2026-09-19T14:22:52Z",
+    "last_fetch_utc": "2026-09-19T14:32:48Z",
     "notes": [
       "川の防災情報が画面表示に使用する公開JSONから取得。",
       "公開側の保持期間が短いため、取得済みデータをこのリポジトリで継続保存。"
@@ -6069,7 +6069,7 @@
     },
     {
       "timestamp": "2026-09-19T23:20",
-      "value": null,
+      "value": 1.45,
       "flag": "",
       "resolution": "10min"
     }
