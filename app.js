@@ -831,7 +831,14 @@ function getHourlyDisplayRecords(records) {
     map.set(record.timestamp, record);
   }
 
-  return [...map.values()].sort((a, b) => a.timestamp.localeCompare(b.timestamp));
+  const hourlyRecords = [...map.values()].sort((a, b) => a.timestamp.localeCompare(b.timestamp));
+  // The hourly archive lags the live feed by an hour or two (and holds empty slots for the
+  // rest of the day); extend the line with the ten-minute observations recorded after its
+  // last valid hour so long ranges reach the present.
+  const lastHourly = hourlyRecords.filter(r => isRenderableRecord(r)).at(-1)?.timestamp;
+  const latestTenMinute = records
+    .filter(r => isTenMinuteRecord(r) && isRenderableRecord(r) && (!lastHourly || r.timestamp > lastHourly));
+  return hourlyRecords.concat(latestTenMinute).sort((a, b) => a.timestamp.localeCompare(b.timestamp));
 }
 
 function getDisplayRecords(records) {
