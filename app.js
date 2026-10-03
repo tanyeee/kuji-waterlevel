@@ -1035,6 +1035,43 @@ function resizeChartLegend(chart) {
   labels.font = { size: compact ? (narrow ? 8 : window.innerWidth <= 380 ? 9 : 10) : 12 };
 }
 
+function buildHourlyTicks(min, max, stepHours) {
+  const cursor = new Date(min);
+  cursor.setMinutes(0, 0, 0);
+  if (cursor.getTime() < min) cursor.setHours(cursor.getHours() + 1);
+  while (cursor.getHours() % stepHours !== 0) cursor.setHours(cursor.getHours() + 1);
+  const ticks = [];
+  while (cursor.getTime() <= max) {
+    ticks.push({ value: cursor.getTime() });
+    cursor.setHours(cursor.getHours() + stepHours);
+  }
+  return ticks;
+}
+
+function alignTwentyFourHourTicks(scale) {
+  if (!scale.chart.options.scales.x.twentyFourHour) return;
+  const stepHours = scale.chart.width >= 900 ? 1 : 2;
+  scale.ticks = buildHourlyTicks(scale.min, scale.max, stepHours);
+}
+
+function twentyFourHourYBounds(min, max) {
+  const span = max - min;
+  const steps = [0.05, 0.1, 0.2, 0.25, 0.5, 1, 2, 5, 10];
+  let step = steps.find(value => Math.ceil(max / value - 1e-9) - Math.floor(min / value + 1e-9) <= 8);
+  if (!step) step = 10 * Math.ceil(span / 80);
+  return {
+    min: Number((Math.floor(min / step + 1e-9) * step).toFixed(2)),
+    max: Number((Math.ceil(max / step - 1e-9) * step).toFixed(2)),
+    step
+  };
+}
+
+function formatTwentyFourHourTick(value) {
+  const date = new Date(value);
+  const time = `${String(date.getHours()).padStart(2, '0')}:00`;
+  return date.getHours() === 0 ? [`${date.getMonth() + 1}/${date.getDate()}`, time] : time;
+}
+
 function generateLineLegendLabels(chart) {
   // Point-style legends otherwise inherit point styles, which omit line dashes.
   const labels = Chart.defaults.plugins.legend.labels.generateLabels(chart).map(item => {
@@ -1136,8 +1173,10 @@ function render() {
   const scaleMin = Math.min(minValue, ...visibleFloodLevels, ...levelZoneThresholds);
   const scaleMax = Math.max(maxValue, ...visibleFloodLevels, ...levelZoneCeilings);
   const yPadding = Math.max((scaleMax - scaleMin) * 0.08, 0.05);
-  const yMin = Math.floor((scaleMin - yPadding) * 100) / 100;
-  const yMax = Math.ceil((scaleMax + yPadding) * 100) / 100;
+  const twentyFourHour = isTwentyFourHourMode();
+  const yBounds = twentyFourHour ? twentyFourHourYBounds(scaleMin - yPadding, scaleMax + yPadding) : null;
+  const yMin = yBounds?.min ?? Math.floor((scaleMin - yPadding) * 100) / 100;
+  const yMax = yBounds?.max ?? Math.ceil((scaleMax + yPadding) * 100) / 100;
 
   const datasets = [
     {
@@ -1239,7 +1278,7 @@ function render() {
 
   const latestRenderable = valid[valid.length - 1];
   const xMax = latestRenderable ? latestRenderable.timestamp : records[records.length - 1].timestamp;
-  const timeUnit = chooseTimeUnit(records, useTenMinuteDisplay);
+  const timeUnit = twentyFourHour ? 'hour' : chooseTimeUnit(records, useTenMinuteDisplay);
   const timeStepSize = timeUnit === 'minute' ? 10 : undefined;
 
   if (chart) {
@@ -1248,8 +1287,12 @@ function render() {
     chart.options.scales.x.max = xMax;
     chart.options.scales.x.time.unit = timeUnit;
     chart.options.scales.x.time.stepSize = timeStepSize;
+    chart.options.scales.x.twentyFourHour = twentyFourHour;
+    chart.options.scales.x.ticks.autoSkip = !twentyFourHour;
     chart.options.scales.y.min = yMin;
     chart.options.scales.y.max = yMax;
+    chart.options.scales.y.ticks.stepSize = yBounds?.step;
+    chart.options.scales.y.ticks.includeBounds = !twentyFourHour;
     chart.update();
     saveViewState();
     return;
@@ -1297,6 +1340,8 @@ function render() {
       scales: {
         x: {
           type: 'time',
+          twentyFourHour,
+          afterBuildTicks: alignTwentyFourHourTicks,
           min: records[0].timestamp,
           max: xMax,
           time: {
@@ -1307,8 +1352,12 @@ function render() {
           ticks: {
             color: '#9bb4cc',
             maxRotation: 0,
-            autoSkip: true,
+            autoSkip: !twentyFourHour,
+            font(context) {
+              return { size: context.chart.options.scales.x.twentyFourHour && context.chart.width < 600 ? 8 : 12 };
+            },
             callback(value) {
+              if (this.chart.options.scales.x.twentyFourHour) return formatTwentyFourHourTick(value);
               return formatXAxisLabel(value, this.chart.options.scales.x.time.unit);
             }
           },
@@ -1321,8 +1370,11 @@ function render() {
           max: yMax,
           ticks: {
             color: '#9bb4cc',
+            stepSize: yBounds?.step,
+            includeBounds: !twentyFourHour,
             callback(value) {
-              return `${Number(value).toFixed(1)} m`;
+              const digits = this.chart.options.scales.x.twentyFourHour ? 2 : 1;
+              return `${Number(value).toFixed(digits)} m`;
             }
           },
           grid: {

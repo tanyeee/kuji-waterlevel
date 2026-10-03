@@ -326,6 +326,43 @@ test('mobile legend keeps dashes visible with clear item spacing and restores de
   assert.equal(a.run('chart.options.plugins.legend.labels.font.size'), 12);
 });
 
+test('24-hour axes align hourly ticks, retain ten-minute data and reset on leaving the preset', () => {
+  const a = app();
+  a.context.h = {records: [
+    row('2026-10-03T05:50', -0.32, {resolution: '10min'}),
+    row('2026-10-04T05:50', -0.52, {resolution: '10min'})
+  ]};
+  a.run(`rawData = mergeDatasets({records: []}, {records: []}, h);
+    activePresetValue = '24h';
+    getRangeRecords = () => rawData.records;
+    saveViewState = () => {};
+    render();`);
+  assert.equal(a.run('chart.options.scales.x.time.unit'), 'hour');
+  assert.equal(a.run('chart.data.datasets[0].data.length'), 2);
+  assert.equal(a.run('chart.options.scales.y.ticks.stepSize'), 0.05);
+  assert.equal(a.run('chart.options.scales.y.ticks.callback.call({chart}, -0.35)'), '-0.35 m');
+  for (const width of [390, 1000]) {
+    a.context.width = width;
+    const ticks = a.run(`var scale = {min: new Date(h.records[0].timestamp).getTime(),
+      max: new Date(h.records[1].timestamp).getTime(), chart: {width, options: chart.options}};
+      alignTwentyFourHourTicks(scale); scale.ticks;`);
+    assert.equal(ticks.length, width === 390 ? 12 : 24);
+    for (const tick of ticks) {
+      const date = new Date(tick.value);
+      assert.equal(date.getMinutes(), 0);
+      if (width === 390) assert.equal(date.getHours() % 2, 0);
+    }
+  }
+  a.context.midnight = new Date('2026-10-04T00:00').getTime();
+  assert.deepEqual(Array.from(a.run('formatTwentyFourHourTick(midnight)')), ['10/4', '00:00']);
+  assert.ok(a.run('twentyFourHourYBounds(-0.5, 7.2).step') >= 1);
+  a.run(`activePresetValue = '7'; render();`);
+  assert.equal(a.run('chart.options.scales.x.twentyFourHour'), false);
+  assert.equal(a.run('chart.options.scales.x.ticks.autoSkip'), true);
+  assert.equal(a.run('chart.options.scales.y.ticks.stepSize'), undefined);
+  assert.equal(a.run('chart.options.scales.y.ticks.callback.call({chart}, -0.35)'), '-0.3 m');
+});
+
 test('saved B mode restarts as A without discarding the saved station or range', () => {
   const a = app();
   a.context.localStorage = {getItem: () => JSON.stringify({mode: 'B', stationId: 'kihatsu', preset: '30'})};
