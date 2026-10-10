@@ -166,6 +166,7 @@ let currentStation = null;
 let rawData = null;
 let chart = null;
 let waterBandVisible = true;
+const displayPreferences = { showRangeLines: false, showAnnualLines: true, showFloodLines: false, showWaterBand: true };
 let currentMode = 'A';
 let eventsBound = false;
 let activePresetValue = null;
@@ -229,6 +230,8 @@ const levelZonePlugin = {
 const els = {
   pageTitle: document.getElementById('pageTitle'),
   chartStationName: document.getElementById('chartStationName'),
+  chartCurrentLevel: document.getElementById('chartCurrentLevel'),
+  chartCurrentTime: document.getElementById('chartCurrentTime'),
   stationSelect: document.getElementById('stationSelect'),
   startDate: document.getElementById('startDate'),
   endDate: document.getElementById('endDate'),
@@ -432,6 +435,8 @@ async function fetchHistoricalHourly(station) {
 }
 
 function resetForLoading(station) {
+  els.chartCurrentLevel.textContent = '読み込み中';
+  els.chartCurrentTime.textContent = '';
   els.statusBadge.textContent = '読み込み中';
   els.statusBadge.className = 'status-badge neutral';
   els.statusDescription.textContent = `${stationDisplayName(station)} のデータを読み込んでいます。`.trim();
@@ -467,13 +472,17 @@ function loadViewState() {
 
 function saveViewState() {
   if (!currentStation) return;
+  displayPreferences.showRangeLines = els.toggleRangeLines.checked;
+  if (!els.toggleAnnualLines.disabled) displayPreferences.showAnnualLines = els.toggleAnnualLines.checked;
+  if (!els.toggleFloodLines.disabled) displayPreferences.showFloodLines = els.toggleFloodLines.checked;
+  displayPreferences.showWaterBand = waterBandVisible;
   const state = {
     stationId: currentStation.id,
     preset: activePresetValue,
     startDate: els.startDate.value || null,
     endDate: els.endDate.value || null,
     mode: currentMode,
-    showFloodLines: els.toggleFloodLines.checked
+    ...displayPreferences
   };
   try {
     localStorage.setItem(VIEW_STATE_KEY, JSON.stringify(state));
@@ -483,10 +492,27 @@ function saveViewState() {
 }
 
 function applySavedMode(state) {
-  if (!state?.mode) return;
+  if (!state) return;
+  for (const key of Object.keys(displayPreferences)) {
+    if (typeof state[key] === 'boolean') displayPreferences[key] = state[key];
+  }
+  applyDisplayPreferences();
+  if (!state.mode) return;
   currentMode = state.mode === 'B' ? 'B' : 'A';
-  els.toggleFloodLines.checked = Boolean(state.showFloodLines && !els.toggleFloodLines.disabled);
   els.modeButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.mode === currentMode));
+}
+
+function applyDisplayPreferences() {
+  els.toggleRangeLines.checked = displayPreferences.showRangeLines;
+  els.toggleAnnualLines.checked = displayPreferences.showAnnualLines && !els.toggleAnnualLines.disabled;
+  els.toggleFloodLines.checked = displayPreferences.showFloodLines && !els.toggleFloodLines.disabled;
+  waterBandVisible = displayPreferences.showWaterBand;
+}
+
+function updateCurrentLevel() {
+  const latest = getLatestValid(rawData?.records || []);
+  els.chartCurrentLevel.textContent = latest ? formatLevel(latest.value) : 'データなし';
+  els.chartCurrentTime.textContent = latest ? `${formatDateTime(latest.timestamp)} 観測` : '';
 }
 
 function currentRangeState() {
@@ -526,17 +552,11 @@ async function loadStation(stationId, options = {}) {
   const hasRangeState = Object.prototype.hasOwnProperty.call(options, 'rangeState');
   const rangeState = hasRangeState ? options.rangeState : currentRangeState();
   currentStation = station;
-  const wasReferenceDisabled = els.toggleAnnualLines.disabled;
   const referenceStatsEnabled = station.reference_stats_enabled !== false;
   els.toggleAnnualLines.disabled = !referenceStatsEnabled;
-  if (!referenceStatsEnabled) {
-    els.toggleAnnualLines.checked = false;
-  } else if (wasReferenceDisabled) {
-    els.toggleAnnualLines.checked = true;
-  }
   const hasFloodLevels = FLOOD_LEVEL_DEFINITIONS.some(({ key }) => Number.isFinite(station.flood_levels?.[key]));
   els.toggleFloodLines.disabled = !hasFloodLevels;
-  if (!hasFloodLevels) els.toggleFloodLines.checked = false;
+  applyDisplayPreferences();
   populateStationSelect(station.id);
   els.stationSelect.value = station.id;
   resetForLoading(station);
@@ -550,6 +570,7 @@ async function loadStation(stationId, options = {}) {
 
   const records = rawData.records;
   updateStationCopy();
+  updateCurrentLevel();
   if (!records.length) {
     els.startDate.value = '';
     els.endDate.value = '';
@@ -593,6 +614,8 @@ function bindEvents() {
     loadStation(els.stationSelect.value, { rangeState }).catch(err => {
       console.error(err);
       els.statusBadge.textContent = '読み込み失敗';
+      els.chartCurrentLevel.textContent = '取得できません';
+      els.chartCurrentTime.textContent = '';
       els.statusBadge.className = 'status-badge neutral';
       els.statusDescription.textContent = '選択した地点のデータまたはスクリプトの読み込みに失敗しました。';
     });
@@ -1121,6 +1144,7 @@ function handleLegendClick(event, item, legend) {
 }
 
 function render() {
+  updateCurrentLevel();
   if (!rawData || !rawData.records || !rawData.records.length) {
     return;
   }
@@ -1403,6 +1427,8 @@ window.addEventListener('load', () => {
   init().catch(err => {
     console.error(err);
     els.statusBadge.textContent = '読み込み失敗';
+    els.chartCurrentLevel.textContent = '取得できません';
+    els.chartCurrentTime.textContent = '';
     els.statusBadge.className = 'status-badge neutral';
     els.statusDescription.textContent = 'データまたはスクリプトの読み込みに失敗しました。';
   });

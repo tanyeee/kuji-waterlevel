@@ -143,6 +143,9 @@ button.primary{
   margin-bottom:12px;
 }
 .chart-title{line-height:1.6; overflow-wrap:anywhere}
+.chart-current{display:flex; flex-wrap:wrap; justify-content:flex-end; align-items:baseline; gap:4px 8px; margin:-4px 0 8px; font-size:.8rem; color:var(--muted)}
+.chart-current strong{color:var(--text); font-size:1rem; font-weight:600; font-variant-numeric:tabular-nums}
+.chart-current-time{font-size:.72rem; white-space:nowrap}
 #chartStationName{font-weight:500; color:var(--muted)}
 .emphasis{
   background:linear-gradient(180deg, rgba(15,45,73,.98) 0%, rgba(10,25,40,.98) 100%);

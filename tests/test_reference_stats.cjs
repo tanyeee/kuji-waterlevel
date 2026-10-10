@@ -426,3 +426,43 @@ test('changing the start date anchors the end picker without affecting end edits
   start.listeners.change();
   assert.equal(end.value, '2018-04-20');
 });
+
+test('latest level remains independent of the selected historical range and clears when unavailable', () => {
+  const a = app();
+  a.context.h = {records: [row('2026-10-01T10:00', 1.1), row('2026-10-10T09:20', 1.23), row('2026-10-10T09:30', null)]};
+  a.run(`rawData = mergeDatasets(h, {records: []}, {records: []});
+    getRangeRecords = () => rawData.records.slice(0, 1);
+    getDisplayRecords = records => records;
+    saveViewState = () => {}; render();`);
+  assert.equal(a.elements.get('chartCurrentLevel').textContent, '1.23 m');
+  assert.match(a.elements.get('chartCurrentTime').textContent, /09:20|9:20/);
+  assert.equal(a.elements.get('statusCurrentLevel').textContent, '1.10 m');
+  a.run('rawData = null; updateCurrentLevel();');
+  assert.equal(a.elements.get('chartCurrentLevel').textContent, 'データなし');
+  assert.equal(a.elements.get('chartCurrentTime').textContent, '');
+});
+
+test('display preferences survive reload and stations without available reference lines', () => {
+  let saved;
+  const a = app();
+  a.context.localStorage = {setItem: (key, value) => { saved = value; }};
+  a.run(`currentStation = {id: 'nukada'};
+    els.toggleRangeLines.checked = true;
+    els.toggleAnnualLines.checked = false;
+    els.toggleFloodLines.checked = true;
+    waterBandVisible = false; saveViewState();`);
+  const b = app();
+  b.context.localStorage = {getItem: () => saved, setItem: (key, value) => { saved = value; }};
+  b.run(`applySavedMode(loadViewState());
+    currentStation = {id: 'shimoishizaki'};
+    els.toggleAnnualLines.disabled = true;
+    els.toggleFloodLines.disabled = true;
+    applyDisplayPreferences(); saveViewState();`);
+  assert.equal(JSON.parse(saved).showFloodLines, true);
+  b.run(`els.toggleAnnualLines.disabled = false; els.toggleFloodLines.disabled = false;
+    applyDisplayPreferences();`);
+  assert.equal(b.elements.get('toggleRangeLines').checked, true);
+  assert.equal(b.elements.get('toggleAnnualLines').checked, false);
+  assert.equal(b.elements.get('toggleFloodLines').checked, true);
+  assert.equal(b.run('waterBandVisible'), false);
+});
