@@ -426,3 +426,104 @@ test('changing the start date anchors the end picker without affecting end edits
   start.listeners.change();
   assert.equal(end.value, '2018-04-20');
 });
+
+test('latest level remains independent of the selected historical range and clears when unavailable', () => {
+  const a = app();
+  a.context.h = {records: [row('2026-10-01T10:00', 1.1), row('2026-10-10T09:20', 1.23), row('2026-10-10T09:30', null)]};
+  a.run(`rawData = mergeDatasets(h, {records: []}, {records: []});
+    getRangeRecords = () => rawData.records.slice(0, 1);
+    getDisplayRecords = records => records;
+    saveViewState = () => {}; render();`);
+  assert.equal(a.elements.get('chartCurrentLevel').textContent, '1.23 m');
+  assert.match(a.elements.get('chartCurrentTime').textContent, /09:20|9:20/);
+  assert.equal(a.elements.get('statusCurrentLevel').textContent, '1.10 m');
+  a.run('rawData = null; updateCurrentLevel();');
+  assert.equal(a.elements.get('chartCurrentLevel').textContent, 'データなし');
+  assert.equal(a.elements.get('chartCurrentTime').textContent, '');
+});
+
+test('display preferences survive reload and stations without available reference lines', () => {
+  let saved;
+  const a = app();
+  a.context.localStorage = {setItem: (key, value) => { saved = value; }};
+  a.run(`currentStation = {id: 'nukada'};
+    els.toggleRangeLines.checked = true;
+    els.toggleAnnualLines.checked = false;
+    els.toggleFloodLines.checked = true;
+    waterBandVisible = false; saveViewState();`);
+  const b = app();
+  b.context.localStorage = {getItem: () => saved, setItem: (key, value) => { saved = value; }};
+  b.run(`applySavedMode(loadViewState());
+    currentStation = {id: 'shimoishizaki'};
+    els.toggleAnnualLines.disabled = true;
+    els.toggleFloodLines.disabled = true;
+    applyDisplayPreferences(); saveViewState();`);
+  assert.equal(JSON.parse(saved).showFloodLines, true);
+  b.run(`els.toggleAnnualLines.disabled = false; els.toggleFloodLines.disabled = false;
+    applyDisplayPreferences();`);
+  assert.equal(b.elements.get('toggleRangeLines').checked, true);
+  assert.equal(b.elements.get('toggleAnnualLines').checked, false);
+  assert.equal(b.elements.get('toggleFloodLines').checked, true);
+  assert.equal(b.run('waterBandVisible'), false);
+});
+
+test('refresh fetches fresh data, clears archive cache and preserves controls', async () => {
+  const a = app();
+  a.context.h = { records: [row('2026-10-01T10:00', 1.0), row('2026-10-10T10:00', 1.1)] };
+  a.context.live = { records: [row('2026-10-11T10:10', 1.23)] };
+  a.run(`currentStation = {id: 'nukada'};
+    rawData = h;
+    hourlyArchiveManifestPromise = Promise.resolve({});
+    hourlyArchiveCache.set('nukada', h);
+    els.startDate.value = '2026-10-01'; els.endDate.value = '2026-10-10';
+    els.toggleRangeLines.checked = true;
+    saveViewState = () => {};
+    fetchHistoricalHourly = async () => {
+      if (hourlyArchiveManifestPromise !== null || hourlyArchiveCache.has('nukada')) throw Error('stale cache');
+      return h;
+    };
+    fetchRecentTenMinute = async (station, options) => {
+      if (!options.required) throw Error('live data must be required');
+      return live;
+    };
+    populateAnnualStats = () => {};
+    render = () => updateCurrentLevel();`);
+  await a.run('refreshGraph()');
+  assert.equal(a.elements.get('chartCurrentLevel').textContent, '1.23 m');
+  assert.equal(a.elements.get('startDate').value, '2026-10-01');
+  assert.equal(a.elements.get('endDate').value, '2026-10-10');
+  assert.equal(a.elements.get('toggleRangeLines').checked, true);
+  assert.equal(a.elements.get('applyButton').disabled, false);
+});
+
+test('failed refresh retains previous observations and restores the button', async () => {
+  const a = app();
+  a.context.console = { ...console, error() {} };
+  a.context.h = { records: [row('2026-10-10T10:00', 1.1)] };
+  a.run(`currentStation = {id: 'nukada'}; rawData = h;
+    saveViewState = () => {};
+    fetchHistoricalHourly = async () => h;
+    fetchRecentTenMinute = async () => { throw Error('offline'); };`);
+  await a.run('refreshGraph()');
+  assert.equal(a.run('rawData === h'), true);
+  assert.equal(a.elements.get('statusBadge').textContent, '更新できません');
+  assert.equal(a.elements.get('applyButton').disabled, false);
+});
+
+test('refresh completion cannot overwrite a newer station selection', async () => {
+  const a = app();
+  let resolveLive;
+  a.context.pendingLive = new Promise(resolve => { resolveLive = resolve; });
+  a.context.h = { records: [row('2026-10-10T10:00', 1.1)] };
+  a.run(`currentStation = {id: 'nukada'}; rawData = h;
+    saveViewState = () => {};
+    fetchHistoricalHourly = async () => h;
+    fetchRecentTenMinute = () => pendingLive;`);
+  const pending = a.run('refreshGraph()');
+  a.run(`++dataRequestVersion; currentStation = {id: 'tomioka'}; rawData = null;`);
+  resolveLive({ records: [row('2026-10-11T10:00', 1.2)] });
+  await pending;
+  assert.equal(a.run('rawData'), null);
+  assert.equal(a.run('currentStation.id'), 'tomioka');
+  assert.equal(a.elements.get('applyButton').disabled, false);
+});
