@@ -171,6 +171,7 @@ let currentMode = 'A';
 let eventsBound = false;
 let activePresetValue = null;
 let pendingInitialState = null;
+let dataRequestVersion = 0;
 
 const fmt = new Intl.NumberFormat('ja-JP', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const fmt3 = new Intl.NumberFormat('ja-JP', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
@@ -349,10 +350,11 @@ const HOURLY_ARCHIVE_BASE = 'https://raw.githubusercontent.com/tanyeee/kuji-wate
 let hourlyArchiveManifestPromise = null;
 const hourlyArchiveCache = new Map();
 
-async function fetchRecentTenMinute(station) {
+async function fetchRecentTenMinute(station, { required = false } = {}) {
   try {
     return await fetchJson(`${LIVE_WATERLEVEL_BASE}/${station.id}/recent_10min.json`);
   } catch (error) {
+    if (required) throw error;
     // The live Pages site is now the only ten-minute source. If it is
     // unreachable, show no ten-minute overlay instead of falling back to
     // the frozen snapshot that used to live in this repository.
@@ -544,6 +546,7 @@ function applyRangeState(state) {
 }
 
 async function loadStation(stationId, options = {}) {
+  const requestVersion = ++dataRequestVersion;
   const station = isDisplayStation(stationId)
     ? stationById(stationId)
     : stationById(stationConfig.default_station) || displayStations()[0];
@@ -565,6 +568,7 @@ async function loadStation(stationId, options = {}) {
     fetchHistoricalHourly(station),
     fetchRecentTenMinute(station)
   ]);
+  if (requestVersion !== dataRequestVersion) return;
   rawData = mergeDatasets(historical, { records: [] }, recent10min);
   rawData.meta.station = station;
 
@@ -599,11 +603,51 @@ async function loadStation(stationId, options = {}) {
   // 1フレーム待ってから初回描画します。
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
+      if (requestVersion !== dataRequestVersion) return;
       ensureDateInputs();
       render();
       saveViewState();
     });
   });
+}
+
+async function refreshGraph() {
+  if (!currentStation || els.applyButton.disabled) return;
+  const station = currentStation;
+  const requestVersion = ++dataRequestVersion;
+  saveViewState();
+  hourlyArchiveManifestPromise = null;
+  hourlyArchiveCache.delete(station.id);
+  els.applyButton.disabled = true;
+  els.applyButton.title = '最新データを取得中';
+  try {
+    const [historical, recent10min] = await Promise.all([
+      fetchHistoricalHourly(station),
+      fetchRecentTenMinute(station, { required: true })
+    ]);
+    if (requestVersion !== dataRequestVersion) return;
+    const refreshed = mergeDatasets(historical, { records: [] }, recent10min);
+    const latest = getLatestValid(refreshed.records);
+    if (!latest) throw new Error('No valid observations received');
+    // Use the current controls even if dates or a preset changed during the request.
+    const rangeState = currentRangeState();
+    rawData = refreshed;
+    rawData.meta.station = station;
+    els.startDate.min = els.endDate.min = rawData.records[0].timestamp.slice(0, 10);
+    els.startDate.max = els.endDate.max = latest.timestamp.slice(0, 10);
+    applyRangeState(rangeState);
+    populateAnnualStats();
+    render();
+  } catch (error) {
+    if (requestVersion !== dataRequestVersion) return;
+    console.error(error);
+    els.statusBadge.textContent = '更新できません';
+    els.statusBadge.className = 'status-badge neutral';
+    els.statusDescription.textContent = '最新データを取得できなかったため、前回取得したデータを表示しています。時間をおいて再度更新してください。';
+  } finally {
+    els.applyButton.disabled = false;
+    els.applyButton.title = 'グラフ更新';
+  }
 }
 
 function bindEvents() {
@@ -620,7 +664,7 @@ function bindEvents() {
       els.statusDescription.textContent = '選択した地点のデータまたはスクリプトの読み込みに失敗しました。';
     });
   });
-  els.applyButton.addEventListener('click', () => render());
+  els.applyButton.addEventListener('click', refreshGraph);
   els.toggleRangeLines.addEventListener('change', () => {
     render();
     saveViewState();

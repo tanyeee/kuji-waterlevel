@@ -466,3 +466,64 @@ test('display preferences survive reload and stations without available referenc
   assert.equal(b.elements.get('toggleFloodLines').checked, true);
   assert.equal(b.run('waterBandVisible'), false);
 });
+
+test('refresh fetches fresh data, clears archive cache and preserves controls', async () => {
+  const a = app();
+  a.context.h = { records: [row('2026-10-01T10:00', 1.0), row('2026-10-10T10:00', 1.1)] };
+  a.context.live = { records: [row('2026-10-11T10:10', 1.23)] };
+  a.run(`currentStation = {id: 'nukada'};
+    rawData = h;
+    hourlyArchiveManifestPromise = Promise.resolve({});
+    hourlyArchiveCache.set('nukada', h);
+    els.startDate.value = '2026-10-01'; els.endDate.value = '2026-10-10';
+    els.toggleRangeLines.checked = true;
+    saveViewState = () => {};
+    fetchHistoricalHourly = async () => {
+      if (hourlyArchiveManifestPromise !== null || hourlyArchiveCache.has('nukada')) throw Error('stale cache');
+      return h;
+    };
+    fetchRecentTenMinute = async (station, options) => {
+      if (!options.required) throw Error('live data must be required');
+      return live;
+    };
+    populateAnnualStats = () => {};
+    render = () => updateCurrentLevel();`);
+  await a.run('refreshGraph()');
+  assert.equal(a.elements.get('chartCurrentLevel').textContent, '1.23 m');
+  assert.equal(a.elements.get('startDate').value, '2026-10-01');
+  assert.equal(a.elements.get('endDate').value, '2026-10-10');
+  assert.equal(a.elements.get('toggleRangeLines').checked, true);
+  assert.equal(a.elements.get('applyButton').disabled, false);
+});
+
+test('failed refresh retains previous observations and restores the button', async () => {
+  const a = app();
+  a.context.console = { ...console, error() {} };
+  a.context.h = { records: [row('2026-10-10T10:00', 1.1)] };
+  a.run(`currentStation = {id: 'nukada'}; rawData = h;
+    saveViewState = () => {};
+    fetchHistoricalHourly = async () => h;
+    fetchRecentTenMinute = async () => { throw Error('offline'); };`);
+  await a.run('refreshGraph()');
+  assert.equal(a.run('rawData === h'), true);
+  assert.equal(a.elements.get('statusBadge').textContent, '更新できません');
+  assert.equal(a.elements.get('applyButton').disabled, false);
+});
+
+test('refresh completion cannot overwrite a newer station selection', async () => {
+  const a = app();
+  let resolveLive;
+  a.context.pendingLive = new Promise(resolve => { resolveLive = resolve; });
+  a.context.h = { records: [row('2026-10-10T10:00', 1.1)] };
+  a.run(`currentStation = {id: 'nukada'}; rawData = h;
+    saveViewState = () => {};
+    fetchHistoricalHourly = async () => h;
+    fetchRecentTenMinute = () => pendingLive;`);
+  const pending = a.run('refreshGraph()');
+  a.run(`++dataRequestVersion; currentStation = {id: 'tomioka'}; rawData = null;`);
+  resolveLive({ records: [row('2026-10-11T10:00', 1.2)] });
+  await pending;
+  assert.equal(a.run('rawData'), null);
+  assert.equal(a.run('currentStation.id'), 'tomioka');
+  assert.equal(a.elements.get('applyButton').disabled, false);
+});
