@@ -6,10 +6,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 CONFIG = ROOT / "config/stations.json"
 DISPLAY_GROUPS = {
-    "久慈川": ["tomioka-bashi", "nukada", "sakakibashi-ue"],
+    "久慈川": ["tomioka-bashi", "nukada", "sakakibashi-ue", "sakakibashi"],
     "里川": ["kihatsu"],
     "山田川": ["tsuneibashi"],
-    "涸沼川": ["takahashi", "shimoishizaki"],
+    "涸沼川": ["takahashi", "shimoishizaki", "hinuma-bashi"],
     "那珂川": ["nakagawa-ohashi"],
 }
 FLOOD_LEVELS = {
@@ -36,13 +36,13 @@ class StationConfigTests(unittest.TestCase):
         self.assertCountEqual(membership, self.stations)
         self.assertIn(self.config["default_station"], self.stations)
 
-    def test_display_groups_hide_tidal_stations(self):
+    def test_display_groups_include_selected_tidal_stations(self):
         groups = {group["label"]: group["station_ids"] for group in self.config["display_groups"]}
         self.assertEqual(groups, DISPLAY_GROUPS)
         displayed = {station_id for ids in groups.values() for station_id in ids}
         hidden = set(self.stations) - displayed
         self.assertEqual(hidden, {
-            "sakakibashi", "kuji-ohashi", "hinuma-bashi", "minato-ohashi",
+            "kuji-ohashi", "minato-ohashi",
             "suifu-bashi", "kunita-ohashi",
         })
 

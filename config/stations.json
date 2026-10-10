@@ -4,7 +4,7 @@
   "display_groups": [
     {
       "label": "久慈川",
-      "station_ids": ["tomioka-bashi", "nukada", "sakakibashi-ue"]
+      "station_ids": ["tomioka-bashi", "nukada", "sakakibashi-ue", "sakakibashi"]
     },
     {
       "label": "里川",
@@ -16,7 +16,7 @@
     },
     {
       "label": "涸沼川",
-      "station_ids": ["takahashi", "shimoishizaki"]
+      "station_ids": ["takahashi", "shimoishizaki", "hinuma-bashi"]
     },
     {
       "label": "那珂川",

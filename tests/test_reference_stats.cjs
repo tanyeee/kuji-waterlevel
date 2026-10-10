@@ -390,17 +390,18 @@ test('graph station label follows selection without changing the page title', ()
   assert.equal(a.elements.has('stationSummary'), false);
 });
 
-test('station selector groups only non-tidal display stations', () => {
+test('station selector includes the selected tidal observation stations', () => {
   const a = app();
   a.context.config = JSON.parse(readFileSync(resolve(root, 'config/stations.json'), 'utf8'));
   a.run('stationConfig = config; populateStationSelect("nukada");');
   const groups = a.elements.get('stationSelect').children;
   assert.deepEqual(groups.map(group => group.label), ['久慈川', '里川', '山田川', '涸沼川', '那珂川']);
   assert.deepEqual(groups.map(group => group.children.map(option => option.textContent)), [
-    ['富岡橋', '幸久橋（額田）', '榊橋上'], ['機初'], ['常井橋'], ['高橋', '下石崎'], ['那珂川大橋']
+    ['富岡橋', '幸久橋（額田）', '榊橋上', '榊橋'], ['機初'], ['常井橋'], ['高橋', '下石崎', '涸沼橋'], ['那珂川大橋']
   ]);
-  assert.equal(a.run('displayStations().length'), 8);
-  assert.equal(a.run('isDisplayStation("sakakibashi")'), false);
+  assert.equal(a.run('displayStations().length'), 10);
+  assert.equal(a.run('isDisplayStation("sakakibashi")'), true);
+  assert.equal(a.run('isDisplayStation("hinuma-bashi")'), true);
   assert.equal(a.run('isDisplayStation("nukada")'), true);
   assert.equal(a.elements.get('stationSelect').value, 'nukada');
 });
