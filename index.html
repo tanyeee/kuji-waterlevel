@@ -80,6 +80,21 @@
         <p class="date-apply-note">開始日・終了日の変更は、「グラフ更新」を押すと反映されます。</p>
       </div>
 
+      <details id="manualImport" hidden>
+        <summary>額田の観測値を取り込む</summary>
+        <p><a href="https://www.river.go.jp/kawabou/mb/tm?ofcCd=21271&amp;itmkndCd=4&amp;obsCd=7" target="_blank" rel="noopener">額田の公式ページ</a>で「観測値」を表示し、登録した「額田の表をコピー」を押してください。</p>
+        <p>初回のみ、<a id="manualImportBookmark">額田の表をコピー</a>をPCのブックマークバーへドラッグしてください。</p>
+        <form id="manualImportForm">
+          <label class="field">表の先頭の日付（日本時間）<input type="date" name="referenceDate" required></label>
+          <label class="field">観測間隔<select name="resolution"><option value="10min">10分</option><option value="hourly">1時間</option></select></label>
+          <label class="field">観測値の表<textarea name="raw" rows="6" required></textarea></label>
+          <button type="submit">取り込み内容を確認</button>
+          <p id="manualImportResult" role="status"></p>
+          <button id="manualImportSave" type="button" hidden>この端末のグラフに反映</button>
+          <button id="manualImportDownload" type="button" hidden>共有用ファイルを保存</button>
+        </form>
+      </details>
+
       <div class="preset-row">
         <span class="preset-label">期間プリセット</span>
         <button type="button" class="preset-btn" data-days="24h">24時間</button>
@@ -196,6 +211,7 @@
     </section>
   </div>
 
-  <script src="app.js?v=20261011-refresh-data"></script>
+  <script src="manual-import.js?v=2"></script>
+  <script src="app.js?v=20261105-manual-import"></script>
 </body>
 </html>

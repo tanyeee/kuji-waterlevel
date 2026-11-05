@@ -102,7 +102,7 @@ function computeRolling7DayDiffs(records) {
   return diffs.sort((a, b) => a - b);
 }
 
-function mergeDatasets(historical, recent, recent10min) {
+function mergeDatasets(historical, recent, recent10min, manual = []) {
   const map = new Map();
   const datasets = [
     { payload: historical, source: 'historical_hourly' },
@@ -121,6 +121,15 @@ function mergeDatasets(historical, recent, recent10min) {
     }
   }
 
+  for (const observation of manual) {
+    const existing = map.get(observation.timestamp);
+    if (isRenderableRecord(existing)) continue;
+    const record = { ...observation, source: 'manual_nukada' };
+    if (isTenMinuteRecord(record) && record.timestamp.endsWith(':00')) {
+      record.fallback_record = { ...record, resolution: 'hourly' };
+    }
+    map.set(record.timestamp, record);
+  }
   const records = [...map.values()].sort((a, b) => a.timestamp.localeCompare(b.timestamp));
   const baseline = getBaselineRecords(records);
   const values = baseline.map(r => r.value).sort((a, b) => a - b);
@@ -350,6 +359,30 @@ const HOURLY_ARCHIVE_BASE = 'https://raw.githubusercontent.com/tanyeee/kuji-wate
 let hourlyArchiveManifestPromise = null;
 const hourlyArchiveCache = new Map();
 
+const NUKADA_LOCAL_KEY = 'nukada-manual-water-levels';
+let sharedNukadaRecords = [];
+
+function localNukadaRecords() {
+  try {
+    const records = JSON.parse(localStorage.getItem(NUKADA_LOCAL_KEY) || '[]');
+    return Array.isArray(records) ? records : [];
+  } catch {
+    return [];
+  }
+}
+
+async function fetchManualRecords(station) {
+  if (station.id !== 'nukada') return [];
+  try {
+    const payload = await fetchJson(`${HOURLY_ARCHIVE_BASE}/manual/stations/nukada.json`);
+    if (payload.stationId !== 'nukada' || !Array.isArray(payload.records)) throw Error('Invalid manual history');
+    sharedNukadaRecords = payload.records;
+  } catch (error) {
+    if (error.message !== 'HTTP 404') console.warn('額田の共有取り込み履歴を取得できませんでした。', error);
+  }
+  return [...sharedNukadaRecords, ...localNukadaRecords()];
+}
+
 async function fetchRecentTenMinute(station, { required = false } = {}) {
   try {
     return await fetchJson(`${LIVE_WATERLEVEL_BASE}/${station.id}/recent_10min.json`);
@@ -563,13 +596,16 @@ async function loadStation(stationId, options = {}) {
   populateStationSelect(station.id);
   els.stationSelect.value = station.id;
   resetForLoading(station);
+  const panel = document.getElementById('manualImport');
+  if (panel) panel.hidden = station.id !== 'nukada';
 
-  const [historical, recent10min] = await Promise.all([
+  const [historical, recent10min, manual] = await Promise.all([
     fetchHistoricalHourly(station),
-    fetchRecentTenMinute(station)
+    fetchRecentTenMinute(station),
+    fetchManualRecords(station)
   ]);
   if (requestVersion !== dataRequestVersion) return;
-  rawData = mergeDatasets(historical, { records: [] }, recent10min);
+  rawData = mergeDatasets(historical, { records: [] }, recent10min, manual);
   rawData.meta.station = station;
 
   const records = rawData.records;
@@ -621,12 +657,22 @@ async function refreshGraph() {
   els.applyButton.disabled = true;
   els.applyButton.title = '最新データを取得中';
   try {
-    const [historical, recent10min] = await Promise.all([
+    const manualRequest = fetchManualRecords(station);
+    const [historical, recent10min, manual] = await Promise.all([
       fetchHistoricalHourly(station),
-      fetchRecentTenMinute(station, { required: true })
+      fetchRecentTenMinute(station, { required: true }).catch(async error => {
+        if (station.id === 'nukada' && (await manualRequest).length) {
+          const records = rawData?.meta.station?.id === station.id
+            ? rawData.records.filter(record => record.source === 'recent_10min')
+            : [];
+          return { records };
+        }
+        throw error;
+      }),
+      manualRequest
     ]);
     if (requestVersion !== dataRequestVersion) return;
-    const refreshed = mergeDatasets(historical, { records: [] }, recent10min);
+    const refreshed = mergeDatasets(historical, { records: [] }, recent10min, manual);
     const latest = getLatestValid(refreshed.records);
     if (!latest) throw new Error('No valid observations received');
     // Use the current controls even if dates or a preset changed during the request.
