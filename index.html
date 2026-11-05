@@ -18,8 +18,8 @@
     <p>国土交通省 水文水質データベースが自動取得を制限したため、2026年11月4日以降、水位データは更新されていません。表示中の値は停止前の最終データです。</p>
   </div>
   <script>
-    // 国交省 水文水質データベースの取得が再開したら active を false にする
-    const MLIT_OUTAGE = { active: true, since: '2026-11-04' };
+    // 国交省からデータを取得できなくなったときに true にする(停止中バナーを表示)
+    const MLIT_OUTAGE = { active: false, since: '2026-11-04' };
     document.getElementById('mlitOutageBanner').hidden = !MLIT_OUTAGE.active;
   </script>
   <div class="app-shell">

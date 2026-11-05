@@ -451,8 +451,8 @@ function updateStationCopy() {
   document.title = '茨城県河川水位ビューア';
   els.chartStationName.textContent = `${stationName}${note}`;
   const sourceDescription = currentStation?.kawabou
-    ? '川の防災情報から取得した水位データ'
-    : '水文水質データベースから取得した水位データと増水基準';
+    ? '国土交通省「川の防災情報」から取得した水位データ'
+    : '国土交通省「川の防災情報」から取得した水位データ(長期履歴と増水基準は水文水質データベースの過去データ)';
   els.dataSourceNote.textContent = `更新対応版: ${stationName}${note}の${sourceDescription}を閲覧できます。24時間モードでは10分観測値を優先します。`;
   const levelZones = getLevelZones();
   els.levelZoneNote.hidden = levelZones.length === 0;
