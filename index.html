@@ -8,11 +8,20 @@
   <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32-v20260710.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon-v20260710.png" />
   <link rel="manifest" href="site.webmanifest?v=20260710" />
-  <link rel="stylesheet" href="style.css?v=20261010-current-level" />
+  <link rel="stylesheet" href="style.css?v=20261105-mlit-outage" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3"></script>
 </head>
 <body>
+  <div id="mlitOutageBanner" class="mlit-outage-banner" role="alert" hidden>
+    <strong>⚠ 河川水位データは更新を停止しています</strong>
+    <p>国土交通省 水文水質データベースが自動取得を制限したため、2026年11月4日以降、水位データは更新されていません。表示中の値は停止前の最終データです。</p>
+  </div>
+  <script>
+    // 国交省 水文水質データベースの取得が再開したら active を false にする
+    const MLIT_OUTAGE = { active: true, since: '2026-11-04' };
+    document.getElementById('mlitOutageBanner').hidden = !MLIT_OUTAGE.active;
+  </script>
   <div class="app-shell">
     <header class="hero">
       <div>
