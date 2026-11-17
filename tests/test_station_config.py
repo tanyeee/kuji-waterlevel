@@ -69,17 +69,18 @@ class StationConfigTests(unittest.TestCase):
         self.assertEqual(nukada["flood_levels_basis"]["type"], "estimated")
         self.assertEqual(nukada["flood_levels_basis"]["source_station_id"], "tomioka-bashi")
 
-    def test_only_shimoishizaki_has_the_revetment_inundation_zone(self):
+    def test_revetment_inundation_zones_are_set_for_shimoishizaki_and_sakakibashi_ue(self):
         stations_with_zones = {
             station_id: station["level_zones"]
             for station_id, station in self.stations.items()
             if station.get("level_zones")
         }
-        self.assertEqual(set(stations_with_zones), {"shimoishizaki"})
-        zone = stations_with_zones["shimoishizaki"][0]
-        self.assertEqual(zone["from"], 1.9)
-        self.assertEqual(zone["label"], "護岸浸水目安")
-        self.assertIn("防災基準水位ではありません", zone["note"])
+        self.assertEqual(set(stations_with_zones), {"shimoishizaki", "sakakibashi-ue"})
+        for station_id, expected_from in (("shimoishizaki", 1.9), ("sakakibashi-ue", 1.5)):
+            zone = stations_with_zones[station_id][0]
+            self.assertEqual(zone["from"], expected_from)
+            self.assertEqual(zone["label"], "護岸浸水目安")
+            self.assertIn("防災基準水位ではありません", zone["note"])
 
 
 if __name__ == "__main__":
