@@ -69,6 +69,12 @@ class StationConfigTests(unittest.TestCase):
         self.assertEqual(nukada["flood_levels_basis"]["type"], "estimated")
         self.assertEqual(nukada["flood_levels_basis"]["source_station_id"], "tomioka-bashi")
 
+    def test_only_sakakibashi_has_a_fixed_recommended_band(self):
+        bands = {sid: s["recommended_band"] for sid, s in self.stations.items() if s.get("recommended_band")}
+        self.assertEqual(set(bands), {"sakakibashi"})
+        self.assertEqual((bands["sakakibashi"]["min"], bands["sakakibashi"]["max"]), (0.45, 0.9))
+        self.assertIn("防災基準水位ではありません", bands["sakakibashi"]["note"])
+
     def test_revetment_inundation_zones_are_set_for_shimoishizaki_and_sakakibashi_ue(self):
         stations_with_zones = {
             station_id: station["level_zones"]

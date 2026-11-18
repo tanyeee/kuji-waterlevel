@@ -454,13 +454,18 @@ function updateStationCopy() {
     ? '国土交通省「川の防災情報」から取得した水位データ'
     : '国土交通省「川の防災情報」から取得した水位データ(長期履歴と増水基準は水文水質データベースの過去データ)';
   els.dataSourceNote.textContent = `更新対応版: ${stationName}${note}の${sourceDescription}を閲覧できます。24時間モードでは10分観測値を優先します。`;
-  const levelZones = getLevelZones();
-  els.levelZoneNote.hidden = levelZones.length === 0;
-  els.levelZoneNote.textContent = levelZones.map(zone => zone.note).filter(Boolean).join(' ');
+  const stationNotes = [...getLevelZones().map(zone => zone.note), getRecommendedBand()?.note].filter(Boolean);
+  els.levelZoneNote.hidden = stationNotes.length === 0;
+  els.levelZoneNote.textContent = stationNotes.join(' ');
 }
 
 function getLevelZones(station = currentStation) {
   return (station?.level_zones || []).filter(zone => Number.isFinite(zone?.from));
+}
+
+function getRecommendedBand(station = currentStation) {
+  const band = station?.recommended_band;
+  return band && Number.isFinite(band.min) && Number.isFinite(band.max) && band.min < band.max ? band : null;
 }
 
 function loadViewState() {
@@ -1238,8 +1243,10 @@ function render() {
     : [];
   const levelZoneThresholds = levelZones.map(zone => zone.from);
   const levelZoneCeilings = levelZones.map(zone => zone.from + 0.15);
-  const scaleMin = Math.min(minValue, ...visibleFloodLevels, ...levelZoneThresholds);
-  const scaleMax = Math.max(maxValue, ...visibleFloodLevels, ...levelZoneCeilings);
+  const fixedBand = getRecommendedBand();
+  const fixedBandLevels = fixedBand ? [fixedBand.min, fixedBand.max] : [];
+  const scaleMin = Math.min(minValue, ...visibleFloodLevels, ...levelZoneThresholds, ...fixedBandLevels);
+  const scaleMax = Math.max(maxValue, ...visibleFloodLevels, ...levelZoneCeilings, ...fixedBandLevels);
   const yPadding = Math.max((scaleMax - scaleMin) * 0.08, 0.05);
   const twentyFourHour = isTwentyFourHourMode();
   const yBounds = twentyFourHour ? twentyFourHourYBounds(scaleMin - yPadding, scaleMax + yPadding) : null;
@@ -1298,8 +1305,8 @@ function render() {
         borderDash: [3, 6],
         borderWidth: 1.1,
         pointRadius: 0,
-        waterBand: reference.mean < reference.p95,
-        fill: waterBandVisible && reference.mean < reference.p95 ? {
+        waterBand: !fixedBand && reference.mean < reference.p95,
+        fill: !fixedBand && waterBandVisible && reference.mean < reference.p95 ? {
           target: upperReferenceIndex,
           above: 'rgba(180,100,240,0.2)',
           below: 'rgba(180,100,240,0.2)'
@@ -1309,6 +1316,34 @@ function render() {
         label: '大幅増水基準',
         data: buildLineSeries(records, reference.p95),
         borderColor: 'rgba(255,94,120,.8)',
+        borderDash: [3, 6],
+        borderWidth: 1.1,
+        pointRadius: 0
+      }
+    );
+  }
+
+  if (fixedBand) {
+    const upperBandIndex = datasets.length + 1;
+    datasets.push(
+      {
+        label: `おすすめ下限 ${formatLevel(fixedBand.min)}`,
+        data: buildLineSeries(records, fixedBand.min),
+        borderColor: 'rgba(180,100,240,.75)',
+        borderDash: [3, 6],
+        borderWidth: 1.1,
+        pointRadius: 0,
+        waterBand: true,
+        fill: waterBandVisible ? {
+          target: upperBandIndex,
+          above: 'rgba(180,100,240,0.2)',
+          below: 'rgba(180,100,240,0.2)'
+        } : false
+      },
+      {
+        label: `おすすめ上限 ${formatLevel(fixedBand.max)}`,
+        data: buildLineSeries(records, fixedBand.max),
+        borderColor: 'rgba(180,100,240,.75)',
         borderDash: [3, 6],
         borderWidth: 1.1,
         pointRadius: 0

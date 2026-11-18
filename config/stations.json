@@ -129,6 +129,11 @@
       "river_id": "kuji",
       "river_name": "久慈川水系",
       "data_dir": "data/stations/sakakibashi",
+      "recommended_band": {
+        "min": 0.45,
+        "max": 0.9,
+        "note": "榊橋では0.45〜0.90 mを、明暗に入りやすいおすすめ増水水位帯として固定表示します（0.45 m未満はロープや蛇籠にルアーが当たりやすく、1.0 m前後が入る限界の目安）。国土交通省の防災基準水位ではありません。"
+      },
       "hourly": {
         "station_id": "303011283322050"
       },
